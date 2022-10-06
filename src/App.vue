@@ -5,8 +5,7 @@ import Header from './components/Header.vue';
 </script>
 
 <template>
-  <Header />
-  <h1 class="text-purple-400">Hello from App!</h1>
+  <Header class="text-2xl py-4" />
   <router-view></router-view>
   <!-- <HelloWorld msg="Vite + Vue" /> -->
 </template>
