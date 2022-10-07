@@ -42,13 +42,22 @@ const handleCourseSwitch = async (id) => {
       <button
         @click="handleCourseSwitch(task.id)"
         class="bg-red-200 w-full rounded-lg h-10 text-2xl"
+        :class="
+          currentCourseId == task.id &&
+          'bg-red-600 text-white'
+        "
       >
         {{ task.name }}
       </button>
     </li>
   </ul>
-  <ul class="text-green-600">
-    <li v-for="collection in collectionsData">
+  <ul
+    class="text-green-600 flex flex-col gap-5 py-10 items-start"
+  >
+    <li
+      class="text-base p-4"
+      v-for="collection in collectionsData"
+    >
       {{ collection.name }}
     </li>
   </ul>

@@ -4,7 +4,6 @@ const getCourses = async () => {
       `http://localhost:4000/courses`
     );
     const data = await response.json();
-    console.log('data', data);
     return data;
   } catch (error) {
     console.log('Erorr', error);
@@ -17,7 +16,6 @@ const getCollections = async (courseId) => {
       `http://localhost:4000/collections/${courseId}`
     );
     const data = await response.json();
-    console.log('data', data);
     return data;
   } catch (error) {
     console.log('Erorr', error);
