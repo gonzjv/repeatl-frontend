@@ -1,20 +1,55 @@
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import {
+  onBeforeMount,
+  reactive,
+  toRefs,
+} from 'vue';
+import {
+  getCourses,
+  getCollections,
+} from '@/services/apiService';
 
-let tasksData = ref();
-onBeforeMount(async () => {
-  const response = await fetch(
-    `http://localhost:4000/courses`
-  );
-  tasksData.value = await response.json();
-  console.log('taskData', tasksData.value);
+let state = reactive({
+  tasksData: [],
+  collectionsData: [],
+  currentCourseId: 2,
 });
+
+let {
+  tasksData,
+  collectionsData,
+  currentCourseId,
+} = toRefs(state);
+
+onBeforeMount(async () => {
+  tasksData.value = await getCourses();
+  collectionsData.value = await getCollections(
+    currentCourseId.value
+  );
+});
+
+const handleCourseSwitch = async (id) => {
+  currentCourseId.value = id;
+  collectionsData.value = await getCollections(
+    id
+  );
+  console.log('courseId', currentCourseId.value);
+};
 </script>
 <template>
-  <h2 class="text-yellow-400">Tasks is there!</h2>
-  <ul>
-    <li v-for="task in tasksData">
-      {{ task.name }}
+  <ul class="flex gap-5 justify-center">
+    <li class="w-1/3" v-for="task in tasksData">
+      <button
+        @click="handleCourseSwitch(task.id)"
+        class="bg-red-200 w-full rounded-lg h-10 text-2xl"
+      >
+        {{ task.name }}
+      </button>
+    </li>
+  </ul>
+  <ul class="text-green-600">
+    <li v-for="collection in collectionsData">
+      {{ collection.name }}
     </li>
   </ul>
 </template>
