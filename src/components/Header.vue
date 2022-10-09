@@ -3,33 +3,48 @@ import logoImg from '@/assets/logo.svg';
 import { useDisplayStore } from '@/store/display';
 import { storeToRefs } from 'pinia';
 
-const store = useDisplayStore();
+const NAV_BTNS = [
+  {
+    title: 'Выбор заданий',
+    route: '/tasks',
+  },
+];
 
+const store = useDisplayStore();
 const { isNavLogoDisplay } = storeToRefs(store);
 </script>
 <template>
   <header
-    class="flex items-center justify-start gap-10"
+    class="relative flex items-center justify-start gap-10"
   >
     <figure
-      v-if="isNavLogoDisplay"
-      class="w-3/12"
+      v-show="isNavLogoDisplay"
+      class="w-3/12 absolute left-0 top-0"
     >
       <img class="" :src="logoImg" alt="" />
     </figure>
-    <nav class="text-sky-500">
+    <nav class="text-sky-500 flex gap-10 ml-80">
       <router-link
-        active-class="text-yellow-400"
+        @click="
+          store.$patch({
+            isNavLogoDisplay: false,
+          })
+        "
+        class="w-56 h-10 flex justify-center items-center"
+        active-class="bg-sky-100 rounded-lg"
         to="/"
         >Главная</router-link
       >
-      |
       <router-link
-        active-class="text-yellow-400"
-        to="/tasks"
-        >Выбор заданий</router-link
+        @click="
+          store.$patch({ isNavLogoDisplay: true })
+        "
+        v-for="btn in NAV_BTNS"
+        class="w-56 h-10 flex justify-center items-center"
+        active-class="bg-sky-100 rounded-lg"
+        :to="btn.route"
+        >{{ btn.title }}</router-link
       >
-      |
       <!-- <router-link to="/todayTasks"
         >Задания на сегодня</router-link
       > -->

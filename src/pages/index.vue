@@ -1,6 +1,14 @@
 <script setup>
 import logoImg from '@/assets/logo.svg';
 import descrImg from '@/assets/description.svg';
+// import { useDisplayStore } from '@/store/display';
+// import { onBeforeMount } from 'vue';
+
+// const store = useDisplayStore();
+
+// onBeforeMount(() => {
+//   store.$patch({ isNavLogoDisplay: false });
+// });
 </script>
 <template>
   <figure class="flex justify-between">
