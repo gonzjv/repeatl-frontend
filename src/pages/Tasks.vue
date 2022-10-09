@@ -8,6 +8,7 @@ import {
   getCourses,
   getCollections,
 } from '@/services/apiService';
+import Collection from '../components/Collection.vue';
 let state = reactive({
   coursesData: [],
   collectionsData: [],
@@ -34,9 +35,11 @@ const handleCourseSwitch = async (course) => {
   collectionsData.value = await getCollections(
     course.id
   );
+  console.log(
+    'collections',
+    collectionsData.value
+  );
   coursesWindowDisplay.value = false;
-  console.log('course', course);
-  console.log('window', coursesWindowDisplay);
 };
 </script>
 <template>
@@ -55,29 +58,38 @@ const handleCourseSwitch = async (course) => {
         >
           <button
             @click="handleCourseSwitch(course)"
-            class="bg-red-200 w-full rounded-lg h-10 text-2xl"
+            class="bg-fuchsia-200 w-full rounded-lg h-10 text-2xl"
           >
             {{ course.name }}
           </button>
         </li>
       </ul>
     </aside>
-    <button
+    <section
+      class="flex flex-col w-full items-center"
       v-if="!coursesWindowDisplay"
-      @click="coursesWindowDisplay = true"
-      class="bg-red-600 text-white w-4/12 rounded-lg h-10 text-2xl"
     >
-      {{ currentCourse.name }}
-    </button>
-    <ul
-      class="text-green-600 flex flex-col gap-5 py-10 items-start"
-    >
-      <li
-        class="text-base p-4"
-        v-for="collection in collectionsData"
+      <button
+        @click="coursesWindowDisplay = true"
+        class="bg-fuchsia-400 text-white w-4/12 rounded-lg h-10 text-2xl"
       >
-        {{ collection.name }}
-      </li>
-    </ul>
+        {{ currentCourse.name }}
+      </button>
+      <h2
+        class="w-full text-left text-2xl font-bold"
+      >
+        ВЫБОР ЗАДАНИЙ:
+      </h2>
+      <ul
+        class="w-full flex flex-col gap-10 py-10 items-start"
+      >
+        <li
+          class="text-base p-4 w-full flex items-start flex-col gap-10"
+          v-for="collection in collectionsData"
+        >
+          <Collection :collection="collection" />
+        </li>
+      </ul>
+    </section>
   </main>
 </template>
