@@ -1,7 +1,10 @@
+const API_URL =
+  'https://repeatl-backend.onrender.com';
+
 const getCourses = async () => {
   try {
     const response = await fetch(
-      `http://localhost:4000/courses`
+      `${API_URL}/courses`
     );
     const data = await response.json();
     return data;
@@ -13,7 +16,7 @@ const getCourses = async () => {
 const getCollections = async (courseId) => {
   try {
     const response = await fetch(
-      `http://localhost:4000/collections/${courseId}`
+      `${API_URL}/collections/${courseId}`
     );
     const data = await response.json();
     return data;
