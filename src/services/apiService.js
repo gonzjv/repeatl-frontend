@@ -1,10 +1,13 @@
-const API_URL =
-  'https://repeatl-backend.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getCourses = async () => {
   try {
+    console.log(
+      'envUrl',
+      import.meta.env.VITE_API_URL
+    );
     const response = await fetch(
-      `${API_URL}/courses`
+      `${API_URL}courses`
     );
     const data = await response.json();
     return data;
@@ -16,7 +19,7 @@ const getCourses = async () => {
 const getCollections = async (courseId) => {
   try {
     const response = await fetch(
-      `${API_URL}/collections/${courseId}`
+      `${API_URL}collections/${courseId}`
     );
     const data = await response.json();
     return data;

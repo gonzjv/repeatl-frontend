@@ -3,8 +3,10 @@ const props = defineProps({
   collection: Object,
 });
 
-// const modelsNumber =
-//   props.collection.modelSubCollections.length;
+const models =
+  props.collection.modelSubCollection.models;
+
+const modelsNumber = models.length;
 </script>
 <template>
   <h2 class="text-2xl">
@@ -16,14 +18,14 @@ const props = defineProps({
     <div class="flex flex-col items-center">
       <h3>МОДЕЛИ</h3>
       <mark
-        class="bg-sky-100 flex w-10 h-10 justify-center items-center rounded-lg"
+        class="text-gray-500 bg-sky-100 flex w-10 h-10 justify-center items-center rounded-lg"
       >
-        <!-- {{ modelsNumber }} -->
+        {{ modelsNumber }}
       </mark>
     </div>
     <ul class="w-full flex gap-2 flex-wrap">
-      <li>
-        <!-- {{ collection.model }} -->
+      <li v-for="model in models">
+        {{ model.label }}
       </li>
     </ul>
   </article>
