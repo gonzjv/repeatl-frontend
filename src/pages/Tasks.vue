@@ -9,29 +9,31 @@ import {
   getCollections,
 } from '@/services/apiService';
 import Collection from '../components/Collection.vue';
+import { useCourseStore } from '@/store/course';
+import { storeToRefs } from 'pinia';
 let state = reactive({
   coursesData: [],
   collectionsData: [],
-  currentCourse: {},
   coursesWindowDisplay: true,
 });
 
 let {
   coursesData,
   collectionsData,
-  currentCourse,
   coursesWindowDisplay,
 } = toRefs(state);
 
 onBeforeMount(async () => {
   coursesData.value = await getCourses();
-  // collectionsData.value = await getCollections(
-  //   currentCourseId.value
-  // );
 });
 
+const store = useCourseStore();
+const { currentCourse } = storeToRefs(store);
+
 const handleCourseSwitch = async (course) => {
-  currentCourse.value = course;
+  store.$patch({
+    currentCourse: course,
+  });
   collectionsData.value = await getCollections(
     course.id
   );

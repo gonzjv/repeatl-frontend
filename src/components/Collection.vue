@@ -1,7 +1,11 @@
 <script setup>
+import { useCourseStore } from '../store/course';
+
 const props = defineProps({
   collection: Object,
 });
+
+const store = useCourseStore();
 
 const models =
   props.collection.modelSubCollection.models;
@@ -12,7 +16,14 @@ const modelsNumber = models.length;
   <h2 class="text-2xl">
     Коллекция {{ collection.name }}
   </h2>
-  <article
+  <router-link
+    @click="
+      store.$patch({
+        currentSubCollection:
+          collection.modelSubCollection,
+      })
+    "
+    to="/subCollection"
     class="p-5 flex gap-20 w-full border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
   >
     <div class="flex flex-col items-center">
@@ -28,5 +39,5 @@ const modelsNumber = models.length;
         {{ model.label }}
       </li>
     </ul>
-  </article>
+  </router-link>
 </template>
