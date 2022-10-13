@@ -7,10 +7,10 @@ const props = defineProps({
 
 const store = useCourseStore();
 
-const models =
-  props.collection.modelSubCollection.models;
+const { modelSections } =
+  props.collection.modelSubCollection;
 
-const modelsNumber = models.length;
+const modelsNumber = modelSections.length;
 </script>
 <template>
   <h2 class="text-2xl">
@@ -35,8 +35,8 @@ const modelsNumber = models.length;
       </mark>
     </div>
     <ul class="w-full flex gap-2 flex-wrap">
-      <li v-for="model in models">
-        {{ model.label }}
+      <li v-for="modelSection in modelSections">
+        {{ modelSection.label }}
       </li>
     </ul>
   </router-link>
