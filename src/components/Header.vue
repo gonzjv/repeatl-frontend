@@ -23,7 +23,7 @@ const { isNavLogoDisplay } = storeToRefs(store);
     >
       <img class="" :src="logoImg" alt="" />
     </figure>
-    <nav class="text-sky-500 flex gap-10 ml-80">
+    <nav class="text-sky-400 flex gap-10 ml-80">
       <router-link
         @click="
           store.$patch({

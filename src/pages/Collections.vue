@@ -35,9 +35,9 @@ onBeforeMount(async () => {
     >
       {{ currentCourse.name }}
     </h2>
-    <section class="w-full">
+    <section class="w-full flex flex-col gap-10">
       <h3
-        class="w-full text-left text-2xl font-bold"
+        class="w-full text-left text-xl font-bold"
       >
         ВЫБОР ЗАДАНИЙ:
       </h3>
@@ -45,7 +45,7 @@ onBeforeMount(async () => {
         class="w-full flex flex-col gap-10 items-start"
       >
         <li
-          class="text-base p-4 w-full flex items-start flex-col gap-10"
+          class="pl-32 text-base w-full flex items-start flex-col gap-5"
           v-for="collection in collectionsData"
         >
           <Collection :collection="collection" />

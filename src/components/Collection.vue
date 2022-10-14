@@ -16,7 +16,7 @@ modelSections.forEach(
 );
 </script>
 <template>
-  <h2 class="text-2xl">
+  <h2 class="text-xl">
     Коллекция {{ collection.name }}
   </h2>
   <router-link
@@ -32,7 +32,7 @@ modelSections.forEach(
     <div class="flex flex-col items-center">
       <h3>МОДЕЛИ</h3>
       <mark
-        class="text-gray-500 bg-sky-100 flex w-10 h-10 justify-center items-center rounded-lg"
+        class="text-white bg-sky-400 flex w-14 h-7 justify-center items-center rounded-lg"
       >
         {{ modelsNumber }}
       </mark>
