@@ -34,14 +34,14 @@ const handleCourseSwitch = async (course) => {
   store.$patch({
     currentCourse: course,
   });
-  collectionsData.value = await getCollections(
-    course.id
-  );
-  console.log(
-    'collections',
-    collectionsData.value
-  );
-  coursesWindowDisplay.value = false;
+  // collectionsData.value = await getCollections(
+  //   course.id
+  // );
+  // console.log(
+  //   'collections',
+  //   collectionsData.value
+  // );
+  // coursesWindowDisplay.value = false;
 };
 </script>
 <template>
@@ -58,12 +58,13 @@ const handleCourseSwitch = async (course) => {
           class="w-1/3"
           v-for="course in coursesData"
         >
-          <button
+          <router-link
+            to="/collections"
             @click="handleCourseSwitch(course)"
-            class="bg-fuchsia-200 w-full rounded-lg h-10 text-2xl"
+            class="text-white p-3 bg-fuchsia-400 w-full rounded-lg h-10 text-2xl"
           >
             {{ course.name }}
-          </button>
+          </router-link>
         </li>
       </ul>
     </aside>
@@ -71,13 +72,13 @@ const handleCourseSwitch = async (course) => {
       class="flex flex-col w-full items-center"
       v-if="!coursesWindowDisplay"
     >
-      <button
+      <!-- <button
         @click="coursesWindowDisplay = true"
         class="bg-fuchsia-400 text-white w-4/12 rounded-lg h-10 text-2xl"
       >
         {{ currentCourse.name }}
-      </button>
-      <h2
+      </button> -->
+      <!-- <h2
         class="w-full text-left text-2xl font-bold"
       >
         ВЫБОР ЗАДАНИЙ:
@@ -91,7 +92,7 @@ const handleCourseSwitch = async (course) => {
         >
           <Collection :collection="collection" />
         </li>
-      </ul>
+      </ul> -->
     </section>
   </main>
 </template>

@@ -10,8 +10,13 @@ const { modelSections } =
 </script>
 <template>
   <main
-    class="gap-10 w-full flex flex-col items-center"
+    class="relative gap-10 w-full flex flex-col items-center"
   >
+    <router-link
+      class="absolute left-0 top-3 text-xl"
+      to="/collections"
+      >Go back</router-link
+    >
     <h2
       class="flex justify-center items-center bg-fuchsia-400 text-white w-1/3 rounded-lg h-10 text-2xl"
     >
