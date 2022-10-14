@@ -5,8 +5,8 @@ import { storeToRefs } from 'pinia';
 const store = useCourseStore();
 const { currentCourse, currentSubCollection } =
   storeToRefs(store);
-const { models } = currentSubCollection.value;
-const modelsNumber = models.length;
+const { modelSections } =
+  currentSubCollection.value;
 </script>
 <template>
   <main
@@ -17,17 +17,19 @@ const modelsNumber = models.length;
     >
       {{ currentCourse.name }}
     </h2>
-    <mark
-      class="text-gray-500 bg-sky-100 flex w-10 h-10 justify-center items-center rounded-lg"
-    >
-      {{ modelsNumber }}
-    </mark>
     <ul class="w-full flex flex-col">
       <li
-        v-for="model in models"
+        v-for="section in modelSections"
         class="p-5 flex gap-2 border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
       >
-        {{ model.label }}
+        <mark
+          class="text-gray-500 bg-sky-100 flex w-10 h-10 justify-center items-center rounded-lg"
+        >
+          {{ section.models.length }}
+        </mark>
+        <p>
+          {{ section.label }}
+        </p>
       </li>
     </ul>
   </main>

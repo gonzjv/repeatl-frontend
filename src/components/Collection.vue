@@ -10,7 +10,10 @@ const store = useCourseStore();
 const { modelSections } =
   props.collection.modelSubCollection;
 
-const modelsNumber = modelSections.length;
+let modelsNumber = 0;
+modelSections.forEach(
+  (e) => (modelsNumber += e.models.length)
+);
 </script>
 <template>
   <h2 class="text-2xl">
