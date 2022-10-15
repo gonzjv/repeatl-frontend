@@ -24,9 +24,10 @@ modelSections.forEach(
       store.$patch({
         currentSubCollection:
           collection.modelSubCollection,
+        currentCollection: collection,
       })
     "
-    to="/subCollection"
+    to="/modelSubCollection"
     class="p-5 flex gap-20 w-full border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
   >
     <div class="flex flex-col items-center">
