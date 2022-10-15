@@ -11,11 +11,18 @@ const NAV_BTNS = [
 ];
 
 const store = useDisplayStore();
-const { isNavLogoDisplay } = storeToRefs(store);
+const {
+  isNavLogoDisplay,
+  isSectionPopupDisplay,
+} = storeToRefs(store);
 </script>
 <template>
   <header
-    class="relative flex items-center justify-start gap-10"
+    :class="
+      isSectionPopupDisplay &&
+      'blur-[2px] transition-all duration-500'
+    "
+    class="relative flex items-center justify-start gap-10 h-24 text-xl py-4"
   >
     <figure
       v-show="isNavLogoDisplay"

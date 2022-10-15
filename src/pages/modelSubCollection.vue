@@ -10,12 +10,22 @@ const {
   currentCourse,
   currentSubCollection,
   currentCollection,
+  currentSection,
 } = storeToRefs(courseStore);
-const { isBlurDisplay } =
+const { isSectionPopupDisplay } =
   storeToRefs(displayStore);
 
 const { modelSections } =
   currentSubCollection.value;
+
+const handleButtonClick = (section) => {
+  displayStore.$patch({
+    isSectionPopupDisplay: true,
+  });
+  courseStore.$patch({
+    currentSection: section,
+  });
+};
 
 console.log('sections', modelSections);
 </script>
@@ -46,6 +56,7 @@ console.log('sections', modelSections);
     <ul class="w-full flex flex-col">
       <li
         v-for="section in modelSections"
+        :key="section.id"
         class="p-5 flex items-center gap-10 border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
       >
         <div class="flex flex-col items-center">
@@ -61,15 +72,21 @@ console.log('sections', modelSections);
             {{ section.label }}
           </p>
           <button
+            @click="handleButtonClick(section)"
+            class="text-sky-400 text-xs font-semibold"
+          >
+            Просмотр
+          </button>
+          <!-- <button
             @click="
               displayStore.$patch({
-                isBlurDisplay: true,
+                isSectionPopupDisplay: true,
               })
             "
             class="text-sky-400 text-xs font-semibold"
           >
             Просмотр
-          </button>
+          </button> -->
         </div>
       </li>
     </ul>

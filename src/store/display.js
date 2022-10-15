@@ -5,7 +5,7 @@ export const useDisplayStore = defineStore(
   {
     state: () => ({
       isNavLogoDisplay: false,
-      isBlurDisplay: false,
+      isSectionPopupDisplay: false,
     }),
   }
 );

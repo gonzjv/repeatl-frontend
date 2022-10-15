@@ -2,32 +2,22 @@
 import Header from '@/components/Header.vue';
 import { storeToRefs } from 'pinia';
 import { useDisplayStore } from './store/display';
+import Cover from './components/Cover.vue';
+import Popup from './components/Popup.vue';
 
 const store = useDisplayStore();
-const { isBlurDisplay } = storeToRefs(store);
+const { isSectionPopupDisplay } =
+  storeToRefs(store);
 </script>
 
 <template>
-  <aside
-    @click="
-      store.$patch({
-        isBlurDisplay: false,
-      })
-    "
-    v-if="isBlurDisplay"
-    class="z-10 w-full h-full absolute left-0 top-0"
-  ></aside>
-  <Header
-    :class="
-      isBlurDisplay &&
-      'blur-[2px] transition-all duration-500'
-    "
-    class="h-24 text-xl py-4"
-  />
+  <Header />
   <router-view
     :class="
-      isBlurDisplay &&
+      isSectionPopupDisplay &&
       'blur-[2px] transition-all duration-500'
     "
   ></router-view>
+  <Cover />
+  <Popup />
 </template>
