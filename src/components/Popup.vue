@@ -7,7 +7,7 @@ const displayStore = useDisplayStore();
 const courseStore = useCourseStore();
 const { isSectionPopupDisplay } =
   storeToRefs(displayStore);
-const { currentSection } =
+const { currentSection, currentCollection } =
   storeToRefs(courseStore);
 </script>
 <template>
@@ -18,16 +18,63 @@ const { currentSection } =
     leave-to-class="opacity-0"
     ><div
       v-if="isSectionPopupDisplay"
-      class="z-20 blur-0 bg-white shadow-lg absolute top-[10vh] left-[30vw] w-3/12 h-96"
+      class="py-5 flex flex-col gap-5 z-20 blur-0 bg-white shadow-lg absolute top-[25vh] left-[20vw] w-6/12 h-96 overflow-auto"
     >
-      <h3>
-        {{ currentSection.label }}
+      <h3
+        class="text-sky-400 flex gap-2 justify-center"
+      >
+        <p>Коллекция</p>
+        <span class="text-fuchsia-400">
+          {{ currentCollection.name }}
+        </span>
+        <p>Раздел</p>
+        <span class="text-fuchsia-400">
+          {{ currentSection.label }}
+        </span>
       </h3>
-      <ul>
+      <ul
+        class="flex flex-col gap-4 w-full items-start pl-10"
+      >
         <li
           v-for="model in currentSection.models"
+          :key="model.id"
         >
-          <p>{{ model.label }}</p>
+          <div class="flex gap-7">
+            <p class="text-sm">
+              {{ model.number }}
+            </p>
+            <ul
+              class="flex flex-col items-start gap-2"
+            >
+              <li>
+                <p class="font-extralight">
+                  {{ model.phraseNative1 }}
+                </p>
+                <p>
+                  {{ model.phraseForeign1 }}
+                </p>
+              </li>
+              <li>
+                <p class="font-extralight">
+                  {{ model.phraseNative2 }}
+                </p>
+                <p>
+                  {{ model.phraseForeign2 }}
+                </p>
+              </li>
+              <li>
+                <p class="font-extralight">
+                  {{ model.phraseNative3 }}
+                </p>
+                <p>
+                  {{ model.phraseForeign3 }}
+                </p>
+              </li>
+            </ul>
+            <h4 class="italic text-sm">
+              {{ model.label }}
+            </h4>
+          </div>
         </li>
       </ul>
     </div></Transition
