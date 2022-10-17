@@ -53,11 +53,11 @@ console.log('sections', modelSections);
       </h3>
       <span>/ модели</span>
     </aside>
-    <ul class="w-full flex flex-col">
+    <ul class="w-full flex flex-col items-center">
       <li
         v-for="section in modelSections"
         :key="section.id"
-        class="p-5 flex items-center gap-10 border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
+        class="w-8/12 p-5 flex items-center gap-10 border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
       >
         <div class="flex flex-col items-center">
           <p>МОДЕЛИ</p>
@@ -67,7 +67,7 @@ console.log('sections', modelSections);
             {{ section.models.length }}
           </mark>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col w-1/4">
           <p>
             {{ section.label }}
           </p>
@@ -78,6 +78,11 @@ console.log('sections', modelSections);
             Просмотр
           </button>
         </div>
+        <button
+          class="text-sky-400 font-bold w-1/5 border-sky-400 border-2 rounded-md"
+        >
+          Старт
+        </button>
       </li>
     </ul>
   </main>
