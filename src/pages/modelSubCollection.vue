@@ -73,20 +73,10 @@ console.log('sections', modelSections);
           </p>
           <button
             @click="handleButtonClick(section)"
-            class="text-sky-400 text-xs font-semibold"
+            class="text-sky-400 text-xs font-bold"
           >
             Просмотр
           </button>
-          <!-- <button
-            @click="
-              displayStore.$patch({
-                isSectionPopupDisplay: true,
-              })
-            "
-            class="text-sky-400 text-xs font-semibold"
-          >
-            Просмотр
-          </button> -->
         </div>
       </li>
     </ul>

@@ -39,14 +39,16 @@ const { currentSection, currentCollection } =
           v-for="model in currentSection.models"
           :key="model.id"
         >
-          <div class="flex gap-7">
+          <div
+            class="py-4 flex gap-7 border-b-[1px] border-sky-400 w-full"
+          >
             <p class="text-sm">
               {{ model.number }}
             </p>
             <ul
               class="flex flex-col items-start gap-2"
             >
-              <li>
+              <li class="">
                 <p class="font-extralight">
                   {{ model.phraseNative1 }}
                 </p>
