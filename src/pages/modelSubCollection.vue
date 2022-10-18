@@ -67,7 +67,9 @@ console.log('sections', modelSections);
             {{ section.models.length }}
           </mark>
         </div>
-        <div class="flex flex-col w-1/4">
+        <div
+          class="flex flex-col w-2/4 items-start"
+        >
           <p>
             {{ section.label }}
           </p>
@@ -78,11 +80,12 @@ console.log('sections', modelSections);
             Просмотр
           </button>
         </div>
-        <button
+        <router-link
+          to="/quest"
           class="text-sky-400 font-bold w-1/5 border-sky-400 border-2 rounded-md"
         >
           Старт
-        </button>
+        </router-link>
       </li>
     </ul>
   </main>
