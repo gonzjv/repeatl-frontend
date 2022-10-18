@@ -28,22 +28,44 @@ const {
     <h2 class="text-xl">
       {{ currentSection.label }}
     </h2>
-    <section class="flex gap-10">
-      <aside>
-        <div class="flex gap-2">
+    <section class="flex gap-10 w-full">
+      <aside class="flex flex-col gap-5">
+        <div
+          class="flex gap-2 items-center justify-between"
+        >
           <p>Model:</p>
-          <span class="border-[1px]"
+          <span
+            class="border-[1px] w-14 h-14 border-sky-400 rounded-md"
             >model number</span
           >
         </div>
-        <div class="flex gap-2">
+        <div
+          class="flex gap-2 items-center justify-between"
+        >
           <p>Progress:</p>
-          <span class="border-[1px]">
+          <span
+            class="border-[1px] w-14 h-14 border-sky-400 rounded-md"
+          >
             progress, %</span
           >
         </div>
       </aside>
-      <div>Quest</div>
+      <div class="w-6/12 flex flex-col gap-10">
+        <div
+          class="h-80 border-[1px] border-sky-400 rounded-md"
+        >
+          Quest
+        </div>
+        <form
+          class="w-full flex justify-center items-center"
+          action=""
+        >
+          <input
+            class="w-full bg-white border-[1px] rounded-md border-fuchsia-400 focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
+            type="text"
+          />
+        </form>
+      </div>
       <aside>help</aside>
     </section>
   </main>
