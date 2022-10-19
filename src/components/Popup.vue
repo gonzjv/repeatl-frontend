@@ -9,6 +9,10 @@ const { isSectionPopupDisplay } =
   storeToRefs(displayStore);
 const { currentSection, currentCollection } =
   storeToRefs(courseStore);
+console.log(
+  'currentSection',
+  currentSection.value
+);
 </script>
 <template>
   <Transition
@@ -43,33 +47,20 @@ const { currentSection, currentCollection } =
             class="py-4 flex gap-7 border-b-[1px] border-sky-400 w-full"
           >
             <p class="text-sm">
-              {{ model.number }}
+              {{ model }}
             </p>
             <ul
               class="flex flex-col items-start gap-2"
             >
-              <li class="">
+              <li
+                v-for="phrase in model.phrases"
+                class=""
+              >
                 <p class="font-extralight">
-                  {{ model.phraseNative1 }}
+                  {{ phrase.native }}
                 </p>
                 <p>
-                  {{ model.phraseForeign1 }}
-                </p>
-              </li>
-              <li>
-                <p class="font-extralight">
-                  {{ model.phraseNative2 }}
-                </p>
-                <p>
-                  {{ model.phraseForeign2 }}
-                </p>
-              </li>
-              <li>
-                <p class="font-extralight">
-                  {{ model.phraseNative3 }}
-                </p>
-                <p>
-                  {{ model.phraseForeign3 }}
+                  {{ phrase.foreign }}
                 </p>
               </li>
             </ul>

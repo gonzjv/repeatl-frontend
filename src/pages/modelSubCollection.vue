@@ -81,6 +81,11 @@ console.log('sections', modelSections);
           </button>
         </div>
         <router-link
+          @click="
+            courseStore.$patch({
+              currentSection: section,
+            })
+          "
           to="/quest"
           class="text-sky-400 font-bold w-1/5 border-sky-400 border-2 rounded-md"
         >

@@ -55,13 +55,14 @@ const {
           class="h-80 border-[1px] border-sky-400 rounded-md"
         >
           Quest
+          {{ currentSection }}
         </div>
         <form
           class="w-full flex justify-center items-center"
           action=""
         >
           <input
-            class="w-full bg-white border-[1px] rounded-md border-fuchsia-400 focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
+            class="w-full bg-white border-[1px] rounded-md border-sky-400 focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
             type="text"
           />
         </form>
