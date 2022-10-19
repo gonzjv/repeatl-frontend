@@ -1,6 +1,7 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { useCourseStore } from '../store/course';
+import { reactive, toRefs } from 'vue';
 
 const courseStore = useCourseStore();
 const {
@@ -8,7 +9,17 @@ const {
   currentSection,
   currentCollection,
 } = storeToRefs(courseStore);
+
+const initModel = currentSection.value.models[0];
+
+const state = reactive({
+  currentModel: initModel,
+});
+const { currentModel } = toRefs(state);
+
+console.log('currentModel', currentModel.value);
 </script>
+
 <template>
   <main
     class="flex flex-col w-full items-start gap-10"
@@ -51,12 +62,20 @@ const {
         </div>
       </aside>
       <div class="w-6/12 flex flex-col gap-10">
-        <div
+        <ul
           class="h-80 border-[1px] border-sky-400 rounded-md"
         >
-          Quest
-          {{ currentSection }}
-        </div>
+          <li
+            v-for="phrase in currentModel.phrases"
+          >
+            <p class="font-extralight">
+              {{ phrase.native }}
+            </p>
+            <p class="">
+              {{ phrase.foreign }}
+            </p>
+          </li>
+        </ul>
         <form
           class="w-full flex justify-center items-center"
           action=""
