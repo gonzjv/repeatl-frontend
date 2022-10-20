@@ -6,7 +6,10 @@ import {
   toRefs,
   onBeforeMount,
 } from 'vue';
-import { getProgress } from '../services/apiService';
+import {
+  getProgress,
+  createProgress,
+} from '../services/progressService';
 
 const courseStore = useCourseStore();
 const {
@@ -20,15 +23,32 @@ const initModel = currentSection.value.models[0];
 
 const state = reactive({
   currentModel: initModel,
+  progress: {},
 });
-const { currentModel } = toRefs(state);
+const { currentModel, progress } = toRefs(state);
+
+const USER_ID = '4';
 
 onBeforeMount(async () => {
-  const data = await getProgress(
-    currentSubCollection.value.id
+  progress.value = await getProgress(
+    currentSubCollection.value.id,
+    USER_ID
   );
+  if (!progress.value.id) {
+    console.log('progress not found');
 
-  console.log('progress', data);
+    const initProgress = {
+      userId: USER_ID,
+      modelStep: 0,
+      phraseStep: 0,
+      sectionStep: 0,
+      subCollectionId: currentCollection.value.id,
+    };
+    progress.value = await createProgress(
+      initProgress
+    );
+  }
+  console.log('progress', progress.value);
 });
 </script>
 
