@@ -1,13 +1,19 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { useCourseStore } from '../store/course';
-import { reactive, toRefs } from 'vue';
+import {
+  reactive,
+  toRefs,
+  onBeforeMount,
+} from 'vue';
+import { getProgress } from '../services/apiService';
 
 const courseStore = useCourseStore();
 const {
   currentCourse,
   currentSection,
   currentCollection,
+  currentSubCollection,
 } = storeToRefs(courseStore);
 
 const initModel = currentSection.value.models[0];
@@ -17,7 +23,13 @@ const state = reactive({
 });
 const { currentModel } = toRefs(state);
 
-console.log('currentModel', currentModel.value);
+onBeforeMount(async () => {
+  const data = await getProgress(
+    currentSubCollection.value.id
+  );
+
+  console.log('progress', data);
+});
 </script>
 
 <template>

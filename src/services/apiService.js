@@ -28,4 +28,20 @@ const getCollections = async (courseId) => {
   }
 };
 
-export { getCourses, getCollections };
+const getProgress = async (subCollectionId) => {
+  try {
+    const response = await fetch(
+      `${API_URL}progressModels/3.${subCollectionId}`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Erorr', error);
+  }
+};
+
+export {
+  getCourses,
+  getCollections,
+  getProgress,
+};
