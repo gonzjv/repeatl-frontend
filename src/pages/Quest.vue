@@ -91,6 +91,56 @@ const checkAnswer = () => {
   isAnswerFullfilled.value =
     answerLength == phraseLength ? true : false;
 };
+
+const handleFormSubmit = () => {
+  console.log('SUBMIT!!!');
+  if (
+    isAnswerCorrect.value &&
+    isAnswerFullfilled.value
+  ) {
+    console.log('SUBMIT_correct!!!');
+    if (
+      progress.value.phraseStep ==
+      currentModel.value.phrases.length - 1
+    ) {
+      completeModel();
+      return;
+    }
+    completePhrase();
+  }
+};
+
+const completeModel = () => {
+  console.log('COMPLETE MODEL');
+  progress.value.phraseStep = 0;
+  progress.value.modelStep += 1;
+  currentModel.value =
+    currentSection.value.models[
+      progress.value.modelStep
+    ];
+  currentPhrase.value =
+    currentModel.value.phrases[
+      progress.value.phraseStep
+    ];
+
+  resetAnswer();
+};
+
+const completePhrase = () => {
+  console.log('COMPLETE PHRASE');
+  progress.value.phraseStep += 1;
+  currentPhrase.value =
+    currentModel.value.phrases[
+      progress.value.phraseStep
+    ];
+  resetAnswer();
+};
+
+const resetAnswer = () => {
+  isAnswerCorrect.value = true;
+  isAnswerFullfilled.value = false;
+  answer.value = '';
+};
 </script>
 
 <template>
@@ -138,7 +188,7 @@ const checkAnswer = () => {
         <ul
           class="h-80 border-[1px] border-sky-400 rounded-md flex flex-col gap-51 items-center"
         >
-          <li>asdasd{{ progress }}</li>
+          <li>{{ progress }}</li>
           <li>
             <p class="font-extralight">
               {{ currentPhrase.native }}
@@ -150,14 +200,14 @@ const checkAnswer = () => {
                   : isAnswerFullfilled &&
                     'text-emerald-400'
               "
-              class="relative"
+              class="relative transition duration-500"
             >
               <aside
                 class="absolute -left-8 top-0"
                 v-if="!isAnswerCorrect"
               >
                 <InformationCircleIcon
-                  class="text-red-600 w-5"
+                  class="w-5"
                 />
               </aside>
               <aside
@@ -167,9 +217,7 @@ const checkAnswer = () => {
                   isAnswerFullfilled
                 "
               >
-                <CheckBadgeIcon
-                  class="text-emerald-400 w-5"
-                />
+                <CheckBadgeIcon class="w-5" />
               </aside>
               <span>
                 {{ currentPhrase.foreign }}
@@ -178,8 +226,8 @@ const checkAnswer = () => {
           </li>
         </ul>
         <form
+          @submit.prevent="handleFormSubmit"
           class="relative w-full flex justify-center items-center"
-          action=""
         >
           <aside
             class="absolute left-0 -top-7 text-red-600 text-sm font-light"
@@ -194,6 +242,12 @@ const checkAnswer = () => {
             class="w-full bg-white border-[1px] rounded-md border-sky-400 focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
             type="text"
           />
+          <button
+            class="absolute top-0 -right-20"
+            type="submit"
+          >
+            button
+          </button>
         </form>
       </div>
       <aside>help</aside>
