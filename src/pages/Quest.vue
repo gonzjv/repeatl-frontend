@@ -10,6 +10,7 @@ import {
   getProgress,
   createProgress,
 } from '../services/progressService';
+import { InformationCircleIcon } from '@heroicons/vue/24/outline';
 
 const courseStore = useCourseStore();
 const {
@@ -125,36 +126,31 @@ const checkAnswer = () => {
       </aside>
       <div class="w-6/12 flex flex-col gap-10">
         <ul
-          class="h-80 border-[1px] border-sky-400 rounded-md flex flex-col gap-51"
+          class="h-80 border-[1px] border-sky-400 rounded-md flex flex-col gap-51 items-center"
         >
-          <!-- <li>
-            <p class="font-extralight">
-              {{
-                currentModel.phrases[
-                  progress.phraseStep
-                ].native
-              }}
-            </p>
-            <p class="">
-              {{
-                currentModel.phrases[
-                  progress.phraseStep
-                ].foreign
-              }}
-            </p>
-          </li> -->
-          <li>{{ progress }}</li>
-          <li
-            :class="
-              !isAnswerCorrect && 'text-red-600'
-            "
-          >
+          <li>asdasd{{ progress }}</li>
+          <li>
             <p class="font-extralight">
               {{ currentPhrase.native }}
             </p>
-            <p class="">
-              {{ currentPhrase.foreign }}
-            </p>
+            <div
+              :class="
+                !isAnswerCorrect && 'text-red-600'
+              "
+              class="relative"
+            >
+              <aside
+                class="absolute -left-8 top-0"
+                v-if="!isAnswerCorrect"
+              >
+                <InformationCircleIcon
+                  class="text-red-600 w-5"
+                />
+              </aside>
+              <span>
+                {{ currentPhrase.foreign }}
+              </span>
+            </div>
           </li>
         </ul>
         <form
