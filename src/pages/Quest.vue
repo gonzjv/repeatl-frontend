@@ -19,13 +19,21 @@ const {
   currentSubCollection,
 } = storeToRefs(courseStore);
 
-const initModel = currentSection.value.models[0];
-
 const state = reactive({
-  currentModel: initModel,
+  currentModel: currentSection.value.models[0],
+  currentPhrase:
+    currentSection.value.models[0].phrases[0],
   progress: {},
+  answer: '',
+  isAnswerCorrect: true,
 });
-const { currentModel, progress } = toRefs(state);
+const {
+  currentModel,
+  currentPhrase,
+  progress,
+  answer,
+  isAnswerCorrect,
+} = toRefs(state);
 
 const USER_ID = '4';
 
@@ -48,8 +56,30 @@ onBeforeMount(async () => {
       initProgress
     );
   }
-  console.log('progress', progress.value);
+  const initModel =
+    currentSection.value.models[
+      progress.value.modelStep
+    ];
+
+  currentModel.value = initModel;
+  console.log('currentModel', currentModel.value);
 });
+
+const checkAnswer = () => {
+  const answerLength =
+    answer.value.split('').length;
+  const phraseToCompare =
+    currentPhrase.value.foreign;
+  const stringToCompare = phraseToCompare
+    .split('')
+    .slice(0, answerLength)
+    .join('');
+
+  isAnswerCorrect.value =
+    answer.value == stringToCompare
+      ? true
+      : false;
+};
 </script>
 
 <template>
@@ -95,16 +125,35 @@ onBeforeMount(async () => {
       </aside>
       <div class="w-6/12 flex flex-col gap-10">
         <ul
-          class="h-80 border-[1px] border-sky-400 rounded-md"
+          class="h-80 border-[1px] border-sky-400 rounded-md flex flex-col gap-51"
         >
-          <li
-            v-for="phrase in currentModel.phrases"
-          >
+          <!-- <li>
             <p class="font-extralight">
-              {{ phrase.native }}
+              {{
+                currentModel.phrases[
+                  progress.phraseStep
+                ].native
+              }}
             </p>
             <p class="">
-              {{ phrase.foreign }}
+              {{
+                currentModel.phrases[
+                  progress.phraseStep
+                ].foreign
+              }}
+            </p>
+          </li> -->
+          <li>{{ progress }}</li>
+          <li
+            :class="
+              !isAnswerCorrect && 'text-red-600'
+            "
+          >
+            <p class="font-extralight">
+              {{ currentPhrase.native }}
+            </p>
+            <p class="">
+              {{ currentPhrase.foreign }}
             </p>
           </li>
         </ul>
@@ -113,6 +162,8 @@ onBeforeMount(async () => {
           action=""
         >
           <input
+            @input="checkAnswer"
+            v-model="answer"
             class="w-full bg-white border-[1px] rounded-md border-sky-400 focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
             type="text"
           />
