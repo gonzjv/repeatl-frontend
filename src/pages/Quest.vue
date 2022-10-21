@@ -10,7 +10,10 @@ import {
   getProgress,
   createProgress,
 } from '../services/progressService';
-import { InformationCircleIcon } from '@heroicons/vue/24/outline';
+import {
+  InformationCircleIcon,
+  CheckBadgeIcon,
+} from '@heroicons/vue/24/outline';
 
 const courseStore = useCourseStore();
 const {
@@ -27,6 +30,7 @@ const state = reactive({
   progress: {},
   answer: '',
   isAnswerCorrect: true,
+  isAnswerFullfilled: false,
 });
 const {
   currentModel,
@@ -34,6 +38,7 @@ const {
   progress,
   answer,
   isAnswerCorrect,
+  isAnswerFullfilled,
 } = toRefs(state);
 
 const USER_ID = '4';
@@ -71,6 +76,8 @@ const checkAnswer = () => {
     answer.value.split('').length;
   const phraseToCompare =
     currentPhrase.value.foreign;
+  const phraseLength =
+    phraseToCompare.split('').length;
   const stringToCompare = phraseToCompare
     .split('')
     .slice(0, answerLength)
@@ -80,6 +87,9 @@ const checkAnswer = () => {
     answer.value == stringToCompare
       ? true
       : false;
+
+  isAnswerFullfilled.value =
+    answerLength == phraseLength ? true : false;
 };
 </script>
 
@@ -135,7 +145,10 @@ const checkAnswer = () => {
             </p>
             <div
               :class="
-                !isAnswerCorrect && 'text-red-600'
+                !isAnswerCorrect
+                  ? 'text-red-600'
+                  : isAnswerFullfilled &&
+                    'text-emerald-400'
               "
               class="relative"
             >
@@ -147,6 +160,17 @@ const checkAnswer = () => {
                   class="text-red-600 w-5"
                 />
               </aside>
+              <aside
+                class="absolute -left-8 top-0"
+                v-if="
+                  isAnswerCorrect &&
+                  isAnswerFullfilled
+                "
+              >
+                <CheckBadgeIcon
+                  class="text-emerald-400 w-5"
+                />
+              </aside>
               <span>
                 {{ currentPhrase.foreign }}
               </span>
@@ -154,10 +178,17 @@ const checkAnswer = () => {
           </li>
         </ul>
         <form
-          class="w-full flex justify-center items-center"
+          class="relative w-full flex justify-center items-center"
           action=""
         >
+          <aside
+            class="absolute left-0 -top-7 text-red-600 text-sm font-light"
+            v-if="!isAnswerCorrect"
+          >
+            Проверьте корректность ввода фразы
+          </aside>
           <input
+            placeholder="Введите фразу..."
             @input="checkAnswer"
             v-model="answer"
             class="w-full bg-white border-[1px] rounded-md border-sky-400 focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
