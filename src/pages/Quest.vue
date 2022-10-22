@@ -31,6 +31,7 @@ const state = reactive({
   answer: '',
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
+  isSectionComplete: false,
   prevPhrases: [],
 });
 const {
@@ -40,6 +41,7 @@ const {
   answer,
   isAnswerCorrect,
   isAnswerFullfilled,
+  isSectionComplete,
   prevPhrases,
 } = toRefs(state);
 
@@ -101,19 +103,24 @@ const handleFormSubmit = () => {
     isAnswerFullfilled.value
   ) {
     console.log('SUBMIT_correct!!!');
-    if (
-      progress.value.phraseStep ==
-      currentModel.value.phrases.length - 1
-    ) {
-      completeModel();
-      return;
-    }
     completePhrase();
   }
 };
 
+const completeSection = () => {
+  console.log('COMPLETE SECTION');
+  isSectionComplete.value = true;
+};
+
 const completeModel = () => {
   console.log('COMPLETE MODEL');
+  if (
+    progress.value.modelStep ==
+    currentSection.value.models.length - 1
+  ) {
+    completeSection();
+    return;
+  }
   progress.value.phraseStep = 0;
   progress.value.modelStep += 1;
   currentModel.value =
@@ -124,12 +131,21 @@ const completeModel = () => {
     currentModel.value.phrases[
       progress.value.phraseStep
     ];
+  prevPhrases.value = [];
 
   resetAnswer();
 };
 
 const completePhrase = () => {
   console.log('COMPLETE PHRASE');
+  if (
+    progress.value.phraseStep ==
+    currentModel.value.phrases.length - 1
+  ) {
+    completeModel();
+    return;
+  }
+
   prevPhrases.value.push(currentPhrase.value);
   progress.value.phraseStep += 1;
   currentPhrase.value =
@@ -260,11 +276,30 @@ const resetAnswer = () => {
             type="text"
           />
           <button
-            class="absolute top-0 -right-20"
+            v-if="
+              isAnswerCorrect &&
+              isAnswerFullfilled
+            "
+            class="absolute -top-2 -right-40 text-white w-32 h-10 bg-emerald-400 rounded-md"
             type="submit"
           >
-            button
+            Дальше
           </button>
+          <aside
+            class="absolute -right-40 -top-10 text-xs flex gap-2 items-center text-emerald-400"
+            v-if="isSectionComplete"
+          >
+            <CheckBadgeIcon class="w-5" />
+            <span>Раздел завершен</span>
+          </aside>
+
+          <router-link
+            class="absolute -top-2 -right-72 text-sky-400"
+            v-if="isSectionComplete"
+            to="/collections"
+          >
+            в коллекцию</router-link
+          >
         </form>
       </div>
       <aside>help</aside>
