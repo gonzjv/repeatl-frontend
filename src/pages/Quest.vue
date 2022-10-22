@@ -31,6 +31,7 @@ const state = reactive({
   answer: '',
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
+  prevPhrases: [],
 });
 const {
   currentModel,
@@ -39,6 +40,7 @@ const {
   answer,
   isAnswerCorrect,
   isAnswerFullfilled,
+  prevPhrases,
 } = toRefs(state);
 
 const USER_ID = '4';
@@ -128,6 +130,7 @@ const completeModel = () => {
 
 const completePhrase = () => {
   console.log('COMPLETE PHRASE');
+  prevPhrases.value.push(currentPhrase.value);
   progress.value.phraseStep += 1;
   currentPhrase.value =
     currentModel.value.phrases[
@@ -185,11 +188,25 @@ const resetAnswer = () => {
         </div>
       </aside>
       <div class="w-6/12 flex flex-col gap-10">
-        <ul
+        <div
           class="h-80 border-[1px] border-sky-400 rounded-md flex flex-col gap-51 items-center"
         >
-          <li>{{ progress }}</li>
-          <li>
+          <!-- <p>{{ progress }}</p> -->
+          <ul
+            class="h-1/2 w-full flex flex-col gap-5 items-start justify-center p-20"
+          >
+            <li v-for="prev in prevPhrases">
+              <p class="font-extralight text-xs">
+                {{ prev.native }}
+              </p>
+              <p class="text-xs">
+                {{ prev.foreign }}
+              </p>
+            </li>
+          </ul>
+          <div
+            class="h-1/2 w-full flex flex-col items-start justify-center p-20"
+          >
             <p class="font-extralight">
               {{ currentPhrase.native }}
             </p>
@@ -223,8 +240,8 @@ const resetAnswer = () => {
                 {{ currentPhrase.foreign }}
               </span>
             </div>
-          </li>
-        </ul>
+          </div>
+        </div>
         <form
           @submit.prevent="handleFormSubmit"
           class="relative w-full flex justify-center items-center"
