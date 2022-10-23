@@ -37,24 +37,25 @@ console.log(
         </span>
       </h3>
       <ul
-        class="flex flex-col gap-4 w-full items-start pl-10"
+        class="flex flex-col gap-4 w-full items-start"
       >
         <li
+          class="w-full px-10"
           v-for="model in currentSection.models"
           :key="model.id"
         >
           <div
             class="py-4 flex gap-7 border-b-[1px] border-sky-400 w-full"
           >
-            <p class="text-sm">
+            <!-- <p class="text-sm">
               {{ model }}
-            </p>
+            </p> -->
             <ul
-              class="flex flex-col items-start gap-2"
+              class="flex flex-col items-start gap-2 w-full"
             >
               <li
                 v-for="phrase in model.phrases"
-                class=""
+                class="flex flex-col items-start w-full"
               >
                 <p class="font-extralight">
                   {{ phrase.native }}
