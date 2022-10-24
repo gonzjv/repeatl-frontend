@@ -12,7 +12,7 @@ const {
   currentCollection,
   currentSection,
 } = storeToRefs(courseStore);
-const { isSectionPopupDisplay } =
+const { isSectionPopupDisplay, isPopupDisplay } =
   storeToRefs(displayStore);
 
 const { modelSections } =
@@ -21,6 +21,7 @@ const { modelSections } =
 const handleButtonClick = (section) => {
   displayStore.$patch({
     isSectionPopupDisplay: true,
+    isPopupDisplay: true,
   });
   courseStore.$patch({
     currentSection: section,

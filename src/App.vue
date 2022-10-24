@@ -6,7 +6,7 @@ import Cover from './components/Cover.vue';
 import Popup from './components/Popup.vue';
 
 const store = useDisplayStore();
-const { isSectionPopupDisplay } =
+const { isSectionPopupDisplay, isPopupDisplay } =
   storeToRefs(store);
 </script>
 
@@ -14,7 +14,7 @@ const { isSectionPopupDisplay } =
   <Header />
   <router-view
     :class="
-      isSectionPopupDisplay &&
+      isPopupDisplay &&
       'blur-[2px] transition-all duration-500'
     "
   ></router-view>

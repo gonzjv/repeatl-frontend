@@ -11,15 +11,13 @@ const NAV_BTNS = [
 ];
 
 const store = useDisplayStore();
-const {
-  isNavLogoDisplay,
-  isSectionPopupDisplay,
-} = storeToRefs(store);
+const { isNavLogoDisplay, isPopupDisplay } =
+  storeToRefs(store);
 </script>
 <template>
   <header
     :class="
-      isSectionPopupDisplay &&
+      isPopupDisplay &&
       'blur-[2px] transition-all duration-500'
     "
     class="relative flex items-center justify-start gap-10 h-24 text-xl py-4"
@@ -52,9 +50,16 @@ const {
         :to="btn.route"
         >{{ btn.title }}</router-link
       >
-      <!-- <router-link to="/todayTasks"
-        >Задания на сегодня</router-link
-      > -->
     </nav>
+    <button
+      @click="
+        store.$patch({
+          isLoginPopupDisplay: true,
+          isPopupDisplay: true,
+        })
+      "
+    >
+      Login
+    </button>
   </header>
 </template>
