@@ -52,6 +52,7 @@ const { isNavLogoDisplay, isPopupDisplay } =
       >
     </nav>
     <button
+      class="p-[4px] bg-gradient-to-r from-cyan-400 via-yellow-200 to-pink-400 rounded-full"
       @click="
         store.$patch({
           isLoginPopupDisplay: true,
@@ -59,7 +60,11 @@ const { isNavLogoDisplay, isPopupDisplay } =
         })
       "
     >
-      Login
+      <p
+        class="text-basesm px-4 py-1 font-semibold rounded-full bg-white text-sky-400"
+      >
+        Вход
+      </p>
     </button>
   </header>
 </template>
