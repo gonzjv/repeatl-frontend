@@ -4,6 +4,7 @@ import { useCourseStore } from '../store/course';
 import { useDisplayStore } from '../store/display';
 import { reactive, toRefs } from 'vue';
 import { addUser } from '@/services/userService';
+import { loginUser } from '../services/userService';
 
 const displayStore = useDisplayStore();
 const courseStore = useCourseStore();
@@ -17,12 +18,25 @@ const state = reactive({
   email: '',
   password: '',
   newUser: {},
+  token: 'not token yet',
 });
-const { isLoginMode, email, password, newUser } =
-  toRefs(state);
+const {
+  isLoginMode,
+  email,
+  password,
+  newUser,
+  token,
+} = toRefs(state);
 
 const handleSubmit = async () => {
   if (isLoginMode.value) {
+    const user = {
+      email: email.value,
+      password: password.value,
+    };
+
+    token.value = await loginUser(user);
+    console.log('token', token.value);
   }
   if (!isLoginMode.value) {
     const user = {
@@ -42,6 +56,7 @@ const handleSubmit = async () => {
   <div
     class="py-5 flex flex-col justify-center gap-5 z-20 blur-0 bg-white shadow-lg absolute top-[12vh] left-[40vw] w-4/12 h-96 overflow-auto rounded-md"
   >
+    <p>{{ token }}</p>
     <form
       @submit.prevent="handleSubmit"
       class="w-full p-5 flex flex-col gap-7"

@@ -31,4 +31,22 @@ const addUser = async (user) => {
   }
 };
 
-export { getUser, addUser };
+const loginUser = async (user) => {
+  const url = `${API_URL}users/login`;
+  const reqData = user;
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(reqData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const token = await response.json();
+    return token;
+  } catch (error) {
+    console.log('Erorr:', error);
+  }
+};
+
+export { getUser, addUser, loginUser };
