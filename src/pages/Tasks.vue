@@ -19,9 +19,9 @@ let { coursesData, coursesWindowDisplay } =
   toRefs(state);
 
 onBeforeMount(async () => {
-  console.log('userStore.token', userStore.token);
+  console.log('userData', userStore.userData);
   coursesData.value = await getCourses(
-    userStore.token
+    userStore.userData.token
   );
 });
 

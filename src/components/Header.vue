@@ -2,6 +2,7 @@
 import logoImg from '@/assets/logo.svg';
 import { useDisplayStore } from '@/store/display';
 import { storeToRefs } from 'pinia';
+import { useUserStore } from '../store/user';
 
 const NAV_BTNS = [
   {
@@ -11,8 +12,11 @@ const NAV_BTNS = [
 ];
 
 const store = useDisplayStore();
+const userStore = useUserStore();
+
 const { isNavLogoDisplay, isPopupDisplay } =
   storeToRefs(store);
+const { userData } = storeToRefs(userStore);
 </script>
 <template>
   <header
@@ -61,9 +65,11 @@ const { isNavLogoDisplay, isPopupDisplay } =
       "
     >
       <p
-        class="text-basesm px-4 py-1 font-semibold rounded-full bg-white text-sky-400"
+        class="text-basesm px-4 py-1 rounded-full bg-white text-sky-400"
       >
-        Вход
+        {{
+          userData.email ? userData.email : 'Вход'
+        }}
       </p>
     </button>
   </header>

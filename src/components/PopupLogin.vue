@@ -3,21 +3,26 @@ import { reactive, toRefs } from 'vue';
 import { addUser } from '@/services/userService';
 import { loginUser } from '../services/userService';
 import { useUserStore } from '../store/user';
+import { useDisplayStore } from '../store/display';
+// import { useRouter } from 'vue-router';
 
+// const router = useRouter();
 const userStore = useUserStore();
+const displayStore = useDisplayStore();
 
 const state = reactive({
   isLoginMode: true,
   email: '',
   password: '',
   newUser: {},
+  isLoginFail: false,
 });
 const {
   isLoginMode,
   email,
   password,
   newUser,
-  token,
+  isLoginFail,
 } = toRefs(state);
 
 const handleSubmit = async () => {
@@ -27,11 +32,22 @@ const handleSubmit = async () => {
       password: password.value,
     };
 
-    const userData = await loginUser(user);
-    userStore.$patch({
-      token: userData.token,
-    });
-    console.log('userData', userData);
+    const response = await loginUser(user);
+    if (response.token) {
+      userStore.$patch({
+        token: response.token,
+        userData: response,
+      });
+      isLoginFail.value = false;
+      displayStore.$patch({
+        isPopupDisplay: false,
+        isLoginPopupDisplay: false,
+      });
+      // router.push('/tasks');
+    } else {
+      isLoginFail.value = true;
+    }
+    console.log('userData', response);
   }
   if (!isLoginMode.value) {
     const user = {
@@ -51,10 +67,9 @@ const handleSubmit = async () => {
   <div
     class="py-5 flex flex-col justify-center gap-5 z-20 blur-0 bg-white shadow-lg absolute top-[12vh] left-[40vw] w-4/12 h-96 overflow-auto rounded-md"
   >
-    <p>{{ token }}</p>
     <form
       @submit.prevent="handleSubmit"
-      class="w-full p-5 flex flex-col gap-7"
+      class="w-full p-10 flex flex-col gap-7"
       action=""
     >
       <input
@@ -77,13 +92,19 @@ const handleSubmit = async () => {
       />
       <button
         type="submit"
-        class="bg-gradient-to-r from-cyan-400 via-yellow-200 to-pink-400 rounded-full h-10 text-slate-400 font-bold"
+        class="relative bg-gradient-to-r from-cyan-400 via-yellow-200 to-pink-400 rounded-full h-10 text-slate-400 font-bold"
       >
         {{
           isLoginMode
             ? 'ВОЙТИ'
             : 'ЗАРЕГИСТРИРОВАТЬСЯ'
         }}
+        <p
+          v-if="isLoginFail"
+          class="absolute left-0 -top-7 font-extralight text-sm text-red-400"
+        >
+          Неверный емейл и/или пароль.
+        </p>
       </button>
     </form>
     <aside
