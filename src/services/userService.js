@@ -42,8 +42,8 @@ const loginUser = async (user) => {
         'Content-Type': 'application/json',
       },
     });
-    const token = await response.json();
-    return token;
+    const userData = await response.json();
+    return userData;
   } catch (error) {
     console.log('Erorr:', error);
   }

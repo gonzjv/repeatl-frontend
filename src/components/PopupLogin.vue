@@ -27,11 +27,11 @@ const handleSubmit = async () => {
       password: password.value,
     };
 
-    const token = await loginUser(user);
+    const userData = await loginUser(user);
     userStore.$patch({
-      token: token,
+      token: userData.token,
     });
-    console.log('token', token);
+    console.log('userData', userData);
   }
   if (!isLoginMode.value) {
     const user = {
