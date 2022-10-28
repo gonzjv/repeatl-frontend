@@ -1,24 +1,16 @@
 <script setup>
-import { storeToRefs } from 'pinia';
-import { useCourseStore } from '../store/course';
-import { useDisplayStore } from '../store/display';
 import { reactive, toRefs } from 'vue';
 import { addUser } from '@/services/userService';
 import { loginUser } from '../services/userService';
+import { useUserStore } from '../store/user';
 
-const displayStore = useDisplayStore();
-const courseStore = useCourseStore();
-const { isLoginPopupDisplay } =
-  storeToRefs(displayStore);
-const { currentSection, currentCollection } =
-  storeToRefs(courseStore);
+const userStore = useUserStore();
 
 const state = reactive({
   isLoginMode: true,
   email: '',
   password: '',
   newUser: {},
-  token: 'not token yet',
 });
 const {
   isLoginMode,
@@ -35,8 +27,11 @@ const handleSubmit = async () => {
       password: password.value,
     };
 
-    token.value = await loginUser(user);
-    console.log('token', token.value);
+    const token = await loginUser(user);
+    userStore.$patch({
+      token: token,
+    });
+    console.log('token', token);
   }
   if (!isLoginMode.value) {
     const user = {

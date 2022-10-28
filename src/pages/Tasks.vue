@@ -4,30 +4,29 @@ import {
   reactive,
   toRefs,
 } from 'vue';
-import {
-  getCourses,
-  getCollections,
-} from '@/services/apiService';
-import Collection from '../components/Collection.vue';
+import { getCourses } from '@/services/apiService';
 import { useCourseStore } from '@/store/course';
 import { storeToRefs } from 'pinia';
+import { useUserStore } from '../store/user';
+
 let state = reactive({
   coursesData: [],
   collectionsData: [],
   coursesWindowDisplay: true,
 });
 
-let {
-  coursesData,
-  collectionsData,
-  coursesWindowDisplay,
-} = toRefs(state);
+let { coursesData, coursesWindowDisplay } =
+  toRefs(state);
 
 onBeforeMount(async () => {
-  coursesData.value = await getCourses();
+  console.log('userStore.token', userStore.token);
+  coursesData.value = await getCourses(
+    userStore.token
+  );
 });
 
 const store = useCourseStore();
+const userStore = useUserStore();
 const { currentCourse } = storeToRefs(store);
 
 const handleCourseSwitch = async (course) => {
