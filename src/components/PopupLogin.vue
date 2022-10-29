@@ -35,8 +35,8 @@ const handleSubmit = async () => {
     const response = await loginUser(user);
     if (response.token) {
       userStore.$patch({
-        token: response.token,
         userData: response,
+        isUserLoggedIn: true,
       });
       isLoginFail.value = false;
       displayStore.$patch({

@@ -16,7 +16,8 @@ const userStore = useUserStore();
 
 const { isNavLogoDisplay, isPopupDisplay } =
   storeToRefs(store);
-const { userData } = storeToRefs(userStore);
+const { userData, isUserLoggedIn } =
+  storeToRefs(userStore);
 </script>
 <template>
   <header
@@ -45,6 +46,7 @@ const { userData } = storeToRefs(userStore);
         >Главная</router-link
       >
       <router-link
+        v-if="isUserLoggedIn"
         @click="
           store.$patch({ isNavLogoDisplay: true })
         "
@@ -68,7 +70,7 @@ const { userData } = storeToRefs(userStore);
         class="text-basesm px-4 py-1 rounded-full bg-white text-sky-400"
       >
         {{
-          userData.email ? userData.email : 'Вход'
+          isUserLoggedIn ? userData.email : 'Вход'
         }}
       </p>
     </button>
