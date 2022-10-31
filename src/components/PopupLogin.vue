@@ -17,6 +17,7 @@ const state = reactive({
   password: '',
   newUser: {},
   isLoginFail: false,
+  isSignupSuccess: false,
 });
 const {
   isLoginMode,
@@ -24,6 +25,7 @@ const {
   password,
   newUser,
   isLoginFail,
+  isSignupSuccess,
 } = toRefs(state);
 
 const handleSubmit = async () => {
@@ -60,6 +62,7 @@ const handleSubmit = async () => {
     const createdUser = await addUser(user);
     if (createdUser) {
       newUser.value = createdUser;
+      isSignupSuccess.value = true;
     }
   }
 };
@@ -115,7 +118,7 @@ const handleSubmit = async () => {
     >
       <div
         class="flex text-justify text-emerald-400 font-light w-full"
-        v-if="newUser.email"
+        v-if="isSignupSuccess"
       >
         <p class="w-2/3">
           Добро пожаловать, {{ newUser.email }}.
@@ -141,7 +144,10 @@ const handleSubmit = async () => {
         <button
           class="text-sky-400"
           v-if="!isLoginMode"
-          @click="isLoginMode = true"
+          @click="
+            isLoginMode = true;
+            isSignupSuccess = false;
+          "
         >
           Вход
         </button>
