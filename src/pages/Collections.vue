@@ -10,6 +10,7 @@ import { storeToRefs } from 'pinia';
 
 import Collection from '../components/Collection.vue';
 import { getCollections } from '../services/apiService';
+import { useUserStore } from '../store/user';
 
 let state = reactive({
   collectionsData: [],
@@ -18,11 +19,13 @@ let state = reactive({
 let { collectionsData } = toRefs(state);
 
 const store = useCourseStore();
+const userStore = useUserStore();
 const { currentCourse } = storeToRefs(store);
 
 onBeforeMount(async () => {
   collectionsData.value = await getCollections(
-    currentCourse.value.id
+    currentCourse.value.id,
+    userStore.userData.token
   );
 });
 </script>

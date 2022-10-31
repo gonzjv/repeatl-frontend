@@ -17,11 +17,19 @@ const getCourses = async (token) => {
   }
 };
 
-const getCollections = async (courseId) => {
+const getCollections = async (
+  courseId,
+  token
+) => {
   try {
-    const response = await fetch(
-      `${API_URL}collections/${courseId}`
-    );
+    const url = `${API_URL}collections/${courseId}`;
+    const bearerToken = 'Bearer ' + token;
+    const myHeaders = {
+      Authorization: bearerToken,
+    };
+    const response = await fetch(url, {
+      headers: myHeaders,
+    });
     const data = await response.json();
     return data;
   } catch (error) {

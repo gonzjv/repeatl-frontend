@@ -14,8 +14,10 @@ import {
   InformationCircleIcon,
   CheckBadgeIcon,
 } from '@heroicons/vue/24/outline';
+import { useUserStore } from '../store/user';
 
 const courseStore = useCourseStore();
+const userStore = useUserStore();
 const {
   currentCourse,
   currentSection,
@@ -45,7 +47,7 @@ const {
   prevPhrases,
 } = toRefs(state);
 
-const USER_ID = '4';
+const USER_ID = '1';
 
 onBeforeMount(async () => {
   progress.value = await getProgress(
@@ -63,7 +65,8 @@ onBeforeMount(async () => {
       subCollectionId: currentCollection.value.id,
     };
     progress.value = await createProgress(
-      initProgress
+      initProgress,
+      userStore.userData.token
     );
   }
   const initModel =

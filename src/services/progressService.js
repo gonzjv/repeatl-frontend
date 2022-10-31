@@ -15,18 +15,24 @@ const getProgress = async (
   }
 };
 
-const createProgress = async (progress) => {
-  const options = {};
+const createProgress = async (
+  progress,
+  token
+) => {
+  const bearerToken = 'Bearer ' + token;
+  const myHeaders = {
+    'Content-Type': 'application/json',
+    Authorization: bearerToken,
+  };
   const url = `${API_URL}progressModels/`;
   const reqData = progress;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(reqData),
+    headers: myHeaders,
+  };
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(reqData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(url, options);
     const data = await response.json();
     console.log('response', data);
     return data;
