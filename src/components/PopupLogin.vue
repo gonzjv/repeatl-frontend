@@ -4,6 +4,7 @@ import { addUser } from '@/services/userService';
 import { loginUser } from '../services/userService';
 import { useUserStore } from '../store/user';
 import { useDisplayStore } from '../store/display';
+import { ArrowLongDownIcon } from '@heroicons/vue/24/outline';
 // import { useRouter } from 'vue-router';
 
 // const router = useRouter();
@@ -65,7 +66,7 @@ const handleSubmit = async () => {
 </script>
 <template>
   <div
-    class="py-5 flex flex-col justify-center gap-5 z-20 blur-0 bg-white shadow-lg absolute top-[12vh] left-[40vw] w-4/12 h-96 overflow-auto rounded-md"
+    class="py-5 flex flex-col justify-center gap-5 z-20 blur-0 bg-white shadow-lg absolute top-[12vh] left-[40vw] w-4/12 h-[500px] overflow-auto rounded-md"
   >
     <form
       @submit.prevent="handleSubmit"
@@ -73,12 +74,14 @@ const handleSubmit = async () => {
       action=""
     >
       <input
+        @input="isLoginFail = false"
         v-model="email"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
         type="text"
         placeholder="Эл. почта"
       />
       <input
+        @input="isLoginFail = false"
         v-model="password"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
         type="text"
@@ -110,13 +113,16 @@ const handleSubmit = async () => {
     <aside
       class="flex flex-col gap-5 justify-center items-center px-5"
     >
-      <p
-        class="text-emerald-400 font-light"
+      <div
+        class="flex text-justify text-emerald-400 font-light w-full"
         v-if="newUser.email"
       >
-        Добро пожаловать, {{ newUser.email }}.
-        Можете смело нажать
-      </p>
+        <p class="w-2/3">
+          Добро пожаловать, {{ newUser.email }}.
+          Можете смело нажать
+        </p>
+        <ArrowLongDownIcon class="w-1/6" />
+      </div>
       <div class="flex gap-5 items-center">
         <p class="text-xs font-extralight">
           {{
