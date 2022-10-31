@@ -69,7 +69,8 @@ onBeforeMount(async () => {
       modelStep: 0,
       phraseStep: 0,
       sectionStep: 0,
-      subCollectionId: currentCollection.value.id,
+      subCollectionId:
+        currentSubCollection.value.id,
     };
     console.log('userData', userStore.userData);
     progress.value = await createProgress(
