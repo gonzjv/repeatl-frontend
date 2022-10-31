@@ -9,6 +9,7 @@ import {
 import {
   getProgress,
   createProgress,
+  updateProgress,
 } from '../services/progressService';
 import {
   InformationCircleIcon,
@@ -17,13 +18,15 @@ import {
 import { useUserStore } from '../store/user';
 
 const courseStore = useCourseStore();
-const userStore = useUserStore();
 const {
   currentCourse,
   currentSection,
   currentCollection,
   currentSubCollection,
 } = storeToRefs(courseStore);
+
+const userStore = useUserStore();
+const { userData } = userStore;
 
 const state = reactive({
   currentModel: currentSection.value.models[0],
@@ -47,35 +50,46 @@ const {
   prevPhrases,
 } = toRefs(state);
 
-const USER_ID = '1';
-
 onBeforeMount(async () => {
   progress.value = await getProgress(
     currentSubCollection.value.id,
-    USER_ID
+    userData.id,
+    userData.token
+  );
+
+  console.log(
+    'progress before mount',
+    progress.value
   );
   if (!progress.value.id) {
     console.log('progress not found');
 
     const initProgress = {
-      userId: USER_ID,
+      userId: userData.id,
       modelStep: 0,
       phraseStep: 0,
       sectionStep: 0,
       subCollectionId: currentCollection.value.id,
     };
+    console.log('userData', userStore.userData);
     progress.value = await createProgress(
       initProgress,
-      userStore.userData.token
+      userData.token
     );
   }
+  // console.log('progress', progress.value);
   const initModel =
     currentSection.value.models[
       progress.value.modelStep
     ];
 
   currentModel.value = initModel;
-  console.log('currentModel', currentModel.value);
+  currentPhrase.value =
+    currentModel.value.phrases[
+      progress.value.phraseStep
+    ];
+
+  // console.log('currentModel', currentModel.value);
 });
 
 const checkAnswer = () => {
@@ -115,7 +129,7 @@ const completeSection = () => {
   isSectionComplete.value = true;
 };
 
-const completeModel = () => {
+const completeModel = async () => {
   console.log('COMPLETE MODEL');
   if (
     progress.value.modelStep ==
@@ -126,6 +140,11 @@ const completeModel = () => {
   }
   progress.value.phraseStep = 0;
   progress.value.modelStep += 1;
+  await updateProgress(
+    userData.token,
+    progress.value
+  );
+
   currentModel.value =
     currentSection.value.models[
       progress.value.modelStep
@@ -139,7 +158,7 @@ const completeModel = () => {
   resetAnswer();
 };
 
-const completePhrase = () => {
+const completePhrase = async () => {
   console.log('COMPLETE PHRASE');
   if (
     progress.value.phraseStep ==
@@ -151,6 +170,11 @@ const completePhrase = () => {
 
   prevPhrases.value.push(currentPhrase.value);
   progress.value.phraseStep += 1;
+  console.log('progress.value', progress.value);
+  await updateProgress(
+    userData.token,
+    progress.value
+  );
   currentPhrase.value =
     currentModel.value.phrases[
       progress.value.phraseStep
