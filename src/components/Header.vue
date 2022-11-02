@@ -16,7 +16,7 @@ const userStore = useUserStore();
 
 const { isNavLogoDisplay, isPopupDisplay } =
   storeToRefs(store);
-const { userData, isUserLoggedIn } =
+const { userData, isUserLoggedIn, isAdminHere } =
   storeToRefs(userStore);
 </script>
 <template>
@@ -56,6 +56,7 @@ const { userData, isUserLoggedIn } =
         :to="btn.route"
         >{{ btn.title }}</router-link
       >
+      <p v-if="isAdminHere">admin is here!!!</p>
     </nav>
     <button
       class="p-[4px] bg-gradient-to-r from-cyan-400 via-yellow-200 to-pink-400 rounded-full"
@@ -67,7 +68,7 @@ const { userData, isUserLoggedIn } =
       "
     >
       <p
-        class="text-basesm px-4 py-1 rounded-full bg-white text-sky-400"
+        class="text-base px-4 py-1 rounded-full bg-white text-sky-400"
       >
         {{
           isUserLoggedIn ? userData.email : 'Вход'

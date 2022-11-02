@@ -4,5 +4,6 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     userData: {},
     isUserLoggedIn: false,
+    isAdminHere: false,
   }),
 });

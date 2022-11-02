@@ -28,42 +28,54 @@ const {
   isSignupSuccess,
 } = toRefs(state);
 
+const signIn = async () => {
+  const user = {
+    email: email.value,
+    password: password.value,
+  };
+
+  const response = await loginUser(user);
+  if (response.token) {
+    userStore.$patch({
+      userData: response,
+      isUserLoggedIn: true,
+    });
+
+    response.role == 'admin' &&
+      userStore.$patch({ isAdminHere: true });
+
+    isLoginFail.value = false;
+    displayStore.$patch({
+      isPopupDisplay: false,
+      isLoginPopupDisplay: false,
+    });
+    // router.push('/tasks');
+  } else {
+    isLoginFail.value = true;
+  }
+  console.log('userData', response);
+};
+
+const signUp = async () => {
+  const user = {
+    email: email.value,
+    password: password.value,
+    role: 'user',
+  };
+
+  const createdUser = await addUser(user);
+  if (createdUser) {
+    newUser.value = createdUser;
+    isSignupSuccess.value = true;
+  }
+};
+
 const handleSubmit = async () => {
   if (isLoginMode.value) {
-    const user = {
-      email: email.value,
-      password: password.value,
-    };
-
-    const response = await loginUser(user);
-    if (response.token) {
-      userStore.$patch({
-        userData: response,
-        isUserLoggedIn: true,
-      });
-      isLoginFail.value = false;
-      displayStore.$patch({
-        isPopupDisplay: false,
-        isLoginPopupDisplay: false,
-      });
-      // router.push('/tasks');
-    } else {
-      isLoginFail.value = true;
-    }
-    console.log('userData', response);
+    signIn();
   }
   if (!isLoginMode.value) {
-    const user = {
-      email: email.value,
-      password: password.value,
-      role: 'user',
-    };
-
-    const createdUser = await addUser(user);
-    if (createdUser) {
-      newUser.value = createdUser;
-      isSignupSuccess.value = true;
-    }
+    signUp();
   }
 };
 </script>
