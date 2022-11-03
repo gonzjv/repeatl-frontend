@@ -3,6 +3,7 @@ import logoImg from '@/assets/logo.svg';
 import { useDisplayStore } from '@/store/display';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '../store/user';
+import { Cog8ToothIcon } from '@heroicons/vue/24/outline';
 
 const NAV_BTNS = [
   {
@@ -56,7 +57,14 @@ const { userData, isUserLoggedIn, isAdminHere } =
         :to="btn.route"
         >{{ btn.title }}</router-link
       >
-      <p v-if="isAdminHere">admin is here!!!</p>
+      <router-link
+        v-if="isAdminHere"
+        to="/controlBoard"
+        class="flex items-center justify-center"
+      >
+        <cog8-tooth-icon class="w-10" />
+        <p>Панель управления</p>
+      </router-link>
     </nav>
     <button
       class="p-[4px] bg-gradient-to-r from-cyan-400 via-yellow-200 to-pink-400 rounded-full"
