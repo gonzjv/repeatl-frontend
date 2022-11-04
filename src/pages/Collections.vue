@@ -9,7 +9,7 @@ import { useCourseStore } from '@/store/course';
 import { storeToRefs } from 'pinia';
 
 import Collection from '../components/Collection.vue';
-import { getCollections } from '../services/apiService';
+import { getCollections } from '../services/collectionService';
 import { useUserStore } from '../store/user';
 
 let state = reactive({

@@ -59,6 +59,9 @@ const { userData, isUserLoggedIn, isAdminHere } =
       >
       <router-link
         v-if="isAdminHere"
+        @click="
+          store.$patch({ isNavLogoDisplay: true })
+        "
         to="/controlBoard"
         class="w-72 flex items-center justify-center gap-3 hover:border-2 border-sky-100 rounded-lg"
         active-class="bg-sky-100 rounded-lg"

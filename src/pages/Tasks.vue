@@ -4,10 +4,10 @@ import {
   reactive,
   toRefs,
 } from 'vue';
-import { getCourses } from '@/services/apiService';
 import { useCourseStore } from '@/store/course';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '../store/user';
+import { getCourses } from '../services/courseService';
 
 let state = reactive({
   coursesData: [],
