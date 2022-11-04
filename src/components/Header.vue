@@ -41,7 +41,7 @@ const { userData, isUserLoggedIn, isAdminHere } =
             isNavLogoDisplay: false,
           })
         "
-        class="w-56 h-10 flex justify-center items-center"
+        class="w-56 h-10 flex justify-center items-center hover:border-2 border-sky-100 rounded-lg"
         active-class="bg-sky-100 rounded-lg"
         to="/"
         >Главная</router-link
@@ -52,7 +52,7 @@ const { userData, isUserLoggedIn, isAdminHere } =
           store.$patch({ isNavLogoDisplay: true })
         "
         v-for="btn in NAV_BTNS"
-        class="w-56 h-10 flex justify-center items-center"
+        class="w-56 h-10 flex justify-center items-center hover:border-2 border-sky-100 rounded-lg"
         active-class="bg-sky-100 rounded-lg"
         :to="btn.route"
         >{{ btn.title }}</router-link
@@ -60,9 +60,10 @@ const { userData, isUserLoggedIn, isAdminHere } =
       <router-link
         v-if="isAdminHere"
         to="/controlBoard"
-        class="flex items-center justify-center"
+        class="w-72 flex items-center justify-center gap-3 hover:border-2 border-sky-100 rounded-lg"
+        active-class="bg-sky-100 rounded-lg"
       >
-        <cog8-tooth-icon class="w-10" />
+        <cog8-tooth-icon class="w-6" />
         <p>Панель управления</p>
       </router-link>
     </nav>
