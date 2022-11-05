@@ -4,12 +4,14 @@ import { useCourseStore } from '../store/course';
 import { useDisplayStore } from '../store/display';
 import PopupLogin from './PopupLogin.vue';
 import PopupSection from './PopupSection.vue';
+import PopupBoard from './PopupBoard.vue';
 
 const displayStore = useDisplayStore();
 const courseStore = useCourseStore();
 const {
   isSectionPopupDisplay,
   isLoginPopupDisplay,
+  isBoardPopupDisplay,
 } = storeToRefs(displayStore);
 </script>
 <template>
@@ -24,6 +26,7 @@ const {
         v-if="isSectionPopupDisplay"
       />
       <PopupLogin v-if="isLoginPopupDisplay" />
+      <PopupBoard v-if="isBoardPopupDisplay" />
     </aside>
   </Transition>
 </template>

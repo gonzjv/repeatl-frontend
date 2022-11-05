@@ -8,6 +8,7 @@ export const useDisplayStore = defineStore(
       isPopupDisplay: false,
       isSectionPopupDisplay: false,
       isLoginPopupDisplay: false,
+      isBoardPopupDisplay: false,
     }),
   }
 );

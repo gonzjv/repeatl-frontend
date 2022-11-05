@@ -3,11 +3,7 @@ import { storeToRefs } from 'pinia';
 import { useDisplayStore } from '../store/display';
 
 const store = useDisplayStore();
-const {
-  isPopupDisplay,
-  isLoginPopupDisplay,
-  isSectionPopupDisplay,
-} = storeToRefs(store);
+const { isPopupDisplay } = storeToRefs(store);
 </script>
 <template>
   <aside
@@ -16,6 +12,7 @@ const {
         isPopupDisplay: false,
         isLoginPopupDisplay: false,
         isSectionPopupDisplay: false,
+        isBoardPopupDisplay: false,
       })
     "
     v-if="isPopupDisplay"

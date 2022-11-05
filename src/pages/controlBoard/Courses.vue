@@ -4,29 +4,52 @@ import {
   reactive,
   toRefs,
 } from 'vue';
-import { getCourses } from '../../services/courseService';
+import {
+  getCourses,
+  deleteCourse,
+} from '../../services/courseService';
 import { useUserStore } from '../../store/user';
+import { useControlBoardStore } from '@/store/controlBoard';
 import {
   ArrowLeftIcon,
   SquaresPlusIcon,
   Squares2X2Icon,
+  XMarkIcon,
 } from '@heroicons/vue/24/outline';
+import { useDisplayStore } from '../../store/display';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
+const { token } = userStore.userData;
 
-let state = reactive({
-  courses: [],
-});
+const displayStore = useDisplayStore();
+const { isBoardPopupDisplay } =
+  storeToRefs(displayStore);
 
-let { courses } = toRefs(state);
+const controlBoardStore = useControlBoardStore();
+const { courses } = storeToRefs(
+  controlBoardStore
+);
+
+let state = reactive({});
+
+// let { courses } = toRefs(state);
+
 onBeforeMount(async () => {
   console.log('userData', userStore.userData);
-  courses.value = await getCourses(
-    userStore.userData.token
-  );
+  controlBoardStore.$patch({
+    courses: await getCourses(token),
+  });
 });
 
-const test = 'test';
+const handleDeleteClick = async (course) => {
+  const deletedCourse = await deleteCourse(
+    token,
+    course
+  );
+  courses.value = await getCourses(token);
+  console.log('delCourse', deletedCourse);
+};
 </script>
 <template>
   <main class="flex flex-col gap-10">
@@ -42,7 +65,7 @@ const test = 'test';
     <section class="w-full flex">
       <div class="flex flex-col gap-5 w-1/2">
         <h2
-          class="flex gap-2 justify-start w-2/12 text-xl border-b-2 border-yellow-400"
+          class="py-2 flex gap-2 justify-start w-2/12 text-xl border-b-2 border-yellow-400"
         >
           <Squares2X2Icon class="w-5" />
           Курсы:
@@ -53,11 +76,22 @@ const test = 'test';
             v-for="course in courses"
           >
             <button>{{ course.name }}</button>
+            <button
+              @click="handleDeleteClick(course)"
+            >
+              <XMarkIcon class="w-5" />
+            </button>
           </li>
         </ul>
       </div>
       <div class="flex w-1/2">
         <button
+          @click="
+            displayStore.$patch({
+              isBoardPopupDisplay: true,
+              isPopupDisplay: true,
+            })
+          "
           class="shadow-sm hover:shadow-lg flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
         >
           <SquaresPlusIcon class="w-5" />
