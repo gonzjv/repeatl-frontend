@@ -89,6 +89,7 @@ const handleCollectionClick = async (
             displayStore.$patch({
               isBoardPopupDisplay: true,
               isPopupDisplay: true,
+              popupElement: 'addCollection',
             })
           "
           class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
