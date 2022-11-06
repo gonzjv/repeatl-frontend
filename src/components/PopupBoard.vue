@@ -45,10 +45,11 @@ const handleSubmit = async () => {
       action=""
     >
       <input
+        required
         v-model="courseName"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
         type="text"
-        placeholder="Название"
+        placeholder="Название курса"
       />
       <button
         type="submit"

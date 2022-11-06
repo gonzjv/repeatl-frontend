@@ -65,21 +65,27 @@ const handleDeleteClick = async (course) => {
     <section class="w-full flex">
       <div class="flex flex-col gap-5 w-1/2">
         <h2
-          class="py-2 flex gap-2 justify-start w-2/12 text-xl border-b-2 border-yellow-400"
+          class="py-2 flex gap-2 justify-start w-2/12 text-xl border-b-2 border-yellow-300"
         >
           <Squares2X2Icon class="w-5" />
           Курсы:
         </h2>
         <ul class="flex flex-col gap-3">
           <li
-            class="flex justify-start"
+            class="flex justify-start items-center gap-5 border-l-2 border-transparent hover:border-yellow-300 hover:border-l-2"
             v-for="course in courses"
           >
-            <button>{{ course.name }}</button>
+            <button
+              class="shadow-lg p-3 rounded-lg"
+            >
+              {{ course.name }}
+            </button>
             <button
               @click="handleDeleteClick(course)"
             >
-              <XMarkIcon class="w-5" />
+              <XMarkIcon
+                class="w-5 hover:text-red-600"
+              />
             </button>
           </li>
         </ul>
