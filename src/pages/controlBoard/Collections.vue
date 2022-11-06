@@ -1,15 +1,6 @@
 <script setup>
-import {
-  onBeforeMount,
-  reactive,
-  toRefs,
-} from 'vue';
-import {
-  getCourses,
-  deleteCourse,
-} from '../../services/courseService';
-import { useUserStore } from '../../store/user';
-import { useControlBoardStore } from '@/store/controlBoard';
+import { storeToRefs } from 'pinia';
+import { useControlBoardStore } from '../../store/controlBoard';
 import {
   ArrowLeftIcon,
   SquaresPlusIcon,
@@ -17,49 +8,31 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/24/outline';
 import { useDisplayStore } from '../../store/display';
-import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router';
-import { getCollections } from '../../services/collectionService';
-
-const userStore = useUserStore();
-const { token } = userStore.userData;
 
 const displayStore = useDisplayStore();
-const { isBoardPopupDisplay } =
-  storeToRefs(displayStore);
-
 const controlBoardStore = useControlBoardStore();
-const { courses } = storeToRefs(
+const { collections } = storeToRefs(
   controlBoardStore
 );
 
-let state = reactive({});
-// let { courses } = toRefs(state);
-
-const router = useRouter();
-
-onBeforeMount(async () => {
-  controlBoardStore.$patch({
-    courses: await getCourses(token),
-  });
-});
-
 const handleDeleteClick = async (course) => {
-  const deletedCourse = await deleteCourse(
-    token,
-    course
-  );
-  courses.value = await getCourses(token);
+  //   const deletedCollection = await delete(
+  //     token,
+  //     course
+  //   );
+  //   courses.value = await getCourses(token);
 };
 
-const handleCourseClick = async (courseId) => {
-  controlBoardStore.$patch({
-    collections: await getCollections(
-      courseId,
-      token
-    ),
-  });
-  router.push('/controlBoard/collections');
+const handleCollectionClick = async (
+  courseId
+) => {
+  //   controlBoardStore.$patch({
+  //     collections: await getCollections(
+  //       courseId,
+  //       token
+  //     ),
+  //   });
+  //   router.push('/controlBoard/collections');
 };
 </script>
 <template>
@@ -67,10 +40,10 @@ const handleCourseClick = async (courseId) => {
     <nav class="w-full flex justify-start">
       <router-link
         class="text-sky-400 flex gap-3 hover:font-extrabold"
-        to="/controlBoard"
+        to="/controlBoard/courses"
       >
         <ArrowLeftIcon class="w-5" />
-        <p>назад в панель управления</p>
+        <p>назад к курсам</p>
       </router-link>
     </nav>
     <section class="w-full flex">
@@ -81,23 +54,27 @@ const handleCourseClick = async (courseId) => {
           class="py-2 flex gap-2 justify-start w-2/12 text-xl border-b-2 border-yellow-300"
         >
           <Squares2X2Icon class="w-5" />
-          Курсы:
+          Коллекции:
         </h2>
         <ul class="flex flex-col gap-3">
           <li
             class="flex justify-start items-center gap-5 border-l-2 border-transparent hover:border-yellow-300 hover:border-l-2"
-            v-for="course in courses"
+            v-for="collection in collections"
           >
             <button
               @click="
-                handleCourseClick(course.id)
+                handleCollectionClick(
+                  collection.id
+                )
               "
               class="shadow-lg p-3 rounded-lg active:shadow-md"
             >
-              {{ course.name }}
+              {{ collection.name }}
             </button>
             <button
-              @click="handleDeleteClick(course)"
+              @click="
+                handleDeleteClick(collection)
+              "
             >
               <XMarkIcon
                 class="w-5 hover:text-red-600"
@@ -112,15 +89,26 @@ const handleCourseClick = async (courseId) => {
             displayStore.$patch({
               isBoardPopupDisplay: true,
               isPopupDisplay: true,
-              popupElement: 'addCourse',
             })
           "
           class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
         >
           <SquaresPlusIcon class="w-5" />
-          <p>Создать курс</p>
+          <p>Создать коллекцию</p>
         </button>
       </div>
     </section>
+  </main>
+
+  <main>
+    <section>
+      <h2>Коллекции</h2>
+      <ul>
+        <li v-for="collection in collections">
+          {{ collection }}
+        </li>
+      </ul>
+    </section>
+    <section></section>
   </main>
 </template>

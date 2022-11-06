@@ -5,6 +5,7 @@ export const useControlBoardStore = defineStore(
   {
     state: () => ({
       courses: [],
+      collections: [],
     }),
   }
 );

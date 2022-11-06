@@ -5,12 +5,15 @@ import { addCourse } from '@/services/courseService.js';
 import { useControlBoardStore } from '../store/controlBoard';
 import { getCourses } from '../services/courseService';
 import { useDisplayStore } from '../store/display';
+import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 const { token } = userStore.userData;
 
 const controlBoardStore = useControlBoardStore();
 const displayStore = useDisplayStore();
+const { popupElement } =
+  storeToRefs(displayStore);
 
 const state = reactive({
   courseName: '',
@@ -36,13 +39,18 @@ const handleSubmit = async () => {
 };
 </script>
 <template>
-  <div
-    class="py-5 flex flex-col justify-center gap-5 z-20 blur-0 bg-white shadow-lg absolute top-[12vh] left-[40vw] w-4/12 h-[500px] overflow-auto rounded-md"
+  <aside
+    v-if="popupElement == 'addCourse'"
+    class="py-5 flex flex-col justify-center items-center gap-5 z-20 blur-0 bg-white shadow-lg absolute top-[12vh] left-[40vw] w-4/12 h-[500px] overflow-auto rounded-md"
   >
+    <h2
+      class="text-xl border-b-2 border-yellow-300 w-1/2 p-2"
+    >
+      Создание курса
+    </h2>
     <form
       @submit.prevent="handleSubmit"
       class="w-full p-10 flex flex-col gap-7"
-      action=""
     >
       <input
         required
@@ -58,5 +66,5 @@ const handleSubmit = async () => {
         ДОБАВИТЬ
       </button>
     </form>
-  </div>
+  </aside>
 </template>

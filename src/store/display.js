@@ -9,6 +9,7 @@ export const useDisplayStore = defineStore(
       isSectionPopupDisplay: false,
       isLoginPopupDisplay: false,
       isBoardPopupDisplay: false,
+      popupElement: '',
     }),
   }
 );
