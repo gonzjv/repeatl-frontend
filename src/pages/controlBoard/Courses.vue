@@ -55,7 +55,7 @@ const handleCourseClick = async (course) => {
   controlBoardStore.$patch({
     activeCourse: course,
   });
-  router.push('/controlBoard/collections');
+  router.push('/controlBoard/collectionList');
 };
 </script>
 <template>
