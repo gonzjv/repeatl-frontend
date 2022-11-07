@@ -3,17 +3,31 @@ import { storeToRefs } from 'pinia';
 import { useControlBoardStore } from '../../store/controlBoard';
 import {
   ArrowLeftIcon,
-  SquaresPlusIcon,
-  Squares2X2Icon,
+  RectangleStackIcon,
   XMarkIcon,
+  PlusCircleIcon,
 } from '@heroicons/vue/24/outline';
 import { useDisplayStore } from '../../store/display';
+import { onBeforeMount } from 'vue';
+import { getCollections } from '../../services/collectionService';
+import { useUserStore } from '../../store/user';
 
 const displayStore = useDisplayStore();
 const controlBoardStore = useControlBoardStore();
-const { collections } = storeToRefs(
+const { collections, activeCourse } = storeToRefs(
   controlBoardStore
 );
+const userStore = useUserStore();
+const { token } = userStore.userData;
+
+onBeforeMount(async () => {
+  controlBoardStore.$patch({
+    collections: await getCollections(
+      activeCourse.value.id,
+      token
+    ),
+  });
+});
 
 const handleDeleteClick = async (course) => {
   //   const deletedCollection = await delete(
@@ -51,9 +65,9 @@ const handleCollectionClick = async (
         class="flex flex-col gap-5 w-1/2 shadow-md p-5"
       >
         <h2
-          class="py-2 flex gap-2 justify-start w-2/12 text-xl border-b-2 border-yellow-300"
+          class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
         >
-          <Squares2X2Icon class="w-5" />
+          <RectangleStackIcon class="w-5" />
           Коллекции:
         </h2>
         <ul class="flex flex-col gap-3">
@@ -94,14 +108,11 @@ const handleCollectionClick = async (
           "
           class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
         >
-          <SquaresPlusIcon class="w-5" />
+          <PlusCircleIcon class="w-5" />
           <p>Создать коллекцию</p>
         </button>
       </div>
     </section>
-  </main>
-
-  <main>
     <section>
       <h2>Коллекции</h2>
       <ul>
@@ -110,6 +121,5 @@ const handleCollectionClick = async (
         </li>
       </ul>
     </section>
-    <section></section>
   </main>
 </template>

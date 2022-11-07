@@ -19,7 +19,6 @@ import {
 import { useDisplayStore } from '../../store/display';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
-import { getCollections } from '../../services/collectionService';
 
 const userStore = useUserStore();
 const { token } = userStore.userData;
@@ -52,12 +51,9 @@ const handleDeleteClick = async (course) => {
   courses.value = await getCourses(token);
 };
 
-const handleCourseClick = async (courseId) => {
+const handleCourseClick = async (course) => {
   controlBoardStore.$patch({
-    collections: await getCollections(
-      courseId,
-      token
-    ),
+    activeCourse: course,
   });
   router.push('/controlBoard/collections');
 };
@@ -89,9 +85,7 @@ const handleCourseClick = async (courseId) => {
             v-for="course in courses"
           >
             <button
-              @click="
-                handleCourseClick(course.id)
-              "
+              @click="handleCourseClick(course)"
               class="shadow-lg p-3 rounded-lg active:shadow-md"
             >
               {{ course.name }}

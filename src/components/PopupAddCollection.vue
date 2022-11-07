@@ -19,19 +19,18 @@ const state = reactive({
 const { collectionName } = toRefs(state);
 
 const handleSubmit = async () => {
-  // const course = { name: collectionName.value };
-  // const newCourse = await (
-  //   token,
-  //   course
-  // );
-  // console.log('newCourse', newCourse);
-  // controlBoardStore.$patch({
-  //   courses: await getCourses(token),
-  // });
-  // displayStore.$patch({
-  //   isPopupDisplay: false,
-  //   isBoardPopupDisplay: false,
-  // });
+  const collection = {
+    name: collectionName.value,
+  };
+  const newCourse = await (token, collection);
+  console.log('newCourse', newCourse);
+  controlBoardStore.$patch({
+    courses: await getCourses(token),
+  });
+  displayStore.$patch({
+    isPopupDisplay: false,
+    isBoardPopupDisplay: false,
+  });
 };
 </script>
 <template>

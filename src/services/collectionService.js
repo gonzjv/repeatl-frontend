@@ -20,4 +20,30 @@ const getCollections = async (
   }
 };
 
-export { getCollections };
+const addCollection = async (
+  token,
+  collection,
+  courseId
+) => {
+  try {
+    const url = `${API_URL}courses/${courseId}`;
+    const bearerToken = 'Bearer ' + token;
+    const myHeaders = {
+      Authorization: bearerToken,
+      'Content-Type': 'application/json',
+    };
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(collection),
+      headers: myHeaders,
+    };
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Erorr', error);
+  }
+};
+
+export { getCollections, addCollection };
