@@ -26,7 +26,7 @@ const addCollection = async (
   courseId
 ) => {
   try {
-    const url = `${API_URL}courses/${courseId}`;
+    const url = `${API_URL}collections/${courseId}`;
     const bearerToken = 'Bearer ' + token;
     const myHeaders = {
       Authorization: bearerToken,
@@ -46,4 +46,33 @@ const addCollection = async (
   }
 };
 
-export { getCollections, addCollection };
+const deleteCollection = async (
+  token,
+  collection
+) => {
+  try {
+    const url = `${API_URL}collections/${collection.id}`;
+    const bearerToken = 'Bearer ' + token;
+    const myHeaders = {
+      Authorization: bearerToken,
+      // 'Content-Type': 'application/json',
+    };
+    const options = {
+      method: 'DELETE',
+      // body: JSON.stringify(collection),
+      headers: myHeaders,
+    };
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Erorr', error);
+  }
+};
+
+export {
+  getCollections,
+  addCollection,
+  deleteCollection,
+};

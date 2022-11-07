@@ -9,7 +9,10 @@ import {
 } from '@heroicons/vue/24/outline';
 import { useDisplayStore } from '../../store/display';
 import { onBeforeMount } from 'vue';
-import { getCollections } from '../../services/collectionService';
+import {
+  deleteCollection,
+  getCollections,
+} from '../../services/collectionService';
 import { useUserStore } from '../../store/user';
 
 const displayStore = useDisplayStore();
@@ -29,12 +32,13 @@ onBeforeMount(async () => {
   });
 });
 
-const handleDeleteClick = async (course) => {
-  //   const deletedCollection = await delete(
-  //     token,
-  //     course
-  //   );
-  //   courses.value = await getCourses(token);
+const handleDeleteClick = async (collection) => {
+  const deletedCollection =
+    await deleteCollection(token, collection);
+  collections.value = await getCollections(
+    activeCourse.value.id,
+    token
+  );
 };
 
 const handleCollectionClick = async (

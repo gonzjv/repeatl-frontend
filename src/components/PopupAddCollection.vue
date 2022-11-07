@@ -6,11 +6,19 @@ import { useControlBoardStore } from '../store/controlBoard';
 import { getCourses } from '../services/courseService';
 import { useDisplayStore } from '../store/display';
 import { storeToRefs } from 'pinia';
+import {
+  addCollection,
+  getCollections,
+} from '../services/collectionService';
 
 const userStore = useUserStore();
 const { token } = userStore.userData;
 
 const controlBoardStore = useControlBoardStore();
+const { activeCourse } = storeToRefs(
+  controlBoardStore
+);
+
 const displayStore = useDisplayStore();
 
 const state = reactive({
@@ -22,10 +30,17 @@ const handleSubmit = async () => {
   const collection = {
     name: collectionName.value,
   };
-  const newCourse = await (token, collection);
-  console.log('newCourse', newCourse);
+  const newCollection = await addCollection(
+    token,
+    collection,
+    activeCourse.value.id
+  );
+  console.log('newOne', newCollection);
   controlBoardStore.$patch({
-    courses: await getCourses(token),
+    collections: await getCollections(
+      activeCourse.value.id,
+      token
+    ),
   });
   displayStore.$patch({
     isPopupDisplay: false,
@@ -48,10 +63,10 @@ const handleSubmit = async () => {
     >
       <input
         required
-        v-model="courseName"
+        v-model="collectionName"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
         type="text"
-        placeholder="Название курса"
+        placeholder="Название коллекции"
       />
       <button
         type="submit"
