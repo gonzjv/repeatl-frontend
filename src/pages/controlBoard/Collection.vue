@@ -33,7 +33,7 @@ const handleGoBack = () => {
           class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
         >
           <RectangleStackIcon class="w-5" />
-          Коллекции:
+          Модели:
         </h2>
         <ul class="flex flex-col gap-3">
           <li
