@@ -14,6 +14,9 @@ import {
   getCollections,
 } from '../../services/collectionService';
 import { useUserStore } from '../../store/user';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const displayStore = useDisplayStore();
 const controlBoardStore = useControlBoardStore();
@@ -42,15 +45,12 @@ const handleDeleteClick = async (collection) => {
 };
 
 const handleCollectionClick = async (
-  courseId
+  collection
 ) => {
-  //   controlBoardStore.$patch({
-  //     collections: await getCollections(
-  //       courseId,
-  //       token
-  //     ),
-  //   });
-  //   router.push('/controlBoard/collections');
+  controlBoardStore.$patch({
+    activeCollection: collection,
+  });
+  router.push('/controlBoard/collection');
 };
 </script>
 <template>
@@ -77,13 +77,12 @@ const handleCollectionClick = async (
         <ul class="flex flex-col gap-3">
           <li
             class="flex justify-start items-center gap-5 border-l-2 border-transparent hover:border-yellow-300 hover:border-l-2"
+            :key="collection.name"
             v-for="collection in collections"
           >
             <button
               @click="
-                handleCollectionClick(
-                  collection.id
-                )
+                handleCollectionClick(collection)
               "
               class="shadow-lg p-3 rounded-lg active:shadow-md"
             >
@@ -116,14 +115,6 @@ const handleCollectionClick = async (
           <p>Создать коллекцию</p>
         </button>
       </div>
-    </section>
-    <section>
-      <h2>Коллекции</h2>
-      <ul>
-        <li v-for="collection in collections">
-          {{ collection }}
-        </li>
-      </ul>
     </section>
   </main>
 </template>
