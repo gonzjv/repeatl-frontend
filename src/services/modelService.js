@@ -1,8 +1,11 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getModels = async (courseId, token) => {
+const getModelSections = async (
+  token,
+  collectionId
+) => {
   try {
-    const url = `${API_URL}collections/${courseId}`;
+    const url = `${API_URL}collections/id/${collectionId}`;
     const bearerToken = 'Bearer ' + token;
     const myHeaders = {
       Authorization: bearerToken,
@@ -68,4 +71,4 @@ const deleteCollection = async (
   }
 };
 
-export { getModels as getCollections };
+export { getModelSections };

@@ -1,14 +1,25 @@
 <script setup>
 import { storeToRefs } from 'pinia';
+import { onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
+import { getModelSections } from '../../services/modelService';
 import { useControlBoardStore } from '../../store/controlBoard';
+import { useUserStore } from '../../store/user';
 
 const controlBoardStore = useControlBoardStore();
 const { activeCollection } = storeToRefs(
   controlBoardStore
 );
 
+const userStore = useUserStore();
+const { token } = userStore.userData;
+
 const router = useRouter();
+
+const { modelSections } =
+  activeCollection.value.modelSubCollection;
+
+onBeforeMount(async () => {});
 
 const handleGoBack = () => {
   router.back();
@@ -33,25 +44,27 @@ const handleGoBack = () => {
           class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
         >
           <RectangleStackIcon class="w-5" />
-          Модели:
+          Разделы моделей:
         </h2>
         <ul class="flex flex-col gap-3">
           <li
             class="flex justify-start items-center gap-5 border-l-2 border-transparent hover:border-yellow-300 hover:border-l-2"
-            :key="collection.name"
-            v-for="collection in collections"
+            :key="modelSection.name"
+            v-for="modelSection in modelSections"
           >
             <button
               @click="
-                handleCollectionClick(collection)
+                handleCollectionClick(
+                  modelSection
+                )
               "
               class="shadow-lg p-3 rounded-lg active:shadow-md"
             >
-              {{ collection.name }}
+              {{ modelSection.label }}
             </button>
             <button
               @click="
-                handleDeleteClick(collection)
+                handleDeleteClick(modelSection)
               "
             >
               <XMarkIcon

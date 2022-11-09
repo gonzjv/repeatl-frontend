@@ -58,7 +58,7 @@ const handleCollectionClick = async (
     <nav class="w-full flex justify-start">
       <router-link
         class="text-sky-400 flex gap-3 hover:font-extrabold"
-        to="/controlBoard/courses"
+        to="/controlBoard/courseList"
       >
         <ArrowLeftIcon class="w-5" />
         <p>назад к курсам</p>
