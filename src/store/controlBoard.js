@@ -7,8 +7,10 @@ export const useControlBoardStore = defineStore(
       courses: [],
       collections: [],
       modelSections: [],
+      models: [],
       activeCourse: {},
       activeCollection: {},
+      activeModelSection: {},
     }),
   }
 );

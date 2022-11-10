@@ -4,6 +4,7 @@ import { useDisplayStore } from '../store/display';
 import PopupAddCourse from '@/components/PopupAddCourse.vue';
 import PopupAddCollection from '@/components/PopupAddCollection.vue';
 import PopupAddModelSection from './PopupAddModelSection.vue';
+import PopupAddModel from './PopupAddModel.vue';
 
 const displayStore = useDisplayStore();
 const { popupElement } =
@@ -18,5 +19,8 @@ const { popupElement } =
   />
   <PopupAddModelSection
     v-if="popupElement == 'addModelSection'"
+  />
+  <PopupAddModel
+    v-if="popupElement == 'addModel'"
   />
 </template>

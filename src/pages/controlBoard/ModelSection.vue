@@ -1,23 +1,21 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { onBeforeMount } from 'vue';
-import { useRouter } from 'vue-router';
 import { useControlBoardStore } from '../../store/controlBoard';
-import { useUserStore } from '../../store/user';
 import {
+  DocumentTextIcon,
   ArrowLeftIcon,
   XMarkIcon,
   PlusCircleIcon,
   FolderOpenIcon,
 } from '@heroicons/vue/24/outline';
-import {
-  deleteModelSection,
-  getModelSections,
-} from '@/services/modelService';
+import { useUserStore } from '../../store/user';
 import { useDisplayStore } from '../../store/display';
+import { useRouter } from 'vue-router';
+import { getModels } from '../../services/modelService';
 
 const controlBoardStore = useControlBoardStore();
-const { activeCollection, modelSections } =
+const { activeModelSection, models } =
   storeToRefs(controlBoardStore);
 
 const userStore = useUserStore();
@@ -28,9 +26,13 @@ const displayStore = useDisplayStore();
 const router = useRouter();
 
 onBeforeMount(async () => {
-  modelSections.value = await getModelSections(
+  console.log(
+    'activeSection',
+    activeModelSection.value
+  );
+  models.value = await getModels(
     token,
-    activeCollection.value.modelSubCollection.id
+    activeModelSection.value.id
   );
 });
 
@@ -41,20 +43,19 @@ const handleGoBack = () => {
 const handleDeleteClick = async (
   modelSection
 ) => {
-  const deletedCollection =
-    await deleteModelSection(token, modelSection);
-
-  modelSections.value = await getModelSections(
-    token,
-    activeCollection.value.modelSubCollection.id
-  );
+  //   const deletedCollection =
+  //     await deleteModelSection(token, modelSection);
+  //   modelSections.value = await getModelSections(
+  //     token,
+  //     activeCollection.value.modelSubCollection.id
+  //   );
 };
 
 const handleSectionClick = (modelSection) => {
-  controlBoardStore.$patch({
-    activeModelSection: modelSection,
-  });
-  router.push('/controlBoard/modelSection');
+  //   controlBoardStore.$patch({
+  //     activeModelSection: modelSection,
+  //   });
+  //   router.push('/controlBoard/modelSection');
 };
 </script>
 <template>
@@ -65,7 +66,7 @@ const handleSectionClick = (modelSection) => {
         class="text-sky-400 flex gap-3 hover:font-extrabold"
       >
         <ArrowLeftIcon class="w-5" />
-        <p>назад в коллекции</p>
+        <p>назад в разделы</p>
       </button>
     </nav>
     <section class="w-full flex">
@@ -75,27 +76,23 @@ const handleSectionClick = (modelSection) => {
         <h2
           class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
         >
-          <FolderOpenIcon class="w-5" />
-          Разделы моделей:
+          <DocumentTextIcon class="w-5" />
+          Модели:
         </h2>
         <ul class="flex flex-col gap-3">
           <li
             class="flex justify-start items-center gap-5 border-l-2 border-transparent hover:border-yellow-300 hover:border-l-2"
-            :key="modelSection.name"
-            v-for="modelSection in modelSections"
+            :key="model.name"
+            v-for="model in models"
           >
             <button
-              @click="
-                handleSectionClick(modelSection)
-              "
+              @click="handleSectionClick(model)"
               class="shadow-lg p-3 rounded-lg active:shadow-md"
             >
-              {{ modelSection.label }}
+              {{ model.label }}
             </button>
             <button
-              @click="
-                handleDeleteClick(modelSection)
-              "
+              @click="handleDeleteClick(model)"
             >
               <XMarkIcon
                 class="w-5 hover:text-red-600"
@@ -110,15 +107,17 @@ const handleSectionClick = (modelSection) => {
             displayStore.$patch({
               isBoardPopupDisplay: true,
               isPopupDisplay: true,
-              popupElement: 'addModelSection',
+              popupElement: 'addModel',
             })
           "
           class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
         >
           <PlusCircleIcon class="w-5" />
-          <p>Создать раздел</p>
+          <p>Создать модель</p>
         </button>
       </div>
     </section>
+    <h2>Model section</h2>
+    <p>{{ activeModelSection }}</p>
   </main>
 </template>
