@@ -2,27 +2,56 @@
 import { storeToRefs } from 'pinia';
 import { onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
-import { getModelSections } from '../../services/modelService';
 import { useControlBoardStore } from '../../store/controlBoard';
 import { useUserStore } from '../../store/user';
+import {
+  ArrowLeftIcon,
+  RectangleStackIcon,
+  XMarkIcon,
+  PlusCircleIcon,
+  FolderOpenIcon,
+} from '@heroicons/vue/24/outline';
+import {
+  deleteModelSection,
+  getModelSections,
+} from '@/services/modelService';
+import { useDisplayStore } from '../../store/display';
 
 const controlBoardStore = useControlBoardStore();
-const { activeCollection } = storeToRefs(
-  controlBoardStore
-);
+const { activeCollection, modelSections } =
+  storeToRefs(controlBoardStore);
 
 const userStore = useUserStore();
 const { token } = userStore.userData;
 
+const displayStore = useDisplayStore();
+
 const router = useRouter();
 
-const { modelSections } =
-  activeCollection.value.modelSubCollection;
+// const { modelSections } =
+//   activeCollection.value.modelSubCollection;
 
-onBeforeMount(async () => {});
+onBeforeMount(async () => {
+  modelSections.value = await getModelSections(
+    token,
+    activeCollection.value.modelSubCollection.id
+  );
+});
 
 const handleGoBack = () => {
   router.back();
+};
+
+const handleDeleteClick = async (
+  modelSection
+) => {
+  const deletedCollection =
+    await deleteModelSection(token, modelSection);
+
+  modelSections.value = await getModelSections(
+    token,
+    activeCollection.value.modelSubCollection.id
+  );
 };
 </script>
 <template>
@@ -43,7 +72,7 @@ const handleGoBack = () => {
         <h2
           class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
         >
-          <RectangleStackIcon class="w-5" />
+          <FolderOpenIcon class="w-5" />
           Разделы моделей:
         </h2>
         <ul class="flex flex-col gap-3">
@@ -80,13 +109,13 @@ const handleGoBack = () => {
             displayStore.$patch({
               isBoardPopupDisplay: true,
               isPopupDisplay: true,
-              popupElement: 'addCollection',
+              popupElement: 'addModelSection',
             })
           "
           class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
         >
           <PlusCircleIcon class="w-5" />
-          <p>Создать коллекцию</p>
+          <p>Создать раздел</p>
         </button>
       </div>
     </section>

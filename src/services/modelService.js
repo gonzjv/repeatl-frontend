@@ -2,10 +2,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const getModelSections = async (
   token,
-  collectionId
+  modelSubCollectionId
 ) => {
   try {
-    const url = `${API_URL}collections/id/${collectionId}`;
+    const url = `${API_URL}modelSections/${modelSubCollectionId}`;
     const bearerToken = 'Bearer ' + token;
     const myHeaders = {
       Authorization: bearerToken,
@@ -46,12 +46,12 @@ const addCollection = async (
   }
 };
 
-const deleteCollection = async (
+const deleteModelSection = async (
   token,
-  collection
+  modelSection
 ) => {
   try {
-    const url = `${API_URL}collections/${collection.id}`;
+    const url = `${API_URL}modelSections/${modelSection.id}`;
     const bearerToken = 'Bearer ' + token;
     const myHeaders = {
       Authorization: bearerToken,
@@ -71,4 +71,4 @@ const deleteCollection = async (
   }
 };
 
-export { getModelSections };
+export { getModelSections, deleteModelSection };
