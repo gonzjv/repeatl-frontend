@@ -20,13 +20,13 @@ const getModelSections = async (
   }
 };
 
-const addCollection = async (
+const addModelSection = async (
   token,
-  collection,
-  courseId
+  modelSection,
+  modelSubCollectionId
 ) => {
   try {
-    const url = `${API_URL}collections/${courseId}`;
+    const url = `${API_URL}modelSections/${modelSubCollectionId}`;
     const bearerToken = 'Bearer ' + token;
     const myHeaders = {
       Authorization: bearerToken,
@@ -34,7 +34,7 @@ const addCollection = async (
     };
     const options = {
       method: 'POST',
-      body: JSON.stringify(collection),
+      body: JSON.stringify(modelSection),
       headers: myHeaders,
     };
 
@@ -71,4 +71,8 @@ const deleteModelSection = async (
   }
 };
 
-export { getModelSections, deleteModelSection };
+export {
+  getModelSections,
+  deleteModelSection,
+  addModelSection,
+};

@@ -1,7 +1,10 @@
 <script setup>
 import { reactive, toRefs } from 'vue';
 import { useUserStore } from '../store/user';
-import { addCourse } from '@/services/courseService.js';
+import {
+  addModelSection,
+  getModelSections,
+} from '@/services/modelService';
 import { useControlBoardStore } from '../store/controlBoard';
 import { getCourses } from '../services/courseService';
 import { useDisplayStore } from '../store/display';
@@ -15,31 +18,34 @@ const userStore = useUserStore();
 const { token } = userStore.userData;
 
 const controlBoardStore = useControlBoardStore();
-const { activeCourse } = storeToRefs(
+const { activeCollection } = storeToRefs(
   controlBoardStore
 );
 
 const displayStore = useDisplayStore();
 
 const state = reactive({
-  name: '',
+  sectionLabel: '',
+  sectionNumber: 0,
 });
-const { name } = toRefs(state);
+const { sectionLabel, sectionNumber } =
+  toRefs(state);
 
 const handleSubmit = async () => {
-  const collection = {
-    name: name.value,
+  const section = {
+    label: sectionLabel.value,
+    number: sectionNumber.value,
   };
-  const newModelSection = await addCollection(
+  const newModelSection = await addModelSection(
     token,
-    collection,
-    activeCourse.value.id
+    section,
+    activeCollection.value.modelSubCollection.id
   );
   console.log('newOne', newModelSection);
   controlBoardStore.$patch({
-    collections: await getCollections(
-      activeCourse.value.id,
-      token
+    modelSections: await getModelSections(
+      token,
+      activeCollection.value.modelSubCollection.id
     ),
   });
   displayStore.$patch({
@@ -63,10 +69,17 @@ const handleSubmit = async () => {
     >
       <input
         required
-        v-model="collectionName"
+        v-model="sectionLabel"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
         type="text"
-        placeholder="Название коллекции"
+        placeholder="Ярлык раздела"
+      />
+      <input
+        required
+        v-model="sectionNumber"
+        class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
+        type="number"
+        placeholder="Номер раздела"
       />
       <button
         type="submit"
