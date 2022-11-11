@@ -1,46 +1,48 @@
 <script setup>
 import { reactive, toRefs } from 'vue';
 import { useUserStore } from '../store/user';
-import {
-  addModelSection,
-  getModelSections,
-} from '@/services/modelService';
 import { useControlBoardStore } from '../store/controlBoard';
 import { useDisplayStore } from '../store/display';
 import { storeToRefs } from 'pinia';
+import {
+  addPhrase,
+  getPhrases,
+} from '@/services/phraseService';
 
 const userStore = useUserStore();
 const { token } = userStore.userData;
 
 const controlBoardStore = useControlBoardStore();
-const { activeCollection } = storeToRefs(
+const { activeModel } = storeToRefs(
   controlBoardStore
 );
 
 const displayStore = useDisplayStore();
 
 const state = reactive({
-  sectionLabel: '',
-  sectionNumber: 0,
+  inputLabel: '',
+  inputNative: '',
+  inputForeign: '',
 });
-const { sectionLabel, sectionNumber } =
+const { inputLabel, inputNative, inputForeign } =
   toRefs(state);
 
 const handleSubmit = async () => {
-  const section = {
-    label: sectionLabel.value,
-    number: sectionNumber.value,
+  const phrase = {
+    label: inputLabel.value,
+    native: inputNative.value,
+    foreign: inputForeign.value,
   };
-  const newModelSection = await addModelSection(
+  const newPhrase = await addPhrase(
     token,
-    section,
-    activeCollection.value.modelSubCollection.id
+    phrase,
+    activeModel.value.id
   );
-  console.log('newOne', newModelSection);
+  console.log('newOne', newPhrase);
   controlBoardStore.$patch({
-    modelSections: await getModelSections(
+    phrases: await getPhrases(
       token,
-      activeCollection.value.modelSubCollection.id
+      activeModel.value.id
     ),
   });
   displayStore.$patch({
@@ -56,7 +58,7 @@ const handleSubmit = async () => {
     <h2
       class="text-xl border-b-2 border-yellow-300 w-1/2 p-2"
     >
-      Создание раздела моделей
+      Создание фразы
     </h2>
     <form
       @submit.prevent="handleSubmit"
@@ -64,17 +66,24 @@ const handleSubmit = async () => {
     >
       <input
         required
-        v-model="sectionLabel"
+        v-model="inputLabel"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
         type="text"
-        placeholder="Ярлык раздела"
+        placeholder="Ярлык фразы"
       />
       <input
         required
-        v-model="sectionNumber"
+        v-model="inputNative"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
-        type="number"
-        placeholder="Номер раздела"
+        type="text"
+        placeholder="Фраза на русском"
+      />
+      <input
+        required
+        v-model="inputForeign"
+        class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
+        type="text"
+        placeholder="Фраза на английском"
       />
       <button
         type="submit"

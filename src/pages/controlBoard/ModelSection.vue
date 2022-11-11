@@ -49,11 +49,11 @@ const handleDeleteClick = async (model) => {
   );
 };
 
-const handleSectionClick = (modelSection) => {
-  //   controlBoardStore.$patch({
-  //     activeModelSection: modelSection,
-  //   });
-  //   router.push('/controlBoard/modelSection');
+const handleModelClick = (model) => {
+  controlBoardStore.$patch({
+    activeModel: model,
+  });
+  router.push('/controlBoard/model');
 };
 </script>
 <template>
@@ -89,7 +89,7 @@ const handleSectionClick = (modelSection) => {
             v-for="model in models"
           >
             <button
-              @click="handleSectionClick(model)"
+              @click="handleModelClick(model)"
               class="shadow-lg p-3 rounded-lg active:shadow-md"
             >
               {{ model.label }}

@@ -5,6 +5,7 @@ import PopupAddCourse from '@/components/PopupAddCourse.vue';
 import PopupAddCollection from '@/components/PopupAddCollection.vue';
 import PopupAddModelSection from './PopupAddModelSection.vue';
 import PopupAddModel from './PopupAddModel.vue';
+import PopupAddPhrase from './PopupAddPhrase.vue';
 
 const displayStore = useDisplayStore();
 const { popupElement } =
@@ -22,5 +23,8 @@ const { popupElement } =
   />
   <PopupAddModel
     v-if="popupElement == 'addModel'"
+  />
+  <PopupAddPhrase
+    v-if="popupElement == 'addPhrase'"
   />
 </template>
