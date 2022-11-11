@@ -1,18 +1,10 @@
 <script setup>
 import { reactive, toRefs } from 'vue';
 import { useUserStore } from '../store/user';
-import {
-  addModelSection,
-  getModelSections,
-} from '@/services/modelService';
 import { useControlBoardStore } from '../store/controlBoard';
 import { getModels } from '@/services/modelService';
 import { useDisplayStore } from '../store/display';
 import { storeToRefs } from 'pinia';
-import {
-  addCollection,
-  getCollections,
-} from '../services/collectionService';
 import { addModel } from '../services/modelService';
 
 const userStore = useUserStore();

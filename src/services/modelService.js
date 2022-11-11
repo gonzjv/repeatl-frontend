@@ -117,10 +117,33 @@ const getModels = async (
   }
 };
 
+const deleteModel = async (token, modelId) => {
+  try {
+    const url = `${API_URL}models/${modelId}`;
+    const bearerToken = 'Bearer ' + token;
+    const myHeaders = {
+      Authorization: bearerToken,
+      // 'Content-Type': 'application/json',
+    };
+    const options = {
+      method: 'DELETE',
+      // body: JSON.stringify(collection),
+      headers: myHeaders,
+    };
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Erorr', error);
+  }
+};
+
 export {
   getModelSections,
   deleteModelSection,
   addModelSection,
   addModel,
   getModels,
+  deleteModel,
 };
