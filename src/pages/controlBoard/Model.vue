@@ -86,9 +86,17 @@ const handleDeleteClick = async (phrase) => {
             v-for="phrase in phrases"
           >
             <button
-              class="shadow-lg p-3 rounded-lg active:shadow-md"
+              class="flex gap-3 shadow-lg p-3 rounded-lg active:shadow-md"
             >
-              {{ phrase.label }}
+              <p>
+                {{ phrase.label }}
+              </p>
+              <p class="font-extralight">
+                {{ phrase.native }}
+              </p>
+              <p class="text-sky-400">
+                {{ phrase.foreign }}
+              </p>
             </button>
             <button
               @click="handleDeleteClick(phrase)"
