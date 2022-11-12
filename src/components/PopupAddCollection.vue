@@ -8,6 +8,7 @@ import { useDisplayStore } from '../store/display';
 import { storeToRefs } from 'pinia';
 import {
   addCollection,
+  addModelSubCollection,
   getCollections,
 } from '../services/collectionService';
 
@@ -36,6 +37,18 @@ const handleSubmit = async () => {
     activeCourse.value.id
   );
   console.log('newOne', newCollection);
+
+  const modelSubCollection = {
+    label: collectionName.value,
+  };
+  const newModelSubCol =
+    await addModelSubCollection(
+      token,
+      modelSubCollection,
+      newCollection.id
+    );
+
+  console.log('new modelSub', newModelSubCol);
   controlBoardStore.$patch({
     collections: await getCollections(
       activeCourse.value.id,

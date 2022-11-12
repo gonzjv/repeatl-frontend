@@ -71,8 +71,35 @@ const deleteCollection = async (
   }
 };
 
+const addModelSubCollection = async (
+  token,
+  modelSubCollection,
+  collectionId
+) => {
+  try {
+    const url = `${API_URL}modelSubCollections/${collectionId}`;
+    const bearerToken = 'Bearer ' + token;
+    const myHeaders = {
+      Authorization: bearerToken,
+      'Content-Type': 'application/json',
+    };
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(modelSubCollection),
+      headers: myHeaders,
+    };
+
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Erorr', error);
+  }
+};
+
 export {
   getCollections,
   addCollection,
   deleteCollection,
+  addModelSubCollection,
 };
