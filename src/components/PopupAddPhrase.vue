@@ -7,6 +7,7 @@ import { storeToRefs } from 'pinia';
 import {
   addPhrase,
   getPhrases,
+  addPhraseFromFile,
 } from '@/services/phraseService';
 
 const userStore = useUserStore();
@@ -23,9 +24,14 @@ const state = reactive({
   inputLabel: '',
   inputNative: '',
   inputForeign: '',
+  inputFile: null,
 });
-const { inputLabel, inputNative, inputForeign } =
-  toRefs(state);
+const {
+  inputLabel,
+  inputNative,
+  inputForeign,
+  inputFile,
+} = toRefs(state);
 
 const handleSubmit = async () => {
   const phrase = {
@@ -49,6 +55,18 @@ const handleSubmit = async () => {
     isPopupDisplay: false,
     isBoardPopupDisplay: false,
   });
+};
+
+const handleFileChange = async () => {
+  console.log(
+    'file',
+
+    inputFile.value.files[0]
+  );
+  await addPhraseFromFile(
+    token,
+    inputFile.value.files[0]
+  );
 };
 </script>
 <template>
@@ -91,6 +109,17 @@ const handleSubmit = async () => {
       >
         ДОБАВИТЬ
       </button>
+    </form>
+    <form
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <input
+        ref="inputFile"
+        @change="handleFileChange"
+        type="file"
+        name="csvFile"
+      />
     </form>
   </section>
 </template>

@@ -65,4 +65,32 @@ const deletePhrase = async (token, phraseId) => {
   }
 };
 
-export { getPhrases, addPhrase, deletePhrase };
+const addPhraseFromFile = async (token, file) => {
+  try {
+    const url = `${API_URL}phrases/upload/csv`;
+    const bearerToken = 'Bearer ' + token;
+    const myHeaders = {
+      Authorization: bearerToken,
+      // 'Content-Type': 'multipart/form-data',
+    };
+    const data = new FormData();
+    data.append('csvFile', file);
+    const options = {
+      method: 'POST',
+      body: data,
+      headers: myHeaders,
+    };
+
+    const response = await fetch(url, options);
+    const resData = await response.json();
+    return resData;
+  } catch (error) {
+    console.log('Erorr', error);
+  }
+};
+export {
+  getPhrases,
+  addPhrase,
+  deletePhrase,
+  addPhraseFromFile,
+};
