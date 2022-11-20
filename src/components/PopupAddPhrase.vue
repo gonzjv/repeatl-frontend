@@ -65,7 +65,8 @@ const handleFileChange = async () => {
   );
   await addPhraseFromFile(
     token,
-    inputFile.value.files[0]
+    inputFile.value.files[0],
+    activeModel.value.id
   );
 };
 </script>

@@ -65,9 +65,13 @@ const deletePhrase = async (token, phraseId) => {
   }
 };
 
-const addPhraseFromFile = async (token, file) => {
+const addPhraseFromFile = async (
+  token,
+  file,
+  modelId
+) => {
   try {
-    const url = `${API_URL}phrases/upload/csv`;
+    const url = `${API_URL}phrases/upload/csv/${modelId}`;
     const bearerToken = 'Bearer ' + token;
     const myHeaders = {
       Authorization: bearerToken,
