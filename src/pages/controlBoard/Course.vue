@@ -8,7 +8,11 @@ import {
   PlusCircleIcon,
 } from '@heroicons/vue/24/outline';
 import { useDisplayStore } from '../../store/display';
-import { onBeforeMount } from 'vue';
+import {
+  onBeforeMount,
+  reactive,
+  toRefs,
+} from 'vue';
 import {
   deleteCollection,
   getCollections,
@@ -25,6 +29,11 @@ const { collections, activeCourse } = storeToRefs(
 );
 const userStore = useUserStore();
 const { token } = userStore.userData;
+
+const state = reactive({
+  inputFile: null,
+});
+const { inputFile } = toRefs(state);
 
 onBeforeMount(async () => {
   controlBoardStore.$patch({
@@ -51,6 +60,15 @@ const handleCollectionClick = async (
     activeCollection: collection,
   });
   router.push('/controlBoard/collection');
+};
+
+const handleFileChange = async () => {
+  console.log('file', inputFile.value.files[0]);
+  // await addPhraseFromFile(
+  //   token,
+  //   inputFile.value.files[0],
+  //   activeModel.value.id
+  // );
 };
 </script>
 <template>
@@ -86,7 +104,7 @@ const handleCollectionClick = async (
               "
               class="shadow-lg p-3 rounded-lg active:shadow-md"
             >
-              {{ collection.name }}
+              {{ collection.number }}
             </button>
             <button
               @click="
@@ -114,6 +132,12 @@ const handleCollectionClick = async (
           <PlusCircleIcon class="w-5" />
           <p>Создать коллекцию</p>
         </button>
+        <input
+          ref="inputFile"
+          @change="handleFileChange"
+          type="file"
+          name="csvFile"
+        />
       </div>
     </section>
   </main>

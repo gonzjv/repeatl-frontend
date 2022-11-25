@@ -1,9 +1,7 @@
 <script setup>
 import { reactive, toRefs } from 'vue';
 import { useUserStore } from '../store/user';
-import { addCourse } from '@/services/courseService.js';
 import { useControlBoardStore } from '../store/controlBoard';
-import { getCourses } from '../services/courseService';
 import { useDisplayStore } from '../store/display';
 import { storeToRefs } from 'pinia';
 import {
@@ -23,13 +21,13 @@ const { activeCourse } = storeToRefs(
 const displayStore = useDisplayStore();
 
 const state = reactive({
-  collectionName: '',
+  collectionNumber: '',
 });
-const { collectionName } = toRefs(state);
+const { collectionNumber } = toRefs(state);
 
 const handleSubmit = async () => {
   const collection = {
-    name: collectionName.value,
+    number: collectionNumber.value,
   };
   const newCollection = await addCollection(
     token,
@@ -39,7 +37,7 @@ const handleSubmit = async () => {
   console.log('newOne', newCollection);
 
   const modelSubCollection = {
-    label: collectionName.value,
+    label: collectionNumber.value,
   };
   const newModelSubCol =
     await addModelSubCollection(
@@ -76,7 +74,7 @@ const handleSubmit = async () => {
     >
       <input
         required
-        v-model="collectionName"
+        v-model="collectionNumber"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
         type="text"
         placeholder="Название коллекции"
