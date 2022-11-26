@@ -34,13 +34,13 @@ const handleSubmit = async () => {
   const newModelSection = await addModelSection(
     token,
     section,
-    activeCollection.value.modelSubCollection.id
+    activeCollection.value.id
   );
   console.log('newOne', newModelSection);
   controlBoardStore.$patch({
     modelSections: await getModelSections(
       token,
-      activeCollection.value.modelSubCollection.id
+      activeCollection.value.id
     ),
   });
   displayStore.$patch({

@@ -2,10 +2,10 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const getModelSections = async (
   token,
-  modelSubCollectionId
+  collectionId
 ) => {
   try {
-    const url = `${API_URL}modelSections/${modelSubCollectionId}`;
+    const url = `${API_URL}modelSections/${collectionId}`;
     const bearerToken = 'Bearer ' + token;
     const myHeaders = {
       Authorization: bearerToken,
@@ -23,10 +23,10 @@ const getModelSections = async (
 const addModelSection = async (
   token,
   modelSection,
-  modelSubCollectionId
+  collectionId
 ) => {
   try {
-    const url = `${API_URL}modelSections/${modelSubCollectionId}`;
+    const url = `${API_URL}modelSections/${collectionId}`;
     const bearerToken = 'Bearer ' + token;
     const myHeaders = {
       Authorization: bearerToken,

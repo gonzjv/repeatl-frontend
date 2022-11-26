@@ -30,7 +30,7 @@ const router = useRouter();
 onBeforeMount(async () => {
   modelSections.value = await getModelSections(
     token,
-    activeCollection.value.modelSubCollection.id
+    activeCollection.value.id
   );
 });
 
@@ -46,7 +46,7 @@ const handleDeleteClick = async (
 
   modelSections.value = await getModelSections(
     token,
-    activeCollection.value.modelSubCollection.id
+    activeCollection.value.id
   );
 };
 
