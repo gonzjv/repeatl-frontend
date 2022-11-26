@@ -6,17 +6,12 @@ import { useDisplayStore } from '../store/display';
 
 const courseStore = useCourseStore();
 const displayStore = useDisplayStore();
-const {
-  currentCourse,
-  currentSubCollection,
-  currentCollection,
-  currentSection,
-} = storeToRefs(courseStore);
+const { currentCourse, currentCollection } =
+  storeToRefs(courseStore);
 const { isSectionPopupDisplay, isPopupDisplay } =
   storeToRefs(displayStore);
 
-const { modelSections } =
-  currentSubCollection.value;
+const { modelSections } = currentCollection.value;
 
 const handleButtonClick = (section) => {
   displayStore.$patch({
@@ -28,7 +23,7 @@ const handleButtonClick = (section) => {
   });
 };
 
-console.log('sections', modelSections);
+console.log('currColl', currentCollection.value);
 </script>
 <template>
   <main
@@ -50,7 +45,7 @@ console.log('sections', modelSections);
     </h2>
     <aside class="w-full flex gap-1 items-center">
       <h3 class="text-xl">
-        Коллекция {{ currentCollection.name }}
+        Коллекция {{ currentCollection.number }}
       </h3>
       <span>/ модели</span>
     </aside>

@@ -7,8 +7,7 @@ const props = defineProps({
 
 const store = useCourseStore();
 
-const { modelSections } =
-  props.collection.modelSubCollection;
+const { modelSections } = props.collection;
 
 let modelsNumber = 0;
 modelSections.forEach(
@@ -17,17 +16,15 @@ modelSections.forEach(
 </script>
 <template>
   <h2 class="text-xl">
-    Коллекция {{ collection.name }}
+    Коллекция {{ collection.number }}
   </h2>
   <router-link
     @click="
       store.$patch({
-        currentSubCollection:
-          collection.modelSubCollection,
         currentCollection: collection,
       })
     "
-    to="/modelSubCollection"
+    to="/modelList"
     class="p-5 flex gap-20 w-full border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
   >
     <div class="flex flex-col items-center">

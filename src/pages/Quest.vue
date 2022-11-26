@@ -52,11 +52,15 @@ const {
 
 onBeforeMount(async () => {
   progress.value = await getProgress(
-    currentSubCollection.value.id,
+    currentCollection.value.id,
     userData.id,
     userData.token
   );
 
+  console.log(
+    'currColl at Quest page',
+    currentCollection.value
+  );
   console.log(
     'progress before mount',
     progress.value
@@ -69,8 +73,7 @@ onBeforeMount(async () => {
       modelStep: 0,
       phraseStep: 0,
       sectionStep: 0,
-      subCollectionId:
-        currentSubCollection.value.id,
+      collectionId: currentCollection.value.id,
     };
     console.log('userData', userStore.userData);
     progress.value = await createProgress(

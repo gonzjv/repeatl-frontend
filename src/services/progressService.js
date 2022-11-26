@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 const getProgress = async (
-  subCollectionId,
+  collectionId,
   userId,
   token
 ) => {
@@ -13,7 +13,7 @@ const getProgress = async (
   const options = {
     headers: myHeaders,
   };
-  const url = `${API_URL}progressModels/${userId}.${subCollectionId}`;
+  const url = `${API_URL}progressModels/${userId}.${collectionId}`;
 
   try {
     const response = await fetch(url, options);
@@ -35,6 +35,7 @@ const createProgress = async (
   };
   const url = `${API_URL}progressModels/`;
   const reqData = progress;
+  console.log('reqData', reqData);
   const options = {
     method: 'POST',
     body: JSON.stringify(reqData),

@@ -6,7 +6,6 @@ export const useCourseStore = defineStore(
     state: () => ({
       currentCourse: {},
       currentCollection: {},
-      currentSubCollection: {},
       currentSection: {},
     }),
   }

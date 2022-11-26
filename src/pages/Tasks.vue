@@ -33,14 +33,6 @@ const handleCourseSwitch = async (course) => {
   store.$patch({
     currentCourse: course,
   });
-  // collectionsData.value = await getCollections(
-  //   course.id
-  // );
-  // console.log(
-  //   'collections',
-  //   collectionsData.value
-  // );
-  // coursesWindowDisplay.value = false;
 };
 </script>
 <template>
