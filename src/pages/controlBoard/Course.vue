@@ -70,6 +70,10 @@ const handleFileChange = async () => {
     inputFile.value.files[0],
     activeCourse.value.id
   );
+  collections.value = await getCollections(
+    activeCourse.value.id,
+    token
+  );
 };
 </script>
 <template>

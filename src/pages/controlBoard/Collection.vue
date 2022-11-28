@@ -90,7 +90,7 @@ const handleSectionClick = (modelSection) => {
               "
               class="shadow-lg p-3 rounded-lg active:shadow-md"
             >
-              {{ modelSection.label }}
+              {{ modelSection.number }}
             </button>
             <button
               @click="
