@@ -19,6 +19,7 @@ import {
 } from '../../services/collectionService';
 import { useUserStore } from '../../store/user';
 import { useRouter } from 'vue-router';
+import { addDataFromFile } from '../../services/courseService';
 
 const router = useRouter();
 
@@ -64,11 +65,11 @@ const handleCollectionClick = async (
 
 const handleFileChange = async () => {
   console.log('file', inputFile.value.files[0]);
-  // await addPhraseFromFile(
-  //   token,
-  //   inputFile.value.files[0],
-  //   activeModel.value.id
-  // );
+  await addDataFromFile(
+    token,
+    inputFile.value.files[0],
+    activeCourse.value.id
+  );
 };
 </script>
 <template>
