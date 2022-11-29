@@ -20,15 +20,12 @@ const { activeCollection } = storeToRefs(
 const displayStore = useDisplayStore();
 
 const state = reactive({
-  sectionLabel: '',
-  sectionNumber: 0,
+  sectionNumber: '',
 });
-const { sectionLabel, sectionNumber } =
-  toRefs(state);
+const { sectionNumber } = toRefs(state);
 
 const handleSubmit = async () => {
   const section = {
-    label: sectionLabel.value,
     number: sectionNumber.value,
   };
   const newModelSection = await addModelSection(
@@ -64,16 +61,9 @@ const handleSubmit = async () => {
     >
       <input
         required
-        v-model="sectionLabel"
-        class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
-        type="text"
-        placeholder="Ярлык раздела"
-      />
-      <input
-        required
         v-model="sectionNumber"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
-        type="number"
+        type="text"
         placeholder="Номер раздела"
       />
       <button
