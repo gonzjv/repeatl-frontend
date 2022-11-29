@@ -20,7 +20,7 @@ const displayStore = useDisplayStore();
 const state = reactive({
   inputLabel: '',
   inputGrammarSubject: '',
-  inputNumber: 0,
+  inputNumber: '',
 });
 const {
   inputLabel,
@@ -83,7 +83,7 @@ const handleSubmit = async () => {
         required
         v-model="inputNumber"
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
-        type="number"
+        type="text"
         placeholder="Номер модели"
       />
       <button
