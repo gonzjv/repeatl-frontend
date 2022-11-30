@@ -70,7 +70,7 @@ const handleSectionClick = (modelSection) => {
     </nav>
     <section class="w-full flex">
       <div
-        class="flex flex-col gap-5 w-1/2 shadow-md p-5"
+        class="flex flex-col gap-5 w-1/2 shadow-md p-5 rounded-lg"
       >
         <h2
           class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"

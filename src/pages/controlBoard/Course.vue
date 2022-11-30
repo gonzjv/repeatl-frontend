@@ -20,6 +20,7 @@ import {
 import { useUserStore } from '../../store/user';
 import { useRouter } from 'vue-router';
 import { addDataFromFile } from '../../services/courseService';
+import { DocumentTextIcon } from '@heroicons/vue/24/outline';
 
 const router = useRouter();
 
@@ -89,7 +90,7 @@ const handleFileChange = async () => {
     </nav>
     <section class="w-full flex">
       <div
-        class="flex flex-col gap-5 w-1/2 shadow-md p-5"
+        class="flex flex-col gap-5 w-1/2 shadow-md p-5 rounded-lg"
       >
         <h2
           class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
@@ -123,7 +124,9 @@ const handleFileChange = async () => {
           </li>
         </ul>
       </div>
-      <div class="flex w-1/2 p-5">
+      <div
+        class="flex w-1/2 p-5 flex-col gap-10 items-start"
+      >
         <button
           @click="
             displayStore.$patch({
@@ -132,17 +135,28 @@ const handleFileChange = async () => {
               popupElement: 'addCollection',
             })
           "
-          class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
+          class="max-w-max shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
         >
           <PlusCircleIcon class="w-5" />
           <p>Создать коллекцию</p>
         </button>
-        <input
-          ref="inputFile"
-          @change="handleFileChange"
-          type="file"
-          name="csvFile"
-        />
+        <div
+          class="shadow-md flex flex-col items-start gap-7 bg-sky-50 p-7 rounded-lg"
+        >
+          <label class="flex gap-3" for="csvFile">
+            <DocumentTextIcon class="w-6" />
+
+            Добавить данные в коллекцию из файла
+            .csv</label
+          >
+          <input
+            class=""
+            ref="inputFile"
+            @change="handleFileChange"
+            type="file"
+            name="csvFile"
+          />
+        </div>
       </div>
     </section>
   </main>
