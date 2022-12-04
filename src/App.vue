@@ -4,10 +4,29 @@ import { storeToRefs } from 'pinia';
 import { useDisplayStore } from './store/display';
 import Cover from './components/Cover.vue';
 import Popup from './components/Popup.vue';
+import { inject, onBeforeMount } from 'vue';
+import { useUserStore } from './store/user';
 
 const store = useDisplayStore();
-const { isSectionPopupDisplay, isPopupDisplay } =
-  storeToRefs(store);
+const userStore = useUserStore();
+const { isPopupDisplay } = storeToRefs(store);
+const { userData } = storeToRefs(userStore);
+
+const $cookies = inject('$cookies');
+const userDataCookie = $cookies.get('userData');
+
+const checkToken = () => {
+  userDataCookie.token &&
+    userStore.$patch({
+      userData: userDataCookie,
+      isUserLoggedIn: true,
+    });
+  console.log('userData', userData.value);
+};
+
+onBeforeMount(() => {
+  checkToken();
+});
 </script>
 
 <template>

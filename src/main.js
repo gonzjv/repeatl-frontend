@@ -7,6 +7,7 @@ import {
 } from 'vue-router';
 import routes from '~pages';
 import { createPinia } from 'pinia';
+import VueCookies from 'vue-cookies';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,6 +16,7 @@ const router = createRouter({
 
 const app = createApp(App);
 
+app.use(VueCookies, { expires: '7d' });
 app.use(router);
 app.use(createPinia());
 app.mount('#app');

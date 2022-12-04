@@ -4,6 +4,7 @@ import { useDisplayStore } from '@/store/display';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '../store/user';
 import { Cog8ToothIcon } from '@heroicons/vue/24/outline';
+import { inject } from 'vue';
 
 const NAV_BTNS = [
   {
@@ -17,8 +18,11 @@ const userStore = useUserStore();
 
 const { isNavLogoDisplay, isPopupDisplay } =
   storeToRefs(store);
-const { userData, isUserLoggedIn, isAdminHere } =
+const { isUserLoggedIn, isAdminHere } =
   storeToRefs(userStore);
+
+const $cookies = inject('$cookies');
+const userData = $cookies.get('userData');
 </script>
 <template>
   <header

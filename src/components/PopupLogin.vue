@@ -1,15 +1,14 @@
 <script setup>
-import { reactive, toRefs } from 'vue';
+import { inject, reactive, toRefs } from 'vue';
 import { addUser } from '@/services/userService';
 import { loginUser } from '../services/userService';
 import { useUserStore } from '../store/user';
 import { useDisplayStore } from '../store/display';
 import { ArrowLongDownIcon } from '@heroicons/vue/24/outline';
-// import { useRouter } from 'vue-router';
 
-// const router = useRouter();
 const userStore = useUserStore();
 const displayStore = useDisplayStore();
+const $cookies = inject('$cookies');
 
 const state = reactive({
   isLoginMode: true,
@@ -41,6 +40,8 @@ const signIn = async () => {
       isUserLoggedIn: true,
     });
 
+    $cookies.set('userData', response);
+
     response.role == 'admin' &&
       userStore.$patch({ isAdminHere: true });
 
@@ -49,11 +50,13 @@ const signIn = async () => {
       isPopupDisplay: false,
       isLoginPopupDisplay: false,
     });
-    // router.push('/tasks');
   } else {
     isLoginFail.value = true;
   }
-  console.log('userData', response);
+  console.log(
+    'userData from cookie',
+    $cookies.get('userData')
+  );
 };
 
 const signUp = async () => {
