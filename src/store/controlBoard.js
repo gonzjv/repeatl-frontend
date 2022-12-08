@@ -7,6 +7,7 @@ export const useControlBoardStore = defineStore(
       courses: [],
       collections: [],
       modelSections: [],
+      wordSections: [],
       models: [],
       phrases: [],
       activeCourse: {},

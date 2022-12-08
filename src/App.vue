@@ -16,12 +16,17 @@ const $cookies = inject('$cookies');
 const userDataCookie = $cookies.get('userData');
 
 const checkToken = () => {
-  userDataCookie.token &&
+  if (userDataCookie) {
     userStore.$patch({
       userData: userDataCookie,
       isUserLoggedIn: true,
     });
-  console.log('userData', userData.value);
+
+    userDataCookie.role == 'admin' &&
+      userStore.$patch({ isAdminHere: true });
+
+    console.log('userData', userData.value);
+  }
 };
 
 onBeforeMount(() => {

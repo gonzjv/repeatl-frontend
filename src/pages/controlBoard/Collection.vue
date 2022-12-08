@@ -15,10 +15,14 @@ import {
   getModelSections,
 } from '@/services/modelService';
 import { useDisplayStore } from '../../store/display';
+import { getWordSections } from '../../services/wordService';
 
 const controlBoardStore = useControlBoardStore();
-const { activeCollection, modelSections } =
-  storeToRefs(controlBoardStore);
+const {
+  activeCollection,
+  modelSections,
+  wordSections,
+} = storeToRefs(controlBoardStore);
 
 const userStore = useUserStore();
 const { token } = userStore.userData;
@@ -29,6 +33,10 @@ const router = useRouter();
 
 onBeforeMount(async () => {
   modelSections.value = await getModelSections(
+    token,
+    activeCollection.value.id
+  );
+  wordSections.value = await getWordSections(
     token,
     activeCollection.value.id
   );
@@ -69,42 +77,77 @@ const handleSectionClick = (modelSection) => {
       </button>
     </nav>
     <section class="w-full flex">
-      <div
+      <dl
         class="flex flex-col gap-5 w-1/2 shadow-md p-5 rounded-lg"
       >
-        <h2
-          class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
-        >
-          <FolderOpenIcon class="w-5" />
-          Разделы моделей:
-        </h2>
-        <ul class="flex flex-col gap-3">
-          <li
-            class="flex justify-start items-center gap-5 border-l-2 border-transparent hover:border-yellow-300 hover:border-l-2"
-            :key="modelSection.name"
-            v-for="modelSection in modelSections"
+        <div class="flex flex-col w-full gap-5">
+          <h2
+            class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
           >
-            <button
-              @click="
-                handleSectionClick(modelSection)
-              "
-              class="shadow-lg p-3 rounded-lg active:shadow-md"
+            <FolderOpenIcon class="w-5" />
+            Разделы моделей:
+          </h2>
+          <ul class="flex flex-col gap-3">
+            <li
+              class="flex justify-start items-center gap-5 border-l-2 border-transparent hover:border-yellow-300 hover:border-l-2"
+              :key="modelSection.name"
+              v-for="modelSection in modelSections"
             >
-              {{ modelSection.number }}
-            </button>
-            <button
-              @click="
-                handleDeleteClick(modelSection)
-              "
+              <button
+                @click="
+                  handleSectionClick(modelSection)
+                "
+                class="shadow-lg p-3 rounded-lg active:shadow-md"
+              >
+                {{ modelSection.number }}
+              </button>
+              <button
+                @click="
+                  handleDeleteClick(modelSection)
+                "
+              >
+                <XMarkIcon
+                  class="w-5 hover:text-red-600"
+                />
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="flex flex-col w-full gap-5">
+          <dt
+            class="py-2 flex gap-2 justify-start max-w-fit text-xl border-b-2 border-yellow-300"
+          >
+            <FolderOpenIcon class="w-5" />
+            Разделы слов:
+          </dt>
+          <ul class="flex flex-col gap-3">
+            <li
+              class="flex justify-start items-center gap-5 border-l-2 border-transparent hover:border-yellow-300 hover:border-l-2"
+              :key="wordSection.name"
+              v-for="wordSection in wordSections"
             >
-              <XMarkIcon
-                class="w-5 hover:text-red-600"
-              />
-            </button>
-          </li>
-        </ul>
-      </div>
-      <div class="flex w-1/2 p-5">
+              <button
+                @click="
+                  handleSectionClick(wordSection)
+                "
+                class="shadow-lg p-3 rounded-lg active:shadow-md"
+              >
+                {{ wordSection.number }}
+              </button>
+              <button
+                @click="
+                  handleDeleteClick(wordSection)
+                "
+              >
+                <XMarkIcon
+                  class="w-5 hover:text-red-600"
+                />
+              </button>
+            </li>
+          </ul>
+        </div>
+      </dl>
+      <div class="flex flex-col gap-10 w-1/2 p-5">
         <button
           @click="
             displayStore.$patch({
@@ -113,10 +156,23 @@ const handleSectionClick = (modelSection) => {
               popupElement: 'addModelSection',
             })
           "
-          class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 p-3 rounded-lg text-white"
+          class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 max-w-max p-3 rounded-lg text-white"
         >
           <PlusCircleIcon class="w-5" />
-          <p>Создать раздел</p>
+          <p>Создать раздел моделей</p>
+        </button>
+        <button
+          @click="
+            displayStore.$patch({
+              isBoardPopupDisplay: true,
+              isPopupDisplay: true,
+              popupElement: 'addWordSection',
+            })
+          "
+          class="shadow-lg active:shadow-md flex gap-3 bg-fuchsia-400 h-12 max-w-max p-3 rounded-lg text-white"
+        >
+          <PlusCircleIcon class="w-5" />
+          <p>Создать раздел слов</p>
         </button>
       </div>
     </section>

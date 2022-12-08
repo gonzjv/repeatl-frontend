@@ -6,6 +6,7 @@ import PopupAddCollection from '@/components/PopupAddCollection.vue';
 import PopupAddModelSection from './PopupAddModelSection.vue';
 import PopupAddModel from './PopupAddModel.vue';
 import PopupAddPhrase from './PopupAddPhrase.vue';
+import PopupAddWordSection from './PopupAddWordSection.vue';
 
 const displayStore = useDisplayStore();
 const { popupElement } =
@@ -26,5 +27,8 @@ const { popupElement } =
   />
   <PopupAddPhrase
     v-if="popupElement == 'addPhrase'"
+  />
+  <PopupAddWordSection
+    v-if="popupElement == 'addWordSection'"
   />
 </template>
