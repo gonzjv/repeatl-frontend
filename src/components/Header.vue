@@ -3,7 +3,10 @@ import logoImg from '@/assets/logo.svg';
 import { useDisplayStore } from '@/store/display';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '../store/user';
-import { Cog8ToothIcon } from '@heroicons/vue/24/outline';
+import {
+  Cog8ToothIcon,
+  UsersIcon,
+} from '@heroicons/vue/24/outline';
 import { inject } from 'vue';
 
 const NAV_BTNS = [
@@ -18,11 +21,19 @@ const userStore = useUserStore();
 
 const { isNavLogoDisplay, isPopupDisplay } =
   storeToRefs(store);
-const { isUserLoggedIn, isAdminHere } =
+const { isUserLoggedIn, isAdminHere, userData } =
   storeToRefs(userStore);
 
 const $cookies = inject('$cookies');
-const userData = $cookies.get('userData');
+
+const handleLogoutClick = () => {
+  $cookies.remove('userData');
+  userStore.$patch({
+    userData: {},
+    isUserLoggedIn: false,
+    isAdminHere: false,
+  });
+};
 </script>
 <template>
   <header
@@ -90,6 +101,12 @@ const userData = $cookies.get('userData');
           isUserLoggedIn ? userData.email : 'Вход'
         }}
       </p>
+    </button>
+    <button
+      @click="handleLogoutClick"
+      v-if="isUserLoggedIn"
+    >
+      Log Out
     </button>
   </header>
 </template>
