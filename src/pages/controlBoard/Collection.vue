@@ -15,7 +15,10 @@ import {
   getModelSections,
 } from '@/services/modelService';
 import { useDisplayStore } from '../../store/display';
-import { getWordSections } from '../../services/wordService';
+import {
+  deleteWordSection,
+  getWordSections,
+} from '../../services/wordService';
 
 const controlBoardStore = useControlBoardStore();
 const {
@@ -46,7 +49,7 @@ const handleGoBack = () => {
   router.back();
 };
 
-const handleDeleteClick = async (
+const handleDeleteModelSection = async (
   modelSection
 ) => {
   const deletedCollection =
@@ -58,11 +61,32 @@ const handleDeleteClick = async (
   );
 };
 
-const handleSectionClick = (modelSection) => {
+const handleWordSectionDelete = async (
+  wordSection
+) => {
+  const deletedCollection =
+    await deleteWordSection(token, wordSection);
+
+  wordSections.value = await getWordSections(
+    token,
+    activeCollection.value.id
+  );
+};
+
+const handleModelSectionClick = (
+  modelSection
+) => {
   controlBoardStore.$patch({
     activeModelSection: modelSection,
   });
   router.push('/controlBoard/modelSection');
+};
+
+const handleWordSectionClick = (wordSection) => {
+  controlBoardStore.$patch({
+    activeWordSection: wordSection,
+  });
+  router.push('/controlBoard/wordSection');
 };
 </script>
 <template>
@@ -95,7 +119,9 @@ const handleSectionClick = (modelSection) => {
             >
               <button
                 @click="
-                  handleSectionClick(modelSection)
+                  handleModelSectionClick(
+                    modelSection
+                  )
                 "
                 class="shadow-lg p-3 rounded-lg active:shadow-md"
               >
@@ -103,7 +129,9 @@ const handleSectionClick = (modelSection) => {
               </button>
               <button
                 @click="
-                  handleDeleteClick(modelSection)
+                  handleDeleteModelSection(
+                    modelSection
+                  )
                 "
               >
                 <XMarkIcon
@@ -128,7 +156,9 @@ const handleSectionClick = (modelSection) => {
             >
               <button
                 @click="
-                  handleSectionClick(wordSection)
+                  handleWordSectionClick(
+                    wordSection
+                  )
                 "
                 class="shadow-lg p-3 rounded-lg active:shadow-md"
               >
@@ -136,7 +166,9 @@ const handleSectionClick = (modelSection) => {
               </button>
               <button
                 @click="
-                  handleDeleteClick(wordSection)
+                  handleWordSectionDelete(
+                    wordSection
+                  )
                 "
               >
                 <XMarkIcon

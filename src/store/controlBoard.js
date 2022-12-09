@@ -10,9 +10,11 @@ export const useControlBoardStore = defineStore(
       wordSections: [],
       models: [],
       phrases: [],
+      wordArr: [],
       activeCourse: {},
       activeCollection: {},
       activeModelSection: {},
+      activeWordSection: {},
       activeModel: {},
     }),
   }
