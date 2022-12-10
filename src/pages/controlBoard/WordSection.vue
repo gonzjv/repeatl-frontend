@@ -86,7 +86,7 @@ const handleDeleteClick = async (word) => {
             v-for="word in wordArr"
           >
             <button
-              @click="handleModelClick(word)"
+              @click=""
               class="flex gap-3 shadow-lg p-3 rounded-lg active:shadow-md"
             >
               <p class="font-extralight">
