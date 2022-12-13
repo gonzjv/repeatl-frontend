@@ -7,11 +7,13 @@ const props = defineProps({
 
 const store = useCourseStore();
 
-const { modelSections } = props.collection;
+const { modelSections, wordSections } =
+  props.collection;
+console.log('wordSections', wordSections);
 
-let modelsNumber = 0;
+let modelSum = 0;
 modelSections.forEach(
-  (e) => (modelsNumber += e.models.length)
+  (e) => (modelSum += e.models.length)
 );
 </script>
 <template>
@@ -25,19 +27,42 @@ modelSections.forEach(
       })
     "
     to="/modelList"
-    class="p-5 flex gap-20 w-full border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
+    class="p-5 flex gap-20 w-full border-2 border-transparent shadow-lg hover:border-b-yellow-300 rounded-lg"
   >
-    <div class="flex flex-col items-center">
+    <div class="w-40 flex flex-col items-center">
       <h3>МОДЕЛИ</h3>
       <mark
         class="text-white bg-sky-400 flex w-14 h-7 justify-center items-center rounded-lg"
       >
-        {{ modelsNumber }}
+        {{ modelSum }}
       </mark>
     </div>
     <ul class="w-full flex gap-2 flex-wrap">
       <li v-for="modelSection in modelSections">
-        {{ modelSection.label }}
+        {{ modelSection.number }}
+      </li>
+    </ul>
+  </router-link>
+  <router-link
+    @click="
+      store.$patch({
+        currentCollection: collection,
+      })
+    "
+    to="/wordList"
+    class="p-5 flex gap-20 w-full border-2 border-transparent shadow-lg hover:border-b-yellow-300 rounded-lg"
+  >
+    <div class="w-40 flex flex-col items-center">
+      <h3>СЛОВА</h3>
+      <mark
+        class="text-white bg-sky-400 flex w-14 h-7 justify-center items-center rounded-lg"
+      >
+        {{ modelSum }}
+      </mark>
+    </div>
+    <ul class="w-full flex gap-2 flex-wrap">
+      <li v-for="wordSection in wordSections">
+        {{ wordSection.number }}
       </li>
     </ul>
   </router-link>

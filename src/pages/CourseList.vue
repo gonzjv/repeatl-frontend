@@ -50,7 +50,7 @@ const handleCourseSwitch = async (course) => {
           v-for="course in coursesData"
         >
           <router-link
-            to="/collections"
+            to="/course"
             @click="handleCourseSwitch(course)"
             class="text-white p-3 bg-fuchsia-400 w-full rounded-lg h-10 text-2xl"
           >

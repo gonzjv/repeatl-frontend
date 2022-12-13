@@ -12,7 +12,7 @@ import { inject } from 'vue';
 const NAV_BTNS = [
   {
     title: 'Выбор заданий',
-    route: '/tasks',
+    route: '/courseList',
   },
 ];
 
@@ -105,8 +105,9 @@ const handleLogoutClick = () => {
     <button
       @click="handleLogoutClick"
       v-if="isUserLoggedIn"
+      class="w-20 h-10 flex justify-center items-center hover:border-2 border-sky-100 rounded-lg text-sky-400"
     >
-      Log Out
+      Выйти
     </button>
   </header>
 </template>

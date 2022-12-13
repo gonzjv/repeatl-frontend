@@ -27,6 +27,10 @@ onBeforeMount(async () => {
     currentCourse.value.id,
     userStore.userData.token
   );
+  console.log(
+    'collectionsData',
+    collectionsData.value
+  );
 });
 </script>
 <template>
@@ -40,15 +44,15 @@ onBeforeMount(async () => {
     </h2>
     <section class="w-full flex flex-col gap-10">
       <h3
-        class="w-full text-left text-xl font-bold"
+        class="max-w-max text-left text-xl border-b-2 border-yellow-300"
       >
-        ВЫБОР ЗАДАНИЙ:
+        Выбор заданий:
       </h3>
       <ul
         class="w-full flex flex-col gap-10 items-start"
       >
         <li
-          class="pl-32 text-base w-full flex items-start flex-col gap-5"
+          class="shadow-lg rounded-lg p-6 text-base w-full flex items-start flex-col gap-5"
           v-for="collection in collectionsData"
         >
           <Collection :collection="collection" />
