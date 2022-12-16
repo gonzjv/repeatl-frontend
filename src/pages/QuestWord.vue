@@ -260,7 +260,7 @@ const resetAnswer = () => {
             placeholder="Введите фразу..."
             @input="checkAnswer"
             v-model="answer"
-            class="p-3 shadow-lg w-full bg-white rounded-lg focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
+            class="p-3 shadow-lg w-full bg-white rounded-lg border-2 border-transparent focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
             type="text"
           />
           <button

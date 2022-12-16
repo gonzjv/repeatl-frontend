@@ -204,28 +204,25 @@ const resetAnswer = () => {
     <section class="flex gap-10 w-full">
       <aside class="flex flex-col gap-5">
         <div
-          class="flex gap-2 items-center justify-between"
+          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
         >
           <p>Model:</p>
-          <span
-            class="border-[1px] w-14 h-14 border-sky-400 rounded-md"
+          <span class="w-14 h-14"
             >model number</span
           >
         </div>
         <div
-          class="flex gap-2 items-center justify-between"
+          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
         >
           <p>Progress:</p>
-          <span
-            class="border-[1px] w-14 h-14 border-sky-400 rounded-md"
-          >
+          <span class="w-14 h-14">
             progress, %</span
           >
         </div>
       </aside>
       <div class="w-6/12 flex flex-col gap-10">
         <div
-          class="h-80 border-[1px] border-sky-400 rounded-md flex flex-col gap-51 items-center"
+          class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center"
         >
           <!-- <p>{{ progress }}</p> -->
           <ul
@@ -292,7 +289,7 @@ const resetAnswer = () => {
             placeholder="Введите фразу..."
             @input="checkAnswer"
             v-model="answer"
-            class="w-full bg-white border-[1px] rounded-md border-sky-400 focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
+            class="w-full bg-white shadow-lg rounded-lg p-3 border-2 border-transparent focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
             type="text"
           />
           <button
@@ -300,7 +297,7 @@ const resetAnswer = () => {
               isAnswerCorrect &&
               isAnswerFullfilled
             "
-            class="absolute -top-2 -right-40 text-white w-32 h-10 bg-emerald-400 rounded-md"
+            class="absolute top-1 -right-40 text-white w-32 h-10 bg-emerald-400 rounded-md"
             type="submit"
           >
             Дальше
