@@ -35,7 +35,10 @@ const createProgressWord = async (
   };
   const url = `${API_URL}progressWord/`;
   const reqData = progress;
-  console.log('reqData', reqData);
+  console.log(
+    'reqData for progress add req',
+    reqData
+  );
   const options = {
     method: 'POST',
     body: JSON.stringify(reqData),
