@@ -86,7 +86,7 @@ const handleGoBack = () => {
               currentSection: section,
             })
           "
-          to="/quest"
+          to="/questWord"
           class="text-sky-400 font-bold w-1/5 border-sky-400 border-2 rounded-md"
         >
           Старт

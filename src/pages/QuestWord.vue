@@ -7,10 +7,10 @@ import {
   onBeforeMount,
 } from 'vue';
 import {
-  getProgress,
-  createProgress,
-  updateProgress,
-} from '../services/progressService';
+  createProgressWord,
+  getProgressWord,
+  updateProgressWord,
+} from '../services/progressWordService';
 import {
   InformationCircleIcon,
   CheckBadgeIcon,
@@ -22,77 +22,78 @@ const {
   currentCourse,
   currentSection,
   currentCollection,
-  currentSubCollection,
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
 const { userData } = userStore;
 
 const state = reactive({
-  currentModel: currentSection.value.models[0],
-  currentPhrase:
-    currentSection.value.models[0].phrases[0],
+  currentWord: currentSection.value.words[0],
   progress: {},
   answer: '',
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
   isSectionComplete: false,
-  prevPhrases: [],
+  prevWordArr: [],
 });
 const {
-  currentModel,
-  currentPhrase,
+  currentWord,
   progress,
   answer,
   isAnswerCorrect,
   isAnswerFullfilled,
   isSectionComplete,
-  prevPhrases,
+  prevWordArr,
 } = toRefs(state);
 
 onBeforeMount(async () => {
-  progress.value = await getProgress(
+  progress.value = await getProgressWord(
     currentCollection.value.id,
     userData.id,
     userData.token
   );
 
+  console.log(
+    'progress before mount',
+    progress.value
+  );
   if (!progress.value.id) {
     console.log('progress not found');
 
     const initProgress = {
       userId: userData.id,
-      modelStep: 0,
-      phraseStep: 0,
+      wordStep: 0,
       sectionStep: 0,
       collectionId: currentCollection.value.id,
     };
     console.log('userData', userStore.userData);
-    progress.value = await createProgress(
+    progress.value = await createProgressWord(
       initProgress,
       userData.token
     );
   }
-  const initModel =
-    currentSection.value.models[
-      progress.value.modelStep
+  console.log('progress', progress.value);
+  const initWord =
+    currentSection.value.words[
+      progress.value.wordStep
     ];
 
-  currentModel.value = initModel;
-  currentPhrase.value =
-    currentModel.value.phrases[
-      progress.value.phraseStep
-    ];
+  currentWord.value = initWord;
+  // currentPhrase.value =
+  //   currentModel.value.phrases[
+  //     progress.value.phraseStep
+  //   ];
+
+  // console.log('currentModel', currentModel.value);
 });
 
 const checkAnswer = () => {
   const answerLength =
     answer.value.split('').length;
-  const phraseToCompare =
-    currentPhrase.value.foreign;
+  const wordToCompare = currentWord.value.foreign;
   const phraseLength =
-    phraseToCompare.split('').length;
-  const stringToCompare = phraseToCompare
+    wordToCompare.split('').length;
+  const stringToCompare = wordToCompare
     .split('')
     .slice(0, answerLength)
     .join('');
@@ -113,7 +114,7 @@ const handleFormSubmit = () => {
     isAnswerFullfilled.value
   ) {
     console.log('SUBMIT_correct!!!');
-    completePhrase();
+    completeWord();
   }
 };
 
@@ -122,55 +123,55 @@ const completeSection = () => {
   isSectionComplete.value = true;
 };
 
-const completeModel = async () => {
-  console.log('COMPLETE MODEL');
+// const completeModel = async () => {
+//   console.log('COMPLETE MODEL');
+//   if (
+//     progress.value.modelStep ==
+//     currentSection.value.models.length - 1
+//   ) {
+//     completeSection();
+//     return;
+//   }
+//   progress.value.phraseStep = 0;
+//   progress.value.modelStep += 1;
+//   await updateProgress(
+//     userData.token,
+//     progress.value
+//   );
+
+//   currentModel.value =
+//     currentSection.value.models[
+//       progress.value.modelStep
+//     ];
+//   currentPhrase.value =
+//     currentModel.value.phrases[
+//       progress.value.phraseStep
+//     ];
+//   prevPhrases.value = [];
+
+//   resetAnswer();
+// };
+
+const completeWord = async () => {
+  console.log('COMPLETE WORD');
   if (
-    progress.value.modelStep ==
-    currentSection.value.models.length - 1
+    progress.value.wordStep ==
+    currentSection.value.words.length - 1
   ) {
     completeSection();
     return;
   }
-  progress.value.phraseStep = 0;
-  progress.value.modelStep += 1;
-  await updateProgress(
-    userData.token,
-    progress.value
-  );
 
-  currentModel.value =
-    currentSection.value.models[
-      progress.value.modelStep
-    ];
-  currentPhrase.value =
-    currentModel.value.phrases[
-      progress.value.phraseStep
-    ];
-  prevPhrases.value = [];
-
-  resetAnswer();
-};
-
-const completePhrase = async () => {
-  console.log('COMPLETE PHRASE');
-  if (
-    progress.value.phraseStep ==
-    currentModel.value.phrases.length - 1
-  ) {
-    completeModel();
-    return;
-  }
-
-  prevPhrases.value.push(currentPhrase.value);
-  progress.value.phraseStep += 1;
+  prevWordArr.value.push(currentWord.value);
+  progress.value.wordStep += 1;
   console.log('progress.value', progress.value);
-  await updateProgress(
+  await updateProgressWord(
     userData.token,
     progress.value
   );
-  currentPhrase.value =
-    currentModel.value.phrases[
-      progress.value.phraseStep
+  currentWord.value =
+    currentSection.value.words[
+      progress.value.wordStep
     ];
   resetAnswer();
 };
@@ -206,10 +207,10 @@ const resetAnswer = () => {
         <div
           class="flex gap-2 items-center justify-between"
         >
-          <p>Model:</p>
+          <p>Word section:</p>
           <span
             class="border-[1px] w-14 h-14 border-sky-400 rounded-md"
-            >model number</span
+            >word section number</span
           >
         </div>
         <div
@@ -231,7 +232,7 @@ const resetAnswer = () => {
           <ul
             class="h-1/2 w-full flex flex-col gap-5 items-start justify-center p-20"
           >
-            <li v-for="prev in prevPhrases">
+            <li v-for="prev in prevWordArr">
               <p class="font-extralight text-xs">
                 {{ prev.native }}
               </p>
@@ -244,7 +245,7 @@ const resetAnswer = () => {
             class="h-1/2 w-full flex flex-col items-start justify-center p-20"
           >
             <p class="font-extralight">
-              {{ currentPhrase.native }}
+              {{ currentWord.native }}
             </p>
             <div
               :class="
@@ -273,7 +274,7 @@ const resetAnswer = () => {
                 <CheckBadgeIcon class="w-5" />
               </aside>
               <span>
-                {{ currentPhrase.foreign }}
+                {{ currentWord.foreign }}
               </span>
             </div>
           </div>
@@ -316,7 +317,7 @@ const resetAnswer = () => {
           <router-link
             class="absolute -top-2 -right-72 text-sky-400"
             v-if="isSectionComplete"
-            to="/modelList"
+            to="/wordList"
           >
             в коллекцию</router-link
           >
