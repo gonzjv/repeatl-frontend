@@ -40,14 +40,20 @@ const handleGoBack = () => {
     >
       <ArrowLeftIcon class="w-5 text-sky-400" />
       <p class="text-sky-400 font-semibold">
-        Все коллекции
+        назад
       </p>
     </button>
-    <h2
+    <router-link
       class="flex justify-center items-center bg-fuchsia-400 text-white w-1/3 rounded-lg h-10 text-2xl"
+      to="/course"
     >
       {{ currentCourse.name }}
-    </h2>
+    </router-link>
+
+    <!-- <h2
+    >
+      {{ currentCourse.name }}
+    </h2> -->
     <aside class="w-full flex gap-1 items-center">
       <h3 class="text-xl">
         Коллекция {{ currentCollection.number }}

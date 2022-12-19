@@ -22,7 +22,6 @@ const {
   currentCourse,
   currentSection,
   currentCollection,
-  currentSubCollection,
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
@@ -33,6 +32,7 @@ const state = reactive({
   currentPhrase:
     currentSection.value.models[0].phrases[0],
   progress: {},
+  percentage: 0,
   answer: '',
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
@@ -43,6 +43,7 @@ const {
   currentModel,
   currentPhrase,
   progress,
+  percentage,
   answer,
   isAnswerCorrect,
   isAnswerFullfilled,
@@ -57,7 +58,13 @@ onBeforeMount(async () => {
     userData.token
   );
 
-  if (!progress.value.id) {
+  const isProgressExist = progress.value.id
+    ? true
+    : false;
+
+  isProgressExist && updatePercentage();
+
+  if (!isProgressExist) {
     console.log('progress not found');
 
     const initProgress = {
@@ -84,6 +91,14 @@ onBeforeMount(async () => {
       progress.value.phraseStep
     ];
 });
+
+const updatePercentage = () => {
+  percentage.value = Math.floor(
+    (progress.value.phraseStep /
+      currentModel.value.phrases.length) *
+      100
+  );
+};
 
 const checkAnswer = () => {
   const answerLength =
@@ -120,6 +135,7 @@ const handleFormSubmit = () => {
 const completeSection = () => {
   console.log('COMPLETE SECTION');
   isSectionComplete.value = true;
+  percentage.value = 100;
 };
 
 const completeModel = async () => {
@@ -168,10 +184,13 @@ const completePhrase = async () => {
     userData.token,
     progress.value
   );
+
   currentPhrase.value =
     currentModel.value.phrases[
       progress.value.phraseStep
     ];
+
+  updatePercentage();
   resetAnswer();
 };
 
@@ -189,35 +208,44 @@ const resetAnswer = () => {
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
-      <router-link to="/collections">
+      <router-link to="/course">
         {{ currentCourse.name }}
       </router-link>
       <p>/</p>
-      <router-link to="/modelSubCollection"
+      <router-link to="/modelList"
         >Коллекция
-        {{ currentCollection.name }}</router-link
+        {{
+          currentCollection.number
+        }}</router-link
       >
     </nav>
     <h2 class="text-xl">
       {{ currentSection.label }}
     </h2>
     <section class="flex gap-10 w-full">
-      <aside class="flex flex-col gap-5">
+      <aside class="flex flex-col gap-5 w-2/12">
         <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
+          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-center"
         >
-          <p>Model:</p>
-          <span class="w-14 h-14"
-            >model number</span
-          >
+          <p>Model: {{ currentModel.number }}</p>
         </div>
         <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
+          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-center"
         >
-          <p>Progress:</p>
-          <span class="w-14 h-14">
-            progress, %</span
-          >
+          <p>
+            Progress:
+            {{
+              Math.floor(
+                (progress.phraseStep /
+                  currentModel.phrases.length) *
+                  100
+              )
+            }}
+            %
+          </p>
+          <p>
+            {{ percentage }}
+          </p>
         </div>
       </aside>
       <div class="w-6/12 flex flex-col gap-10">

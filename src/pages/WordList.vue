@@ -39,14 +39,15 @@ const handleGoBack = () => {
     >
       <ArrowLeftIcon class="w-5 text-sky-400" />
       <p class="text-sky-400 font-semibold">
-        Все коллекции
+        Назад
       </p>
     </button>
-    <h2
+    <router-link
       class="flex justify-center items-center bg-fuchsia-400 text-white w-1/3 rounded-lg h-10 text-2xl"
+      to="/course"
     >
       {{ currentCourse.name }}
-    </h2>
+    </router-link>
     <aside class="w-full flex gap-1 items-center">
       <h3 class="text-xl">
         Коллекция {{ currentCollection.number }}
@@ -60,7 +61,7 @@ const handleGoBack = () => {
         class="w-8/12 p-5 flex items-center gap-10 border-2 border-transparent shadow-none hover:border-2 hover:shadow-md"
       >
         <div class="flex flex-col items-center">
-          <p>Слова</p>
+          <p>Слова {{ section.number }}</p>
           <mark
             class="text-white bg-sky-400 flex w-14 h-7 justify-center items-center rounded-lg"
           >
@@ -70,9 +71,6 @@ const handleGoBack = () => {
         <div
           class="flex flex-col w-2/4 items-start"
         >
-          <p>
-            {{ section.number }}
-          </p>
           <button
             @click="handleButtonClick(section)"
             class="text-sky-400 text-xs font-bold"
