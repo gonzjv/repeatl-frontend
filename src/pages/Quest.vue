@@ -16,7 +16,11 @@ import {
   CheckBadgeIcon,
 } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
-import { countPhrases } from '@/helpers/questHelpers';
+import {
+  countPhrases,
+  getPercentage,
+} from '@/helpers/questHelpers';
+import { countNotCompletedPhraseAmount } from '../helpers/questHelpers';
 
 const courseStore = useCourseStore();
 const {
@@ -87,18 +91,12 @@ onBeforeMount(async () => {
   phraseAmount.value = countPhrases(
     currentSection.value
   );
-  console.log('phraseAmount', phraseAmount.value);
 
   notCompletedPhraseAmount.value =
     countNotCompletedPhraseAmount(
       progress.value,
       currentSection.value
     );
-
-  console.log(
-    'notCompletedPhraseAmount',
-    notCompletedPhraseAmount
-  );
 
   percentage.value = getPercentage(
     phraseAmount.value,
@@ -116,41 +114,6 @@ onBeforeMount(async () => {
       progress.value.phraseStep
     ];
 });
-
-const countNotCompletedPhraseAmount = (
-  progress,
-  section
-) => {
-  const currentModelPhrases = section.models[
-    progress.modelStep
-  ].phrases.slice(progress.phraseStep).length;
-
-  const notCompletedModels = section.models.slice(
-    progress.modelStep + 1
-  );
-  console.log('models', section.models);
-  console.log('progress', progress);
-  console.log(
-    'notCompletedModels',
-    notCompletedModels
-  );
-
-  let result = 0;
-
-  notCompletedModels.forEach((model) => {
-    result += model.phrases.length;
-  });
-
-  result += currentModelPhrases;
-
-  return result;
-};
-
-const getPercentage = (amount, notCompleted) => {
-  return Math.floor(
-    ((amount - notCompleted) / amount) * 100
-  );
-};
 
 const checkAnswer = () => {
   const answerLength =
@@ -280,7 +243,6 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <p>{{ currentSection }}</p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
@@ -310,17 +272,7 @@ const resetAnswer = () => {
         >
           <p>
             Progress:
-            {{
-              Math.floor(
-                (progress.phraseStep /
-                  currentModel.phrases.length) *
-                  100
-              )
-            }}
-            %
-          </p>
-          <p>
-            {{ percentage }}
+            {{ percentage }} %
           </p>
         </div>
       </aside>
@@ -328,7 +280,6 @@ const resetAnswer = () => {
         <div
           class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center"
         >
-          <!-- <p>{{ progress }}</p> -->
           <ul
             class="h-1/2 w-full flex flex-col gap-5 items-start justify-center p-20"
           >
