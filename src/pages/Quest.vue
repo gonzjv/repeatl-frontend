@@ -16,6 +16,7 @@ import {
   CheckBadgeIcon,
 } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
+import { countPhrases } from '@/helpers/questHelpers';
 
 const courseStore = useCourseStore();
 const {
@@ -32,6 +33,8 @@ const state = reactive({
   currentPhrase:
     currentSection.value.models[0].phrases[0],
   progress: {},
+  phraseAmount: 0,
+  notCompletedPhraseAmount: 0,
   percentage: 0,
   answer: '',
   isAnswerCorrect: true,
@@ -43,6 +46,8 @@ const {
   currentModel,
   currentPhrase,
   progress,
+  phraseAmount,
+  notCompletedPhraseAmount,
   percentage,
   answer,
   isAnswerCorrect,
@@ -62,8 +67,6 @@ onBeforeMount(async () => {
     ? true
     : false;
 
-  isProgressExist && updatePercentage();
-
   if (!isProgressExist) {
     console.log('progress not found');
 
@@ -80,6 +83,28 @@ onBeforeMount(async () => {
       userData.token
     );
   }
+
+  phraseAmount.value = countPhrases(
+    currentSection.value
+  );
+  console.log('phraseAmount', phraseAmount.value);
+
+  notCompletedPhraseAmount.value =
+    countNotCompletedPhraseAmount(
+      progress.value,
+      currentSection.value
+    );
+
+  console.log(
+    'notCompletedPhraseAmount',
+    notCompletedPhraseAmount
+  );
+
+  percentage.value = getPercentage(
+    phraseAmount.value,
+    notCompletedPhraseAmount.value
+  );
+
   const initModel =
     currentSection.value.models[
       progress.value.modelStep
@@ -92,11 +117,38 @@ onBeforeMount(async () => {
     ];
 });
 
-const updatePercentage = () => {
-  percentage.value = Math.floor(
-    (progress.value.phraseStep /
-      currentModel.value.phrases.length) *
-      100
+const countNotCompletedPhraseAmount = (
+  progress,
+  section
+) => {
+  const currentModelPhrases = section.models[
+    progress.modelStep
+  ].phrases.slice(progress.phraseStep).length;
+
+  const notCompletedModels = section.models.slice(
+    progress.modelStep + 1
+  );
+  console.log('models', section.models);
+  console.log('progress', progress);
+  console.log(
+    'notCompletedModels',
+    notCompletedModels
+  );
+
+  let result = 0;
+
+  notCompletedModels.forEach((model) => {
+    result += model.phrases.length;
+  });
+
+  result += currentModelPhrases;
+
+  return result;
+};
+
+const getPercentage = (amount, notCompleted) => {
+  return Math.floor(
+    ((amount - notCompleted) / amount) * 100
   );
 };
 
@@ -190,7 +242,18 @@ const completePhrase = async () => {
       progress.value.phraseStep
     ];
 
-  updatePercentage();
+  // updatePercentage();
+  notCompletedPhraseAmount.value =
+    countNotCompletedPhraseAmount(
+      progress.value,
+      currentSection.value
+    );
+
+  percentage.value = getPercentage(
+    phraseAmount.value,
+    notCompletedPhraseAmount.value
+  );
+
   resetAnswer();
 };
 
@@ -205,6 +268,7 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
+    <p>{{ currentSection }}</p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
