@@ -216,6 +216,18 @@ const completeModel = async () => {
     ];
   prevPhrases.value = [];
 
+  // updatePercentage();
+  notCompletedPhraseAmount.value =
+    countNotCompletedPhraseAmount(
+      progress.value,
+      currentSection.value
+    );
+
+  percentage.value = getPercentage(
+    phraseAmount.value,
+    notCompletedPhraseAmount.value
+  );
+
   resetAnswer();
 };
 
