@@ -34,7 +34,6 @@ const state = reactive({
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
   isSectionComplete: false,
-  prevWordArr: [],
 });
 const {
   currentWord,
@@ -43,7 +42,6 @@ const {
   isAnswerCorrect,
   isAnswerFullfilled,
   isSectionComplete,
-  prevWordArr,
 } = toRefs(state);
 
 onBeforeMount(async () => {
@@ -133,7 +131,6 @@ const completeWord = async () => {
     return;
   }
 
-  prevWordArr.value.push(currentWord.value);
   progress.value.wordStep += 1;
   console.log('progress.value', progress.value);
   await updateProgressWord(
@@ -194,25 +191,16 @@ const resetAnswer = () => {
       </aside>
       <div class="w-6/12 flex flex-col gap-10">
         <div
-          class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center"
+          class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center justify-center"
         >
-          <ul
-            class="h-1/2 w-full flex flex-col gap-5 items-start justify-center p-20"
-          >
-            <li v-for="prev in prevWordArr">
-              <p class="font-extralight text-xs">
-                {{ prev.native }}
-              </p>
-              <p class="text-xs">
-                {{ prev.foreign }}
-              </p>
-            </li>
-          </ul>
           <div
-            class="h-1/2 w-full flex flex-col items-start justify-center p-20"
+            class="h-1/2 w-full flex flex-col gap-7 items-start justify-center p-20"
           >
-            <p class="font-extralight">
+            <P>
               {{ currentWord.native }}
+            </P>
+            <p class="font-extralight">
+              {{ currentWord.mnemoTag }}
             </p>
             <div
               :class="
@@ -244,6 +232,9 @@ const resetAnswer = () => {
                 {{ currentWord.foreign }}
               </span>
             </div>
+            <p class="font-extralight">
+              {{ currentWord.transcription }}
+            </p>
           </div>
         </div>
         <form
