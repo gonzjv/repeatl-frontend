@@ -5,11 +5,6 @@ import { useControlBoardStore } from '../store/controlBoard';
 import { useDisplayStore } from '../store/display';
 import { storeToRefs } from 'pinia';
 import {
-  addPhrase,
-  getPhrases,
-  addPhraseFromFile,
-} from '@/services/phraseService';
-import {
   addWord,
   getWordArr,
 } from '../services/wordService';
@@ -28,15 +23,24 @@ const state = reactive({
   inputLabel: '',
   inputNative: '',
   inputForeign: '',
+  inputMnemoTag: '',
+  inputTranscription: '',
 });
-const { inputLabel, inputNative, inputForeign } =
-  toRefs(state);
+const {
+  inputLabel,
+  inputNative,
+  inputForeign,
+  inputMnemoTag,
+  inputTranscription,
+} = toRefs(state);
 
 const handleSubmit = async () => {
   const word = {
     label: inputLabel.value,
     native: inputNative.value,
     foreign: inputForeign.value,
+    mnemoTag: inputMnemoTag.value,
+    transcription: inputTranscription.value,
   };
   const newWord = await addWord(
     token,
@@ -89,6 +93,20 @@ const handleSubmit = async () => {
         class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
         type="text"
         placeholder="Слово на английском"
+      />
+      <input
+        required
+        v-model="inputMnemoTag"
+        class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
+        type="text"
+        placeholder="Мнемотег"
+      />
+      <input
+        required
+        v-model="inputTranscription"
+        class="w-full bg-transparent border-2 border-sky-400 rounded-md h-10 p-2"
+        type="text"
+        placeholder="Транскрипция"
       />
       <button
         type="submit"

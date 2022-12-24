@@ -196,9 +196,9 @@ const resetAnswer = () => {
           <div
             class="h-1/2 w-full flex flex-col gap-7 items-start justify-center p-20"
           >
-            <P>
+            <p>
               {{ currentWord.native }}
-            </P>
+            </p>
             <p class="font-extralight">
               {{ currentWord.mnemoTag }}
             </p>
