@@ -16,6 +16,10 @@ import {
   CheckBadgeIcon,
 } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
+import {
+  countNotCompletedWordAmount,
+  getPercentage,
+} from '@/helpers/questHelpers';
 
 const courseStore = useCourseStore();
 const {
@@ -30,6 +34,9 @@ const { userData } = userStore;
 const state = reactive({
   currentWord: currentSection.value.words[0],
   progress: {},
+  wordAmount: 0,
+  notCompletedWordAmount: 0,
+  percentage: 0,
   answer: '',
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
@@ -42,6 +49,9 @@ const {
   isAnswerCorrect,
   isAnswerFullfilled,
   isSectionComplete,
+  wordAmount,
+  notCompletedWordAmount,
+  percentage,
 } = toRefs(state);
 
 onBeforeMount(async () => {
@@ -70,19 +80,27 @@ onBeforeMount(async () => {
       userData.token
     );
   }
-  console.log('progress', progress.value);
+
+  wordAmount.value =
+    currentSection.value.words.length;
+
+  notCompletedWordAmount.value =
+    countNotCompletedWordAmount(
+      progress.value,
+      currentSection.value
+    );
+
+  percentage.value = getPercentage(
+    wordAmount.value,
+    notCompletedWordAmount.value
+  );
+
   const initWord =
     currentSection.value.words[
       progress.value.wordStep
     ];
 
   currentWord.value = initWord;
-  // currentPhrase.value =
-  //   currentModel.value.phrases[
-  //     progress.value.phraseStep
-  //   ];
-
-  // console.log('currentModel', currentModel.value);
 });
 
 const checkAnswer = () => {
@@ -119,6 +137,7 @@ const handleFormSubmit = () => {
 const completeSection = () => {
   console.log('COMPLETE SECTION');
   isSectionComplete.value = true;
+  percentage.value = 100;
 };
 
 const completeWord = async () => {
@@ -141,6 +160,18 @@ const completeWord = async () => {
     currentSection.value.words[
       progress.value.wordStep
     ];
+
+  notCompletedWordAmount.value =
+    countNotCompletedWordAmount(
+      progress.value,
+      currentSection.value
+    );
+
+  percentage.value = getPercentage(
+    wordAmount.value,
+    notCompletedWordAmount.value
+  );
+
   resetAnswer();
 };
 
@@ -175,18 +206,18 @@ const resetAnswer = () => {
         <div
           class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
         >
-          <p>Word section:</p>
-          <span class="w-14 h-14"
-            >word section number</span
-          >
+          <p>
+            Word section:
+            {{ currentSection.number }}
+          </p>
         </div>
         <div
           class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
         >
-          <p>Progress:</p>
-          <span class="w-14 h-14">
-            progress, %</span
-          >
+          <p>
+            Progress:
+            {{ percentage }} %
+          </p>
         </div>
       </aside>
       <div class="w-6/12 flex flex-col gap-10">
