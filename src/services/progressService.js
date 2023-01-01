@@ -24,21 +24,41 @@ const getProgress = async (
   }
 };
 
-const createProgress = async (
-  progress,
-  token
-) => {
+// const createProgress = async (
+//   progress,
+//   token
+// ) => {
+//   const bearerToken = 'Bearer ' + token;
+//   const myHeaders = {
+//     'Content-Type': 'application/json',
+//     Authorization: bearerToken,
+//   };
+//   const url = `${API_URL}progressModels/`;
+//   const reqData = progress;
+//   console.log('reqData', reqData);
+//   const options = {
+//     method: 'POST',
+//     body: JSON.stringify(reqData),
+//     headers: myHeaders,
+//   };
+//   try {
+//     const response = await fetch(url, options);
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.log('Erorr:', error);
+//   }
+// };
+
+const createProgress = async (userId, token) => {
   const bearerToken = 'Bearer ' + token;
   const myHeaders = {
     'Content-Type': 'application/json',
     Authorization: bearerToken,
   };
-  const url = `${API_URL}progressModels/`;
-  const reqData = progress;
-  console.log('reqData', reqData);
+  const url = `${API_URL}progress/${userId}`;
   const options = {
     method: 'POST',
-    body: JSON.stringify(reqData),
     headers: myHeaders,
   };
   try {

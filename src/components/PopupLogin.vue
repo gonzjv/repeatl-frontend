@@ -1,6 +1,7 @@
 <script setup>
 import { inject, reactive, toRefs } from 'vue';
 import { addUser } from '@/services/userService';
+import { createProgress } from '@/services/progressService';
 import { loginUser } from '../services/userService';
 import { useUserStore } from '../store/user';
 import { useDisplayStore } from '../store/display';
@@ -33,16 +34,23 @@ const signIn = async () => {
     password: password.value,
   };
 
-  const response = await loginUser(user);
-  if (response.token) {
+  const userData = await loginUser(user);
+  if (userData.token) {
     userStore.$patch({
-      userData: response,
+      userData: userData,
       isUserLoggedIn: true,
     });
 
-    $cookies.set('userData', response);
+    const newProgress = await createProgress(
+      userData.id,
+      userData.token
+    );
 
-    response.role == 'admin' &&
+    console.log('newProgress', newProgress);
+
+    $cookies.set('userData', userData);
+
+    userData.role == 'admin' &&
       userStore.$patch({ isAdminHere: true });
 
     isLoginFail.value = false;

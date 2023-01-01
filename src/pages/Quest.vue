@@ -74,18 +74,18 @@ onBeforeMount(async () => {
   if (!isProgressExist) {
     console.log('progress not found');
 
-    const initProgress = {
-      userId: userData.id,
-      modelStep: 0,
-      phraseStep: 0,
-      sectionStep: 0,
-      collectionId: currentCollection.value.id,
-    };
-    console.log('userData', userStore.userData);
-    progress.value = await createProgress(
-      initProgress,
-      userData.token
-    );
+    // const initProgress = {
+    //   userId: userData.id,
+    //   modelStep: 0,
+    //   phraseStep: 0,
+    //   sectionStep: 0,
+    //   collectionId: currentCollection.value.id,
+    // };
+    // console.log('userData', userStore.userData);
+    // progress.value = await createProgress(
+    //   initProgress,
+    //   userData.token
+    // );
   }
 
   phraseAmount.value = countPhrases(
@@ -243,6 +243,7 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
+    <p>{{ progress }}</p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
