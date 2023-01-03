@@ -1,10 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getProgress = async (
-  collectionId,
-  userId,
-  token
-) => {
+const getProgress = async (userId, token) => {
   const bearerToken = 'Bearer ' + token;
   const myHeaders = {
     'Content-Type': 'application/json',
@@ -13,7 +9,7 @@ const getProgress = async (
   const options = {
     headers: myHeaders,
   };
-  const url = `${API_URL}progressModels/${userId}.${collectionId}`;
+  const url = `${API_URL}progress/${userId}`;
 
   try {
     const response = await fetch(url, options);
@@ -23,6 +19,30 @@ const getProgress = async (
     console.log('Erorr:', error);
   }
 };
+
+// const getProgress = async (
+//   collectionId,
+//   userId,
+//   token
+// ) => {
+//   const bearerToken = 'Bearer ' + token;
+//   const myHeaders = {
+//     'Content-Type': 'application/json',
+//     Authorization: bearerToken,
+//   };
+//   const options = {
+//     headers: myHeaders,
+//   };
+//   const url = `${API_URL}progressModels/${userId}.${collectionId}`;
+
+//   try {
+//     const response = await fetch(url, options);
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.log('Erorr:', error);
+//   }
+// };
 
 // const createProgress = async (
 //   progress,

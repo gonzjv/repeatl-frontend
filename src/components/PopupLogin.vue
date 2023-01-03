@@ -1,7 +1,10 @@
 <script setup>
 import { inject, reactive, toRefs } from 'vue';
 import { addUser } from '@/services/userService';
-import { createProgress } from '@/services/progressService';
+import {
+  createProgress,
+  getProgress,
+} from '@/services/progressService';
 import { loginUser } from '../services/userService';
 import { useUserStore } from '../store/user';
 import { useDisplayStore } from '../store/display';
@@ -41,12 +44,20 @@ const signIn = async () => {
       isUserLoggedIn: true,
     });
 
-    const newProgress = await createProgress(
+    const progress = await getProgress(
       userData.id,
       userData.token
     );
+    console.log('progress', progress);
 
-    console.log('newProgress', newProgress);
+    if (!progress) {
+      const newProgress = await createProgress(
+        userData.id,
+        userData.token
+      );
+
+      console.log('newProgress', newProgress);
+    }
 
     $cookies.set('userData', userData);
 
