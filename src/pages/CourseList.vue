@@ -5,9 +5,17 @@ import {
   toRefs,
 } from 'vue';
 import { useCourseStore } from '@/store/course';
-import { storeToRefs } from 'pinia';
 import { useUserStore } from '../store/user';
 import { getCourses } from '../services/courseService';
+import {
+  createProgress,
+  getProgress,
+} from '../services/progressService';
+import { storeToRefs } from 'pinia';
+
+const store = useCourseStore();
+const userStore = useUserStore();
+const { progress } = storeToRefs(userStore);
 
 let state = reactive({
   coursesData: [],
@@ -23,11 +31,26 @@ onBeforeMount(async () => {
   coursesData.value = await getCourses(
     userStore.userData.token
   );
-});
 
-const store = useCourseStore();
-const userStore = useUserStore();
-const { currentCourse } = storeToRefs(store);
+  const progress = await getProgress(
+    userStore.userData.id,
+    userStore.userData.token
+  );
+  console.log('progress', progress);
+
+  progress &&
+    userStore.$patch({ progress: progress });
+
+  if (!progress) {
+    const newProgress = await createProgress(
+      userData.id,
+      userData.token
+    );
+    userStore.$patch({ progress: newProgress });
+
+    console.log('newProgress', newProgress);
+  }
+});
 
 const handleCourseSwitch = async (course) => {
   store.$patch({
@@ -37,6 +60,7 @@ const handleCourseSwitch = async (course) => {
 </script>
 <template>
   <main class="flex flex-col gap-10 items-center">
+    <p>Progress: {{ progress }}</p>
     <aside
       v-if="coursesWindowDisplay"
       class="flex flex-col gap-10 w-full"

@@ -11,32 +11,60 @@ import { storeToRefs } from 'pinia';
 import Collection from '../components/Collection.vue';
 import { getCollections } from '../services/collectionService';
 import { useUserStore } from '../store/user';
+import {
+  getCourseState,
+  addCourseState,
+} from '@/services/courseStateService';
+import { getProgress } from '../services/progressService';
 
 let state = reactive({
   collectionsData: [],
+  courseState: {},
 });
 
-let { collectionsData } = toRefs(state);
+let { collectionsData, courseState } =
+  toRefs(state);
 
 const store = useCourseStore();
 const userStore = useUserStore();
 const { currentCourse } = storeToRefs(store);
+const { progress } = storeToRefs(userStore);
 
 onBeforeMount(async () => {
   collectionsData.value = await getCollections(
     currentCourse.value.id,
     userStore.userData.token
   );
-  console.log(
-    'collectionsData',
-    collectionsData.value
+
+  const progress = await getProgress(
+    userStore.userData.id,
+    userStore.userData.token
   );
+  console.log('progress', progress);
+
+  courseState.value = await getCourseState(
+    progress.id,
+    currentCourse.value.id,
+    userStore.userData.token
+  );
+  console.log('courseState', courseState);
+
+  if (!courseState) {
+    const newCourseState = await addCourseState(
+      progress.value.id,
+      currentCourse.value.id,
+      userStore.userData.token
+    );
+    console.log('newCourseState', newCourseState);
+  }
 });
 </script>
 <template>
   <main
     class="flex flex-col justify-center items-center gap-10"
   >
+    <p>Progress: {{ progress }}</p>
+    <p>Course state: {{ courseState }}</p>
     <h2
       class="flex justify-center items-center bg-fuchsia-400 text-white w-4/12 rounded-lg h-10 text-2xl"
     >
