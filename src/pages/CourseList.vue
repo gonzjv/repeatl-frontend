@@ -43,8 +43,8 @@ onBeforeMount(async () => {
 
   if (!progress) {
     const newProgress = await createProgress(
-      userData.id,
-      userData.token
+      userStore.userData.id,
+      userStore.userData.token
     );
     userStore.$patch({ progress: newProgress });
 

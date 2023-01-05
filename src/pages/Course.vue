@@ -28,7 +28,7 @@ let { collectionsData, courseState } =
 const store = useCourseStore();
 const userStore = useUserStore();
 const { currentCourse } = storeToRefs(store);
-const { progress } = storeToRefs(userStore);
+// const { progress } = storeToRefs(userStore);
 
 onBeforeMount(async () => {
   collectionsData.value = await getCollections(
@@ -47,11 +47,11 @@ onBeforeMount(async () => {
     currentCourse.value.id,
     userStore.userData.token
   );
-  console.log('courseState', courseState);
+  console.log('courseState', courseState.value);
 
-  if (!courseState) {
+  if (!courseState.value) {
     const newCourseState = await addCourseState(
-      progress.value.id,
+      progress.id,
       currentCourse.value.id,
       userStore.userData.token
     );
@@ -63,7 +63,7 @@ onBeforeMount(async () => {
   <main
     class="flex flex-col justify-center items-center gap-10"
   >
-    <p>Progress: {{ progress }}</p>
+    <!-- <p>Progress: {{ progress }}</p> -->
     <p>Course state: {{ courseState }}</p>
     <h2
       class="flex justify-center items-center bg-fuchsia-400 text-white w-4/12 rounded-lg h-10 text-2xl"
