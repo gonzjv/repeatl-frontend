@@ -16,6 +16,7 @@ import {
   addCourseState,
 } from '@/services/courseStateService';
 import { getProgress } from '../services/progressService';
+import { goHome } from '@/helpers/navigation.helper';
 
 let state = reactive({
   collectionsData: [],
@@ -31,6 +32,8 @@ const { currentCourse } = storeToRefs(store);
 // const { progress } = storeToRefs(userStore);
 
 onBeforeMount(async () => {
+  !currentCourse.value.id && goHome();
+
   collectionsData.value = await getCollections(
     currentCourse.value.id,
     userStore.userData.token
