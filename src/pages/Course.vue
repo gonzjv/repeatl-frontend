@@ -15,7 +15,6 @@ import {
   getCourseState,
   addCourseState,
 } from '@/services/courseStateService';
-import { getProgress } from '../services/progressService';
 import { goHome } from '@/helpers/navigation.helper';
 
 let state = reactive({
@@ -39,14 +38,14 @@ onBeforeMount(async () => {
     userStore.userData.token
   );
 
-  const progress = await getProgress(
-    userStore.userData.id,
-    userStore.userData.token
-  );
-  console.log('progress', progress);
+  // const progress = await getProgress(
+  //   userStore.userData.id,
+  //   userStore.userData.token
+  // );
+  // console.log('progress', progress);
 
   courseState.value = await getCourseState(
-    progress.id,
+    userStore.progress.id,
     currentCourse.value.id,
     userStore.userData.token
   );
@@ -54,7 +53,7 @@ onBeforeMount(async () => {
 
   if (!courseState.value) {
     const newCourseState = await addCourseState(
-      progress.id,
+      userStore.progress.id,
       currentCourse.value.id,
       userStore.userData.token
     );
