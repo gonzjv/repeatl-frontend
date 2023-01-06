@@ -34,7 +34,7 @@ const addCollectionState = async (
     'Content-Type': 'application/json',
     Authorization: bearerToken,
   };
-  const url = `${API_URL}courseState/${courseStateId}.${collectionId}`;
+  const url = `${API_URL}collectionState/${courseStateId}.${collectionId}`;
   const options = {
     method: 'POST',
     headers: myHeaders,

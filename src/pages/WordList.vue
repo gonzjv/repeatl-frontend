@@ -4,16 +4,57 @@ import { storeToRefs } from 'pinia';
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { useDisplayStore } from '../store/display';
 import { useRouter } from 'vue-router';
+import { onBeforeMount } from 'vue';
+import { goHome } from '../helpers/navigation.helper';
+import { useUserStore } from '../store/user';
+import {
+  getCollectionState,
+  addCollectionState,
+} from '@/services/collectionStateService';
 
 const router = useRouter();
 
 const courseStore = useCourseStore();
-const displayStore = useDisplayStore();
 const { currentCourse, currentCollection } =
   storeToRefs(courseStore);
+const displayStore = useDisplayStore();
+const userStore = useUserStore();
+const { collectionState, courseState, userData } =
+  storeToRefs(userStore);
 
 const { wordSections } = currentCollection.value;
 console.log('wordSections', wordSections);
+
+onBeforeMount(async () => {
+  !courseState.value.id && goHome();
+
+  if (courseState.value.id) {
+    const state = await getCollectionState(
+      courseState.value.id,
+      currentCollection.value.id,
+      userData.value.token
+    );
+    console.log('collectionState', state);
+
+    userStore.$patch({ collectionState: state });
+
+    if (!state) {
+      const newCollectionState =
+        await addCollectionState(
+          courseState.value.id,
+          currentCollection.value.id,
+          userData.value.token
+        );
+      console.log(
+        'newCollectionState',
+        newCollectionState
+      );
+      userStore.$patch({
+        collectionState: newCollectionState,
+      });
+    }
+  }
+});
 
 const handleButtonClick = (section) => {
   displayStore.$patch({
@@ -33,6 +74,7 @@ const handleGoBack = () => {
   <main
     class="relative gap-10 w-full flex flex-col items-center"
   >
+    <p>CollectionState: {{ collectionState }}</p>
     <button
       @click="handleGoBack"
       class="absolute flex gap-1 items-center left-0 top-3 text-дп"

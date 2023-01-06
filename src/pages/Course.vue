@@ -19,45 +19,51 @@ import { goHome } from '@/helpers/navigation.helper';
 
 let state = reactive({
   collectionsData: [],
-  courseState: {},
 });
 
-let { collectionsData, courseState } =
-  toRefs(state);
+let { collectionsData } = toRefs(state);
 
 const store = useCourseStore();
 const userStore = useUserStore();
 const { currentCourse } = storeToRefs(store);
-// const { progress } = storeToRefs(userStore);
+const { courseState, userData, progress } =
+  storeToRefs(userStore);
 
 onBeforeMount(async () => {
   !currentCourse.value.id && goHome();
 
-  collectionsData.value = await getCollections(
-    currentCourse.value.id,
-    userStore.userData.token
-  );
-
-  // const progress = await getProgress(
-  //   userStore.userData.id,
-  //   userStore.userData.token
-  // );
-  // console.log('progress', progress);
-
-  courseState.value = await getCourseState(
-    userStore.progress.id,
-    currentCourse.value.id,
-    userStore.userData.token
-  );
-  console.log('courseState', courseState.value);
-
-  if (!courseState.value) {
-    const newCourseState = await addCourseState(
-      userStore.progress.id,
+  if (currentCourse.value.id) {
+    collectionsData.value = await getCollections(
       currentCourse.value.id,
-      userStore.userData.token
+      userData.value.token
     );
-    console.log('newCourseState', newCourseState);
+
+    const state = await getCourseState(
+      progress.value.id,
+      currentCourse.value.id,
+      userData.value.token
+    );
+
+    state &&
+      userStore.$patch({
+        courseState: state,
+      });
+    console.log('courseState', state);
+
+    if (!state) {
+      const newCourseState = await addCourseState(
+        progress.value.id,
+        currentCourse.value.id,
+        userData.value.token
+      );
+      console.log(
+        'newCourseState',
+        newCourseState
+      );
+      userStore.$patch({
+        courseState: newCourseState,
+      });
+    }
   }
 });
 </script>
