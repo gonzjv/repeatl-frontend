@@ -5,6 +5,8 @@ import {
   reactive,
   toRefs,
   onBeforeMount,
+  onBeforeUpdate,
+  onBeforeUnmount,
 } from 'vue';
 import {
   createProgressWord,
@@ -20,6 +22,11 @@ import {
   countNotCompletedWordAmount,
   getPercentage,
 } from '@/helpers/questHelpers';
+import {
+  addWordSectionState,
+  getWordSectionState,
+} from '../services/wordSectionStateService';
+import { goHome } from '../helpers/navigation.helper';
 
 const courseStore = useCourseStore();
 const {
@@ -29,10 +36,16 @@ const {
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
-const { userData } = userStore;
+const {
+  userData,
+  collectionState,
+  wordSectionState,
+} = userStore;
 
 const state = reactive({
-  currentWord: currentSection.value.words[0],
+  currentWord: currentSection.value.words
+    ? currentSection.value.words[0]
+    : 'initWord',
   progress: {},
   wordAmount: 0,
   notCompletedWordAmount: 0,
@@ -55,16 +68,16 @@ const {
 } = toRefs(state);
 
 onBeforeMount(async () => {
+  // !collectionState.id && goHome();
+  // !currentSection.value.words && goHome();
+  // console.log('collectionState', collectionState);
+
   progress.value = await getProgressWord(
     currentCollection.value.id,
     userData.id,
     userData.token
   );
 
-  console.log(
-    'progress before mount',
-    progress.value
-  );
   if (!progress.value.id) {
     console.log('progress not found');
 
@@ -79,6 +92,34 @@ onBeforeMount(async () => {
       initProgress,
       userData.token
     );
+  }
+
+  const stateFromApi = await getWordSectionState(
+    collectionState.id,
+    currentSection.value.id,
+    userData.token
+  );
+  console.log('wordSectionState', stateFromApi);
+
+  stateFromApi &&
+    userStore.$patch({
+      wordSectionState: stateFromApi,
+    });
+
+  if (!stateFromApi) {
+    const newWordSectionState =
+      await addWordSectionState(
+        collectionState.id,
+        currentSection.value.id,
+        userData.token
+      );
+    console.log(
+      'newWordSectionState',
+      newWordSectionState
+    );
+    userStore.$patch({
+      wordSectionState: newWordSectionState,
+    });
   }
 
   wordAmount.value =
@@ -186,6 +227,9 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
+    <p>
+      wordSectionState: {{ wordSectionState }}
+    </p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
@@ -208,7 +252,7 @@ const resetAnswer = () => {
         >
           <p>
             Word section:
-            {{ currentSection.number }}
+            <!-- {{ currentSection.number }} -->
           </p>
         </div>
         <div
