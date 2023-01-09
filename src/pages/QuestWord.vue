@@ -26,7 +26,10 @@ import {
   addWordSectionState,
   getWordSectionState,
 } from '../services/wordSectionStateService';
-import { goHome } from '../helpers/navigation.helper';
+import {
+  addWordState,
+  getWordState,
+} from '@/services/wordStateService';
 
 const courseStore = useCourseStore();
 const {
@@ -106,6 +109,9 @@ onBeforeMount(async () => {
       wordSectionState: stateFromApi,
     });
 
+  // currentSection.value.words.map(async (word) => {
+  //   console.log('word', word);
+  // });
   if (!stateFromApi) {
     const newWordSectionState =
       await addWordSectionState(
@@ -120,6 +126,17 @@ onBeforeMount(async () => {
     userStore.$patch({
       wordSectionState: newWordSectionState,
     });
+
+    currentSection.value.words.map(
+      async (word) => {
+        console.log('word', word);
+        await addWordState(
+          stateFromApi.id,
+          word.id,
+          userData.token
+        );
+      }
+    );
   }
 
   wordAmount.value =
