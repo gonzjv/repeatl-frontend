@@ -5,8 +5,6 @@ import {
   reactive,
   toRefs,
   onBeforeMount,
-  onBeforeUpdate,
-  onBeforeUnmount,
 } from 'vue';
 import {
   createProgressWord,
@@ -70,6 +68,31 @@ const {
   percentage,
 } = toRefs(state);
 
+const updateState = async () => {
+  const stateFromApi = await getWordSectionState(
+    collectionState.id,
+    currentSection.value.id,
+    userData.token
+  );
+  console.log('wordSectionState', stateFromApi);
+
+  stateFromApi &&
+    userStore.$patch({
+      wordSectionState: stateFromApi,
+    });
+};
+
+const addWordArrToState = async () => {
+  currentSection.value.words.map(async (word) => {
+    console.log('word', word);
+    await addWordState(
+      wordSectionState.id,
+      word.id,
+      userData.token
+    );
+  });
+};
+
 onBeforeMount(async () => {
   // !collectionState.id && goHome();
   // !currentSection.value.words && goHome();
@@ -97,22 +120,9 @@ onBeforeMount(async () => {
     );
   }
 
-  const stateFromApi = await getWordSectionState(
-    collectionState.id,
-    currentSection.value.id,
-    userData.token
-  );
-  console.log('wordSectionState', stateFromApi);
+  await updateState();
 
-  stateFromApi &&
-    userStore.$patch({
-      wordSectionState: stateFromApi,
-    });
-
-  // currentSection.value.words.map(async (word) => {
-  //   console.log('word', word);
-  // });
-  if (!stateFromApi) {
+  if (!wordSectionState) {
     const newWordSectionState =
       await addWordSectionState(
         collectionState.id,
@@ -126,17 +136,8 @@ onBeforeMount(async () => {
     userStore.$patch({
       wordSectionState: newWordSectionState,
     });
-
-    currentSection.value.words.map(
-      async (word) => {
-        console.log('word', word);
-        await addWordState(
-          stateFromApi.id,
-          word.id,
-          userData.token
-        );
-      }
-    );
+    await addWordArrToState();
+    await updateState();
   }
 
   wordAmount.value =
