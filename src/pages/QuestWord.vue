@@ -27,6 +27,7 @@ import {
 import {
   addWordState,
   getWordState,
+  completeWordState,
 } from '@/services/wordStateService';
 
 const courseStore = useCourseStore();
@@ -201,6 +202,14 @@ const completeSection = () => {
 
 const completeWord = async () => {
   console.log('COMPLETE WORD');
+  const currentWordState =
+    wordSectionState.wordStateArr.find(
+      (e) => (e.wordId = currentWord.value.id)
+    );
+  await completeWordState(
+    userData.token,
+    currentWordState.id
+  );
   if (
     progress.value.wordStep ==
     currentSection.value.words.length - 1
