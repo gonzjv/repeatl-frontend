@@ -38,16 +38,20 @@ const {
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
+// const {
+//   userData,
+//   collectionState,
+//   wordSectionState,
+// } = userStore;
+
 const {
   userData,
   collectionState,
   wordSectionState,
-} = userStore;
+} = storeToRefs(userStore);
 
 const state = reactive({
-  currentWord: currentSection.value.words
-    ? currentSection.value.words[0]
-    : 'initWord',
+  currentWord: currentSection.value.words[0],
   progress: {},
   wordAmount: 0,
   notCompletedWordAmount: 0,
@@ -56,6 +60,7 @@ const state = reactive({
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
   isSectionComplete: false,
+  wordArrToDo: [],
 });
 const {
   currentWord,
@@ -67,15 +72,16 @@ const {
   wordAmount,
   notCompletedWordAmount,
   percentage,
+  wordArrToDo,
 } = toRefs(state);
 
 const updateState = async () => {
   const stateFromApi = await getWordSectionState(
-    collectionState.id,
+    collectionState.value.id,
     currentSection.value.id,
-    userData.token
+    userData.value.token
   );
-  console.log('wordSectionState', stateFromApi);
+  console.log('stateFromApi', stateFromApi);
 
   stateFromApi &&
     userStore.$patch({
@@ -84,13 +90,34 @@ const updateState = async () => {
 };
 
 const addWordArrToState = async () => {
+  let initWordStateArr = [];
+  currentSection.value.words.map((word) => {
+    const initWordState = {
+      wordId: word.id,
+      isCompleted: false,
+    };
+    initWordStateArr.push(initWordState);
+  });
+
+  const initWordSectionState = {
+    wordStateArr: initWordStateArr,
+  };
+  userStore.$patch({
+    wordSectionState: initWordSectionState,
+  });
+
   currentSection.value.words.map(async (word) => {
-    console.log('word', word);
-    await addWordState(
-      wordSectionState.id,
+    const newWordState = await addWordState(
+      wordSectionState.value.id,
       word.id,
-      userData.token
+      userData.value.token
     );
+    console.log('newWordState', newWordState);
+    const initWordState = {
+      id: word.id,
+      isCompleted: false,
+    };
+    initWordStateArr.push(initWordState);
   });
 };
 
@@ -101,15 +128,15 @@ onBeforeMount(async () => {
 
   progress.value = await getProgressWord(
     currentCollection.value.id,
-    userData.id,
-    userData.token
+    userData.value.id,
+    userData.value.token
   );
 
   if (!progress.value.id) {
     console.log('progress not found');
 
     const initProgress = {
-      userId: userData.id,
+      userId: userData.value.id,
       wordStep: 0,
       sectionStep: 0,
       collectionId: currentCollection.value.id,
@@ -117,18 +144,18 @@ onBeforeMount(async () => {
     console.log('userData', userStore.userData);
     progress.value = await createProgressWord(
       initProgress,
-      userData.token
+      userData.value.token
     );
   }
 
   await updateState();
 
-  if (!wordSectionState) {
+  if (!wordSectionState.id) {
     const newWordSectionState =
       await addWordSectionState(
-        collectionState.id,
+        collectionState.value.id,
         currentSection.value.id,
-        userData.token
+        userData.value.token
       );
     console.log(
       'newWordSectionState',
@@ -137,30 +164,59 @@ onBeforeMount(async () => {
     userStore.$patch({
       wordSectionState: newWordSectionState,
     });
+
     await addWordArrToState();
-    await updateState();
+
+    // await updateState();
   }
+
+  console.log(
+    'wordSectionState',
+    wordSectionState.value
+  );
+  console.log(
+    'currentSection',
+    currentSection.value
+  );
+  console.log(
+    'wordSectionState.find',
+    wordSectionState.value.wordStateArr.find(
+      (e) =>
+        e.wordId ==
+        currentSection.value.words[0].id
+    )
+  );
+
+  wordArrToDo.value =
+    currentSection.value.words.filter(
+      (word) =>
+        wordSectionState.value.wordStateArr.find(
+          (e) => e.wordId == word.id
+        ).isCompleted == false
+    );
+  console.log('wordArrToDo', wordArrToDo.value);
 
   wordAmount.value =
     currentSection.value.words.length;
 
   notCompletedWordAmount.value =
-    countNotCompletedWordAmount(
-      progress.value,
-      currentSection.value
-    );
+    wordArrToDo.value.length;
+  // countNotCompletedWordAmount(
+  //   progress.value,
+  //   currentSection.value
+  // );
 
   percentage.value = getPercentage(
     wordAmount.value,
     notCompletedWordAmount.value
   );
 
-  const initWord =
-    currentSection.value.words[
-      progress.value.wordStep
-    ];
+  // const initWord =
+  //   currentSection.value.words[
+  //     progress.value.wordStep
+  //   ];
 
-  currentWord.value = initWord;
+  currentWord.value = wordArrToDo.value[0];
 });
 
 const checkAnswer = () => {
@@ -203,16 +259,28 @@ const completeSection = () => {
 const completeWord = async () => {
   console.log('COMPLETE WORD');
   const currentWordState =
-    wordSectionState.wordStateArr.find(
+    wordSectionState.value.wordStateArr.find(
       (e) => (e.wordId = currentWord.value.id)
     );
   await completeWordState(
-    userData.token,
+    userData.value.token,
     currentWordState.id
   );
+  await updateState();
+  wordArrToDo.value =
+    currentSection.value.words.filter(
+      (word) =>
+        wordSectionState.value.wordStateArr.find(
+          (e) => e.wordId == word.id
+        ).isCompleted == false
+    );
+  console.log('wordArrToDo', wordArrToDo.value);
+  currentWord.value = wordArrToDo.value[0];
+
   if (
-    progress.value.wordStep ==
-    currentSection.value.words.length - 1
+    !wordArrToDo.value
+    // progress.value.wordStep ==
+    // currentSection.value.words.length - 1
   ) {
     completeSection();
     return;
@@ -221,7 +289,7 @@ const completeWord = async () => {
   progress.value.wordStep += 1;
   console.log('progress.value', progress.value);
   await updateProgressWord(
-    userData.token,
+    userData.value.token,
     progress.value
   );
   currentWord.value =
