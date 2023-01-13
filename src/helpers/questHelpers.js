@@ -30,12 +30,6 @@ const countNotCompletedPhraseAmount = (
   return result;
 };
 
-const countNotCompletedWordAmount = (
-  progress,
-  section
-) =>
-  section.words.slice(progress.wordStep).length;
-
 const getPercentage = (amount, notCompleted) => {
   return Math.floor(
     ((amount - notCompleted) / amount) * 100
@@ -45,6 +39,5 @@ const getPercentage = (amount, notCompleted) => {
 export {
   countPhrases,
   countNotCompletedPhraseAmount,
-  countNotCompletedWordAmount,
   getPercentage,
 };

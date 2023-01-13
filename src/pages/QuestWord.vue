@@ -12,10 +12,7 @@ import {
   CheckBadgeIcon,
 } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
-import {
-  countNotCompletedWordAmount,
-  getPercentage,
-} from '@/helpers/questHelpers';
+import { getPercentage } from '@/helpers/questHelpers';
 import {
   addWordSectionState,
   getWordSectionState,
@@ -55,7 +52,6 @@ const state = reactive({
 });
 const {
   currentWord,
-  progress,
   answer,
   isAnswerCorrect,
   isAnswerFullfilled,
@@ -67,14 +63,6 @@ const {
 } = toRefs(state);
 
 const updateState = async () => {
-  console.log(
-    'collectionState',
-    collectionState.value.id
-  );
-  console.log(
-    'currentSection',
-    currentSection.value.id
-  );
   const stateFromApi = await getWordSectionState(
     collectionState.value.id,
     currentSection.value.id,
@@ -86,65 +74,48 @@ const updateState = async () => {
     userStore.$patch({
       wordSectionState: stateFromApi,
     });
-  console.log(
-    'wordSectionState',
-    wordSectionState.value
-  );
 
   if (
     wordSectionState.value &&
     wordSectionState.value.wordStateArr
   ) {
-    wordArrToDo.value =
-      currentSection.value.words.filter(
-        (word) =>
-          wordSectionState.value.wordStateArr.find(
-            (e) => e.wordId == word.id
-          ).isCompleted == false
-      );
-    console.log('wordArrToDo', wordArrToDo.value);
+    updateWordArrToDo();
+    updateCurrentWord();
+    updatePercentage();
+  }
+};
 
-    wordAmount.value =
-      currentSection.value.words.length;
-
-    notCompletedWordAmount.value =
-      wordArrToDo.value.length;
-    // countNotCompletedWordAmount(
-    //   progress.value,
-    //   currentSection.value
-    // );
-
-    percentage.value = getPercentage(
-      wordAmount.value,
-      notCompletedWordAmount.value
-    );
-
-    // const initWord =
-    //   currentSection.value.words[
-    //     progress.value.wordStep
-    //   ];
-
+const updateCurrentWord = () => {
+  if (wordArrToDo.value.length > 0) {
     currentWord.value = wordArrToDo.value[0];
   }
 };
 
+const updateWordArrToDo = () => {
+  wordArrToDo.value =
+    currentSection.value.words.filter(
+      (word) =>
+        wordSectionState.value.wordStateArr.find(
+          (e) => e.wordId == word.id
+        ).isCompleted == false
+    );
+  console.log('wordArrToDo', wordArrToDo.value);
+};
+
+const updatePercentage = () => {
+  wordAmount.value =
+    currentSection.value.words.length;
+
+  notCompletedWordAmount.value =
+    wordArrToDo.value.length;
+
+  percentage.value = getPercentage(
+    wordAmount.value,
+    notCompletedWordAmount.value
+  );
+};
+
 const addWordArrToState = async () => {
-  // let initWordStateArr = [];
-  // currentSection.value.words.map((word) => {
-  //   const initWordState = {
-  //     wordId: word.id,
-  //     isCompleted: false,
-  //   };
-  //   initWordStateArr.push(initWordState);
-  // });
-
-  // const initWordSectionState = {
-  //   wordStateArr: initWordStateArr,
-  // };
-  // userStore.$patch({
-  //   wordSectionState: initWordSectionState,
-  // });
-
   currentSection.value.words.map(async (word) => {
     const newWordState = await addWordState(
       wordSectionState.value.id,
@@ -152,37 +123,10 @@ const addWordArrToState = async () => {
       userData.value.token
     );
     console.log('newWordState', newWordState);
-    // const initWordState = {
-    //   id: word.id,
-    //   isCompleted: false,
-    // };
-    // initWordStateArr.push(initWordState);
   });
 };
 
 onBeforeMount(async () => {
-  // progress.value = await getProgressWord(
-  //   currentCollection.value.id,
-  //   userData.value.id,
-  //   userData.value.token
-  // );
-
-  // if (!progress.value.id) {
-  //   console.log('progress not found');
-
-  //   const initProgress = {
-  //     userId: userData.value.id,
-  //     wordStep: 0,
-  //     sectionStep: 0,
-  //     collectionId: currentCollection.value.id,
-  //   };
-  //   console.log('userData', userStore.userData);
-  //   progress.value = await createProgressWord(
-  //     initProgress,
-  //     userData.value.token
-  //   );
-  // }
-
   await updateState();
 
   if (!wordSectionState.value.id) {
@@ -202,77 +146,16 @@ onBeforeMount(async () => {
 
     await addWordArrToState();
 
-    currentWord.value =
-      currentSection.value.words[0];
-
     setTimeout(async () => {
       await updateState();
-
-      // wordArrToDo.value =
-      //   currentSection.value.words.filter(
-      //     (word) =>
-      //       wordSectionState.value.wordStateArr.find(
-      //         (e) => e.wordId == word.id
-      //       ).isCompleted == false
-      //   );
-      // console.log(
-      //   'wordArrToDo after timeout',
-      //   wordArrToDo.value
-      // );
     }, 1000);
   }
-
-  console.log(
-    'wordSectionState',
-    wordSectionState.value
-  );
-  console.log(
-    'currentSection',
-    currentSection.value
-  );
-
-  // if (
-  //   wordSectionState.value.wordStateArr.length > 0
-  // ) {
-  // wordArrToDo.value =
-  //   currentSection.value.words.filter(
-  //     (word) =>
-  //       wordSectionState.value.wordStateArr.find(
-  //         (e) => e.wordId == word.id
-  //       ).isCompleted == false
-  //   );
-  // console.log('wordArrToDo', wordArrToDo.value);
-  // wordAmount.value =
-  //   currentSection.value.words.length;
-  // notCompletedWordAmount.value =
-  //   wordArrToDo.value.length;
-  // // countNotCompletedWordAmount(
-  // //   progress.value,
-  // //   currentSection.value
-  // // );
-  // percentage.value = getPercentage(
-  //   wordAmount.value,
-  //   notCompletedWordAmount.value
-  // );
-  // // const initWord =
-  // //   currentSection.value.words[
-  // //     progress.value.wordStep
-  // //   ];
-  // currentWord.value = wordArrToDo.value[0];
-  // } else {
-  // currentWord.value =
-  //   currentSection.value.words[0];
-  // }
 });
 
 onBeforeUnmount(async () => {
   userStore.$patch({
     wordSectionState: false,
   });
-  console.log(
-    'wordSectionState when unmount',
-    wordSectionState.value
-  );
 });
 
 const checkAnswer = () => {
@@ -323,46 +206,10 @@ const completeWord = async () => {
     currentWordState.id
   );
   await updateState();
-  wordArrToDo.value =
-    currentSection.value.words.filter(
-      (word) =>
-        wordSectionState.value.wordStateArr.find(
-          (e) => e.wordId == word.id
-        ).isCompleted == false
-    );
-  console.log('wordArrToDo', wordArrToDo.value);
-  currentWord.value = wordArrToDo.value[0];
-
-  if (
-    !wordArrToDo.value
-    // progress.value.wordStep ==
-    // currentSection.value.words.length - 1
-  ) {
+  if (wordArrToDo.value.length == 0) {
     completeSection();
     return;
   }
-
-  // progress.value.wordStep += 1;
-  // console.log('progress.value', progress.value);
-  // await updateProgressWord(
-  //   userData.value.token,
-  //   progress.value
-  // );
-  // currentWord.value =
-  //   currentSection.value.words[
-  //     progress.value.wordStep
-  //   ];
-
-  // notCompletedWordAmount.value =
-  //   countNotCompletedWordAmount(
-  //     progress.value,
-  //     currentSection.value
-  //   );
-
-  // percentage.value = getPercentage(
-  //   wordAmount.value,
-  //   notCompletedWordAmount.value
-  // );
 
   resetAnswer();
 };
@@ -378,9 +225,6 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <p>
-      wordSectionState: {{ wordSectionState }}
-    </p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
@@ -403,7 +247,7 @@ const resetAnswer = () => {
         >
           <p>
             Word section:
-            <!-- {{ currentSection.number }} -->
+            {{ currentSection.number }}
           </p>
         </div>
         <div
@@ -420,6 +264,7 @@ const resetAnswer = () => {
           class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center justify-center"
         >
           <div
+            v-if="!isSectionComplete"
             class="h-1/2 w-full flex flex-col gap-7 items-start justify-center p-20"
           >
             <p>
