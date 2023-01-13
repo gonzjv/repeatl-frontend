@@ -15,6 +15,7 @@ import { useUserStore } from '../store/user';
 import { getPercentage } from '@/helpers/questHelpers';
 import {
   addWordSectionState,
+  completeWordSection,
   getWordSectionState,
 } from '../services/wordSectionStateService';
 import {
@@ -189,10 +190,15 @@ const handleFormSubmit = () => {
   }
 };
 
-const completeSection = () => {
+const completeSection = async () => {
   console.log('COMPLETE SECTION');
   isSectionComplete.value = true;
   percentage.value = 100;
+
+  await completeWordSection(
+    userData.value.token,
+    wordSectionState.value.id
+  );
 };
 
 const completeWord = async () => {

@@ -48,6 +48,33 @@ const addWordSectionState = async (
   }
 };
 
+const completeWordSection = async (
+  token,
+  wordSectionStateId
+) => {
+  const bearerToken = 'Bearer ' + token;
+  const myHeaders = {
+    'Content-Type': 'application/json',
+    Authorization: bearerToken,
+  };
+  const url = `${API_URL}wordSectionState/`;
+  const reqData = {
+    wordSectionStateId: wordSectionStateId,
+  };
+  const options = {
+    method: 'PUT',
+    body: JSON.stringify(reqData),
+    headers: myHeaders,
+  };
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Erorr:', error);
+  }
+};
+
 // const updateProgress = async (
 //   token,
 //   progress
@@ -83,4 +110,5 @@ const addWordSectionState = async (
 export {
   getWordSectionState,
   addWordSectionState,
+  completeWordSection,
 };
