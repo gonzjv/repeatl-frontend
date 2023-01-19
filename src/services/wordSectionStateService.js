@@ -48,9 +48,9 @@ const addWordSectionState = async (
   }
 };
 
-const completeWordSection = async (
+const updateWordSectionState = async (
   token,
-  wordSectionStateId
+  wordSectionState
 ) => {
   const bearerToken = 'Bearer ' + token;
   const myHeaders = {
@@ -59,7 +59,7 @@ const completeWordSection = async (
   };
   const url = `${API_URL}wordSectionState/`;
   const reqData = {
-    wordSectionStateId: wordSectionStateId,
+    wordSectionState: wordSectionState,
   };
   const options = {
     method: 'PUT',
@@ -110,5 +110,5 @@ const completeWordSection = async (
 export {
   getWordSectionState,
   addWordSectionState,
-  completeWordSection,
+  updateWordSectionState,
 };

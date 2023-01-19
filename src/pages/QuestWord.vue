@@ -12,15 +12,20 @@ import {
   CheckBadgeIcon,
 } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
-import { getPercentage } from '@/helpers/questHelpers';
+import {
+  getPercentage,
+  WORD_BATCH_NUMBER,
+  setIntroActive,
+  setFirstRepeatActive,
+  setSecondRepeatActive,
+} from '@/helpers/questHelpers';
 import {
   addWordSectionState,
-  completeWordSection,
+  updateWordSectionState,
   getWordSectionState,
 } from '../services/wordSectionStateService';
 import {
   addWordState,
-  getWordState,
   completeWordState,
 } from '@/services/wordStateService';
 
@@ -49,7 +54,9 @@ const state = reactive({
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
   isSectionComplete: false,
+  isFirstRepeatActive: false,
   wordArrToDo: [],
+  completedWordArr: [],
 });
 const {
   currentWord,
@@ -57,10 +64,12 @@ const {
   isAnswerCorrect,
   isAnswerFullfilled,
   isSectionComplete,
+  isFirstRepeatActive,
   wordAmount,
   notCompletedWordAmount,
   percentage,
   wordArrToDo,
+  completedWordArr,
 } = toRefs(state);
 
 const updateState = async () => {
@@ -78,7 +87,7 @@ const updateState = async () => {
 
   if (
     wordSectionState.value &&
-    wordSectionState.value.wordStateArr
+    wordSectionState.value.wordStateArr.length > 0
   ) {
     updateWordArrToDo();
     updateCurrentWord();
@@ -93,13 +102,24 @@ const updateCurrentWord = () => {
 };
 
 const updateWordArrToDo = () => {
-  wordArrToDo.value =
-    currentSection.value.words.filter(
-      (word) =>
-        wordSectionState.value.wordStateArr.find(
-          (e) => e.wordId == word.id
-        ).isCompleted == false
-    );
+  wordSectionState.value.isSecondRepeatActive &&
+    (wordArrToDo.value =
+      currentSection.value.words.filter(
+        (word) =>
+          wordSectionState.value.wordStateArr.find(
+            (e) => e.wordId == word.id
+          ).isCompleted == false
+      ));
+
+  wordSectionState.value.isIntroActive &&
+    (wordArrToDo.value =
+      currentSection.value.words.filter(
+        (word) =>
+          wordSectionState.value.wordStateArr.find(
+            (e) => e.wordId == word.id
+          ).isFirstRepeatComplete == false
+      ));
+
   console.log('wordArrToDo', wordArrToDo.value);
 };
 
@@ -195,28 +215,83 @@ const completeSection = async () => {
   isSectionComplete.value = true;
   percentage.value = 100;
 
-  await completeWordSection(
+  const stateToUpdate = {
+    id: wordSectionState.value.id,
+    isCompleted: true,
+    isFirsrRepeatActive: false,
+    isSecondRepeatActive: false,
+  };
+  await updateWordSectionState(
     userData.value.token,
-    wordSectionState.value.id
+    stateToUpdate
   );
 };
 
 const completeWord = async () => {
   console.log('COMPLETE WORD');
-  const currentWordState =
-    wordSectionState.value.wordStateArr.find(
-      (e) => (e.wordId = currentWord.value.id)
+
+  if (wordSectionState.value.isIntroActive) {
+    completedWordArr.value.push(
+      currentWord.value
     );
-  await completeWordState(
-    userData.value.token,
-    currentWordState.id
-  );
-  await updateState();
-  if (wordArrToDo.value.length == 0) {
-    completeSection();
-    return;
+
+    wordArrToDo.value =
+      wordArrToDo.value.slice(1);
+
+    updateCurrentWord();
+
+    console.log('currentWord', currentWord.value);
+    console.log('wordArrToDo', wordArrToDo.value);
+    console.log(
+      'completedWordArr',
+      completedWordArr.value
+    );
+    if (
+      completedWordArr.value.length ==
+      WORD_BATCH_NUMBER
+    ) {
+      console.log(
+        'isFirsrRepeatActive before',
+        isFirstRepeatActive.value
+      );
+      if (!isFirstRepeatActive.value) {
+        isFirstRepeatActive.value = true;
+        wordArrToDo.value =
+          completedWordArr.value;
+        console.log(
+          'isFirsrRepeatActive',
+          isFirstRepeatActive.value
+        );
+        updateCurrentWord();
+      } else {
+        await setSecondRepeatActive(
+          userData.value.token,
+          wordSectionState.value.id
+        );
+        await updateState();
+      }
+    }
   }
 
+  if (
+    wordSectionState.value.isSecondRepeatActive
+  ) {
+    const currentWordState =
+      wordSectionState.value.wordStateArr.find(
+        (e) => (e.wordId = currentWord.value.id)
+      );
+    await completeWordState(
+      userData.value.token,
+      currentWordState.id
+    );
+
+    await updateState();
+
+    if (wordArrToDo.value.length == 0) {
+      completeSection();
+      return;
+    }
+  }
   resetAnswer();
 };
 
@@ -231,6 +306,9 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
+    <p>
+      wordSectionState: {{ wordSectionState }}
+    </p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
@@ -305,11 +383,14 @@ const resetAnswer = () => {
               >
                 <CheckBadgeIcon class="w-5" />
               </aside>
-              <span>
+              <span v-if="!isFirstRepeatActive">
                 {{ currentWord.foreign }}
               </span>
             </div>
-            <p class="font-extralight">
+            <p
+              v-if="!isFirstRepeatActive"
+              class="font-extralight"
+            >
               {{ currentWord.transcription }}
             </p>
           </div>
