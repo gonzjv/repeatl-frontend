@@ -27,6 +27,7 @@ import {
 import {
   addWordState,
   completeWordState,
+  completeFirstRepeatBatch,
 } from '@/services/wordStateService';
 
 const courseStore = useCourseStore();
@@ -86,7 +87,7 @@ const updateState = async () => {
     });
 
   if (
-    wordSectionState.value &&
+    wordSectionState.value.wordStateArr &&
     wordSectionState.value.wordStateArr.length > 0
   ) {
     updateWordArrToDo();
@@ -250,26 +251,40 @@ const completeWord = async () => {
       completedWordArr.value.length ==
       WORD_BATCH_NUMBER
     ) {
-      console.log(
-        'isFirsrRepeatActive before',
-        isFirstRepeatActive.value
-      );
       if (!isFirstRepeatActive.value) {
         isFirstRepeatActive.value = true;
         wordArrToDo.value =
           completedWordArr.value;
-        console.log(
-          'isFirsrRepeatActive',
-          isFirstRepeatActive.value
-        );
+        completedWordArr.value = [];
+
         updateCurrentWord();
       } else {
-        await setSecondRepeatActive(
+        isFirstRepeatActive.value = false;
+
+        let wordStateIdArr = [];
+        completedWordArr.value.map((word) => {
+          const wordState =
+            wordSectionState.value.wordStateArr.find(
+              (e) => e.wordId == word.id
+            );
+          wordStateIdArr.push(wordState.id);
+        });
+
+        await completeFirstRepeatBatch(
           userData.value.token,
-          wordSectionState.value.id
+          wordStateIdArr
         );
+        completedWordArr.value = [];
         await updateState();
       }
+
+      // if() {
+      //   await setSecondRepeatActive(
+      //     userData.value.token,
+      //     wordSectionState.value.id
+      //   );
+      //   await updateState();
+      // }
     }
   }
 
@@ -278,7 +293,7 @@ const completeWord = async () => {
   ) {
     const currentWordState =
       wordSectionState.value.wordStateArr.find(
-        (e) => (e.wordId = currentWord.value.id)
+        (e) => e.wordId == currentWord.value.id
       );
     await completeWordState(
       userData.value.token,

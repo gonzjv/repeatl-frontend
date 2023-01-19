@@ -84,7 +84,7 @@ const completeFirstRepeatBatch = async (
     'Content-Type': 'application/json',
     Authorization: bearerToken,
   };
-  const url = `${API_URL}wordState/`;
+  const url = `${API_URL}wordState/firstRepeatComplete`;
   const reqData = {
     wordStateIdArr: wordStateIdArr,
   };
