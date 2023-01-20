@@ -58,6 +58,7 @@ const state = reactive({
   isFirstRepeatActive: false,
   wordArrToDo: [],
   completedWordArr: [],
+  lastWord: {},
 });
 const {
   currentWord,
@@ -71,6 +72,7 @@ const {
   percentage,
   wordArrToDo,
   completedWordArr,
+  lastWord,
 } = toRefs(state);
 
 const updateState = async () => {
@@ -150,6 +152,9 @@ const addWordArrToState = async () => {
 
 onBeforeMount(async () => {
   await updateState();
+
+  lastWord.value =
+    currentSection.value.words.at(-1);
 
   if (!wordSectionState.value.id) {
     const newWordSectionState =
@@ -275,16 +280,31 @@ const completeWord = async () => {
           wordStateIdArr
         );
         completedWordArr.value = [];
-        await updateState();
-      }
 
-      // if() {
-      //   await setSecondRepeatActive(
-      //     userData.value.token,
-      //     wordSectionState.value.id
-      //   );
-      //   await updateState();
-      // }
+        console.log(
+          'lastWord',
+          lastWord.value,
+          'currentWord',
+          currentWord.value
+        );
+        const isFirstRepeatComplete =
+          lastWord.value == currentWord.value &&
+          true;
+        console.log(
+          'isFirstRepeatComplete',
+          isFirstRepeatComplete
+        );
+
+        isFirstRepeatComplete &&
+          (await setSecondRepeatActive(
+            userData.value.token,
+            wordSectionState.value.id
+          ));
+
+        await updateState();
+        resetAnswer();
+        return;
+      }
     }
   }
 
