@@ -371,11 +371,11 @@ const resetAnswer = () => {
       </aside>
       <div class="w-6/12 flex flex-col gap-10">
         <div
-          class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center justify-center"
+          class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center justify-start"
         >
           <div
             v-if="!isSectionComplete"
-            class="h-1/2 w-full flex flex-col gap-7 items-start justify-center p-20"
+            class="w-full flex flex-col gap-7 items-start justify-start p-20"
           >
             <p>
               {{ currentWord.native }}
@@ -409,12 +409,26 @@ const resetAnswer = () => {
               >
                 <CheckBadgeIcon class="w-5" />
               </aside>
-              <span v-if="!isFirstRepeatActive">
+              <span
+                v-if="
+                  (wordSectionState.isIntroActive &&
+                    !isFirstRepeatActive) ||
+                  !isAnswerCorrect ||
+                  (isAnswerCorrect &&
+                    isAnswerFullfilled)
+                "
+              >
                 {{ currentWord.foreign }}
               </span>
             </div>
             <p
-              v-if="!isFirstRepeatActive"
+              v-if="
+                (wordSectionState.isIntroActive &&
+                  !isFirstRepeatActive) ||
+                !isAnswerCorrect ||
+                (isAnswerCorrect &&
+                  isAnswerFullfilled)
+              "
               class="font-extralight"
             >
               {{ currentWord.transcription }}
