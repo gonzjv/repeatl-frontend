@@ -281,12 +281,6 @@ const completeWord = async () => {
         );
         completedWordArr.value = [];
 
-        console.log(
-          'lastWord',
-          lastWord.value,
-          'currentWord',
-          currentWord.value
-        );
         const isFirstRepeatComplete =
           lastWord.value == currentWord.value &&
           true;
@@ -341,9 +335,6 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <p>
-      wordSectionState: {{ wordSectionState }}
-    </p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
@@ -474,7 +465,30 @@ const resetAnswer = () => {
           >
         </form>
       </div>
-      <aside>help</aside>
+      <aside>
+        <div
+          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
+        >
+          <p
+            v-if="
+              wordSectionState.isIntroActive &&
+              !isFirstRepeatActive
+            "
+          >
+            Ознакомление
+          </p>
+          <p v-if="isFirstRepeatActive">
+            Первое повторение
+          </p>
+          <p
+            v-if="
+              wordSectionState.isSecondRepeatActive
+            "
+          >
+            Второе повторение
+          </p>
+        </div>
+      </aside>
     </section>
   </main>
 </template>
