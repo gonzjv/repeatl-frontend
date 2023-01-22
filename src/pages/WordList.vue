@@ -71,12 +71,18 @@ const handleGoBack = () => {
 };
 
 const checkIsComplete = (sectionId) => {
-  if (collectionState.value.wordSectionStateArr) {
+  if (
+    collectionState.value &&
+    collectionState.value.wordSectionStateArr
+  ) {
     const wordSectionState =
       collectionState.value.wordSectionStateArr.find(
         (el) => el.wordSectionId == sectionId
       );
-    return wordSectionState.isCompleted;
+    console.log;
+    return wordSectionState
+      ? wordSectionState.isCompleted
+      : false;
   }
 };
 </script>
