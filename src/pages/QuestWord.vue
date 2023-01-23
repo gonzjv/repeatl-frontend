@@ -140,14 +140,17 @@ const updatePercentage = () => {
 };
 
 const addWordArrToState = async () => {
-  currentSection.value.words.map(async (word) => {
+  let wordStateArr = [];
+  for (const word of currentSection.value.words) {
     const newWordState = await addWordState(
       wordSectionState.value.id,
       word.id,
       userData.value.token
     );
     console.log('newWordState', newWordState);
-  });
+    wordStateArr.push(newWordState);
+  }
+  return wordStateArr;
 };
 
 onBeforeMount(async () => {
@@ -172,10 +175,7 @@ onBeforeMount(async () => {
     });
 
     await addWordArrToState();
-
-    setTimeout(async () => {
-      await updateState();
-    }, 1000);
+    await updateState();
   }
 });
 
