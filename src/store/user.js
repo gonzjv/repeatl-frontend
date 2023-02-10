@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', {
     courseState: {},
     collectionState: {},
     wordSectionState: {},
+    modelSectionState: {},
     isUserLoggedIn: false,
     isAdminHere: false,
   }),

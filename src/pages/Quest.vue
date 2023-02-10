@@ -60,59 +60,36 @@ const {
   prevPhrases,
 } = toRefs(state);
 
+const updateState = async () => {
+  console.log('update state!');
+
+  // const stateFromApi = await getWordSectionState(
+  //   collectionState.value.id,
+  //   currentSection.value.id,
+  //   userData.value.token
+  // );
+  // console.log('stateFromApi', stateFromApi);
+
+  // stateFromApi &&
+  //   userStore.$patch({
+  //     wordSectionState: stateFromApi,
+  //   });
+
+  // if (
+  //   wordSectionState.value.wordStateArr &&
+  //   wordSectionState.value.wordStateArr.length > 0
+  // ) {
+  //   updateWordArrToDo();
+  //   updateCurrentWord();
+  //   updatePercentage();
+  // }
+};
+
 onBeforeMount(async () => {
-  progress.value = await getProgress(
-    currentCollection.value.id,
-    userData.id,
-    userData.token
-  );
-
-  const isProgressExist = progress.value.id
-    ? true
-    : false;
-
-  if (!isProgressExist) {
-    console.log('progress not found');
-
-    // const initProgress = {
-    //   userId: userData.id,
-    //   modelStep: 0,
-    //   phraseStep: 0,
-    //   sectionStep: 0,
-    //   collectionId: currentCollection.value.id,
-    // };
-    // console.log('userData', userStore.userData);
-    // progress.value = await createProgress(
-    //   initProgress,
-    //   userData.token
-    // );
-  }
-
+  await updateState();
   phraseAmount.value = countPhrases(
     currentSection.value
   );
-
-  notCompletedPhraseAmount.value =
-    countNotCompletedPhraseAmount(
-      progress.value,
-      currentSection.value
-    );
-
-  percentage.value = getPercentage(
-    phraseAmount.value,
-    notCompletedPhraseAmount.value
-  );
-
-  const initModel =
-    currentSection.value.models[
-      progress.value.modelStep
-    ];
-
-  currentModel.value = initModel;
-  currentPhrase.value =
-    currentModel.value.phrases[
-      progress.value.phraseStep
-    ];
 });
 
 const checkAnswer = () => {
