@@ -1,20 +1,61 @@
 <script setup>
+import { onBeforeMount } from 'vue';
 import { useCourseStore } from '@/store/course';
 import { storeToRefs } from 'pinia';
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 import { useDisplayStore } from '../store/display';
 import { useRouter } from 'vue-router';
+import {
+  getCollectionState,
+  addCollectionState,
+} from '@/services/collectionStateService';
+import { useUserStore } from '../store/user';
 
 const router = useRouter();
 
 const courseStore = useCourseStore();
 const displayStore = useDisplayStore();
+const userStore = useUserStore();
+
+const { collectionState, courseState, userData } =
+  storeToRefs(userStore);
 const { currentCourse, currentCollection } =
   storeToRefs(courseStore);
-const { isSectionPopupDisplay, isPopupDisplay } =
-  storeToRefs(displayStore);
+// const { isSectionPopupDisplay, isPopupDisplay } =
+//   storeToRefs(displayStore);
 
 const { modelSections } = currentCollection.value;
+
+onBeforeMount(async () => {
+  !courseState.value.id && goHome();
+
+  if (courseState.value.id) {
+    const state = await getCollectionState(
+      courseState.value.id,
+      currentCollection.value.id,
+      userData.value.token
+    );
+    console.log('collectionState', state);
+
+    userStore.$patch({ collectionState: state });
+
+    if (!state) {
+      const newCollectionState =
+        await addCollectionState(
+          courseState.value.id,
+          currentCollection.value.id,
+          userData.value.token
+        );
+      console.log(
+        'newCollectionState',
+        newCollectionState
+      );
+      userStore.$patch({
+        collectionState: newCollectionState,
+      });
+    }
+  }
+});
 
 const handleButtonClick = (section) => {
   displayStore.$patch({
@@ -49,11 +90,6 @@ const handleGoBack = () => {
     >
       {{ currentCourse.name }}
     </router-link>
-
-    <!-- <h2
-    >
-      {{ currentCourse.name }}
-    </h2> -->
     <aside class="w-full flex gap-1 items-center">
       <h3 class="text-xl">
         Коллекция {{ currentCollection.number }}

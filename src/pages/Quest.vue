@@ -21,6 +21,7 @@ import {
   getPercentage,
 } from '@/helpers/questHelpers';
 import { countNotCompletedPhraseAmount } from '../helpers/questHelpers';
+import { getModelSectionState } from '@/services/modelSectionStateService';
 
 const courseStore = useCourseStore();
 const {
@@ -30,7 +31,11 @@ const {
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
-const { userData } = userStore;
+const {
+  userData,
+  collectionState,
+  modelSectionState,
+} = storeToRefs(userStore);
 
 const state = reactive({
   currentModel: currentSection.value.models[0],
@@ -63,17 +68,17 @@ const {
 const updateState = async () => {
   console.log('update state!');
 
-  // const stateFromApi = await getWordSectionState(
-  //   collectionState.value.id,
-  //   currentSection.value.id,
-  //   userData.value.token
-  // );
-  // console.log('stateFromApi', stateFromApi);
+  const stateFromApi = await getModelSectionState(
+    collectionState.value.id,
+    currentSection.value.id,
+    userData.value.token
+  );
+  console.log('stateFromApi', stateFromApi);
 
-  // stateFromApi &&
-  //   userStore.$patch({
-  //     wordSectionState: stateFromApi,
-  //   });
+  stateFromApi &&
+    userStore.$patch({
+      modelSectionState: stateFromApi,
+    });
 
   // if (
   //   wordSectionState.value.wordStateArr &&
@@ -220,7 +225,7 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <p>{{ progress }}</p>
+    <p>{{ modelSectionState }}</p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
