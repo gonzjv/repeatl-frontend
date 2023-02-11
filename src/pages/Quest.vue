@@ -21,7 +21,10 @@ import {
   getPercentage,
 } from '@/helpers/questHelpers';
 import { countNotCompletedPhraseAmount } from '../helpers/questHelpers';
-import { getModelSectionState } from '@/services/modelSectionStateService';
+import {
+  getModelSectionState,
+  addModelSectionState,
+} from '@/services/modelSectionStateService';
 
 const courseStore = useCourseStore();
 const {
@@ -92,6 +95,26 @@ const updateState = async () => {
 
 onBeforeMount(async () => {
   await updateState();
+
+  if (!modelSectionState.value.id) {
+    const newModelSectionState =
+      await addModelSectionState(
+        collectionState.value.id,
+        currentSection.value.id,
+        userData.value.token
+      );
+    console.log(
+      'newWordSectionState',
+      newModelSectionState
+    );
+    userStore.$patch({
+      modelSectionState: newModelSectionState,
+    });
+
+    // await addWordArrToState();
+    await updateState();
+  }
+
   phraseAmount.value = countPhrases(
     currentSection.value
   );
@@ -225,7 +248,9 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <p>{{ modelSectionState }}</p>
+    <p>
+      modelSectionState {{ modelSectionState }}
+    </p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >
