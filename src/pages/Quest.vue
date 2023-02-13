@@ -25,6 +25,7 @@ import {
   getModelSectionState,
   addModelSectionState,
 } from '@/services/modelSectionStateService';
+import { addModelStateArr } from '@/services/modelStateService';
 
 const courseStore = useCourseStore();
 const {
@@ -68,6 +69,28 @@ const {
   prevPhrases,
 } = toRefs(state);
 
+const createState = async () => {
+  const newModelSectionState =
+    await addModelSectionState(
+      collectionState.value.id,
+      currentSection.value.id,
+      userData.value.token
+    );
+  console.log(
+    'newModelSectionState',
+    newModelSectionState
+  );
+  userStore.$patch({
+    modelSectionState: newModelSectionState,
+  });
+
+  await addModelStateArr(
+    modelSectionState.value.id,
+    userData.value.token
+  );
+  await updateState();
+};
+
 const updateState = async () => {
   console.log('update state!');
 
@@ -96,23 +119,12 @@ const updateState = async () => {
 onBeforeMount(async () => {
   await updateState();
 
-  if (!modelSectionState.value.id) {
-    const newModelSectionState =
-      await addModelSectionState(
-        collectionState.value.id,
-        currentSection.value.id,
-        userData.value.token
-      );
-    console.log(
-      'newWordSectionState',
-      newModelSectionState
-    );
-    userStore.$patch({
-      modelSectionState: newModelSectionState,
-    });
+  const isStateExist = modelSectionState.value.id
+    ? true
+    : false;
 
-    // await addWordArrToState();
-    await updateState();
+  if (!isStateExist) {
+    await createState();
   }
 
   phraseAmount.value = countPhrases(

@@ -48,6 +48,29 @@ const addModelState = async (
   }
 };
 
+const addModelStateArr = async (
+  modelSectionStateId,
+  token
+) => {
+  const bearerToken = 'Bearer ' + token;
+  const myHeaders = {
+    'Content-Type': 'application/json',
+    Authorization: bearerToken,
+  };
+  const url = `${API_URL}modelState/addArray/${modelSectionStateId}`;
+  const options = {
+    method: 'POST',
+    headers: myHeaders,
+  };
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Erorr:', error);
+  }
+};
+
 const completeModel = async (
   token,
   modelStateId
@@ -79,4 +102,5 @@ export {
   getModelState,
   addModelState,
   completeModel,
+  addModelStateArr,
 };
