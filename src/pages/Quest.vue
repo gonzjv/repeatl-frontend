@@ -54,6 +54,8 @@ const state = reactive({
   isAnswerFullfilled: false,
   isSectionComplete: false,
   prevPhrases: [],
+  phraseArrToDo: [],
+  modelArrToDo: [],
 });
 const {
   currentModel,
@@ -67,6 +69,8 @@ const {
   isAnswerFullfilled,
   isSectionComplete,
   prevPhrases,
+  phraseArrToDo,
+  modelArrToDo,
 } = toRefs(state);
 
 const createState = async () => {
@@ -91,6 +95,26 @@ const createState = async () => {
   await updateState();
 };
 
+const updateModelArrToDo = () => {
+  modelArrToDo.value =
+    currentSection.value.models.filter(
+      (model) =>
+        modelSectionState.value.modelStateArr.find(
+          (e) => e.modelId == model.id
+        ).isCompleted == false
+    );
+  console.log('modelArrToDo', modelArrToDo.value);
+};
+
+const updatePhraseArrToDo = () => {
+  phraseArrToDo.value =
+    modelArrToDo.value[0].phrases;
+};
+
+const updateCurrentPhrase = () => {
+  currentPhrase.value = phraseArrToDo.value[0];
+};
+
 const updateState = async () => {
   console.log('update state!');
 
@@ -106,14 +130,17 @@ const updateState = async () => {
       modelSectionState: stateFromApi,
     });
 
-  // if (
-  //   wordSectionState.value.wordStateArr &&
-  //   wordSectionState.value.wordStateArr.length > 0
-  // ) {
-  //   updateWordArrToDo();
-  //   updateCurrentWord();
-  //   updatePercentage();
-  // }
+  if (
+    modelSectionState.value.modelStateArr &&
+    modelSectionState.value.modelStateArr.length >
+      0
+  ) {
+    updateModelArrToDo();
+    updatePhraseArrToDo();
+    updateCurrentPhrase();
+    // updateCurrentWord();
+    // updatePercentage();
+  }
 };
 
 onBeforeMount(async () => {
@@ -164,10 +191,30 @@ const handleFormSubmit = () => {
   }
 };
 
-const completeSection = () => {
-  console.log('COMPLETE SECTION');
-  isSectionComplete.value = true;
-  percentage.value = 100;
+const completePhrase = async () => {
+  console.log('COMPLETE PHRASE');
+  phraseArrToDo.value =
+    phraseArrToDo.value.slice(1);
+  console.log(
+    'phraseArrToDo',
+    phraseArrToDo.value
+  );
+
+  prevPhrases.value.push(currentPhrase.value);
+  updateCurrentPhrase();
+  // updatePercentage();
+  // notCompletedPhraseAmount.value =
+  //   countNotCompletedPhraseAmount(
+  //     progress.value,
+  //     currentSection.value
+  //   );
+
+  // percentage.value = getPercentage(
+  //   phraseAmount.value,
+  //   notCompletedPhraseAmount.value
+  // );
+
+  resetAnswer();
 };
 
 const completeModel = async () => {
@@ -211,42 +258,10 @@ const completeModel = async () => {
   resetAnswer();
 };
 
-const completePhrase = async () => {
-  console.log('COMPLETE PHRASE');
-  if (
-    progress.value.phraseStep ==
-    currentModel.value.phrases.length - 1
-  ) {
-    completeModel();
-    return;
-  }
-
-  prevPhrases.value.push(currentPhrase.value);
-  progress.value.phraseStep += 1;
-  console.log('progress.value', progress.value);
-  await updateProgress(
-    userData.token,
-    progress.value
-  );
-
-  currentPhrase.value =
-    currentModel.value.phrases[
-      progress.value.phraseStep
-    ];
-
-  // updatePercentage();
-  notCompletedPhraseAmount.value =
-    countNotCompletedPhraseAmount(
-      progress.value,
-      currentSection.value
-    );
-
-  percentage.value = getPercentage(
-    phraseAmount.value,
-    notCompletedPhraseAmount.value
-  );
-
-  resetAnswer();
+const completeSection = () => {
+  console.log('COMPLETE SECTION');
+  isSectionComplete.value = true;
+  percentage.value = 100;
 };
 
 const resetAnswer = () => {
