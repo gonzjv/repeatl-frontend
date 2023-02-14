@@ -180,6 +180,17 @@ const checkAnswer = () => {
     answerLength == phraseLength ? true : false;
 };
 
+const resetAnswer = () => {
+  isAnswerCorrect.value = true;
+  isAnswerFullfilled.value = false;
+  answer.value = '';
+};
+
+const resetPrevPhrases = () =>
+  (prevPhrases.value = []);
+const resetCurrentPhrase = () =>
+  (currentPhrase.value = {});
+
 const handleFormSubmit = () => {
   console.log('SUBMIT!!!');
   if (
@@ -256,12 +267,6 @@ const completeSection = () => {
   console.log('COMPLETE SECTION');
   // isSectionComplete.value = true;
   // percentage.value = 100;
-};
-
-const resetAnswer = () => {
-  isAnswerCorrect.value = true;
-  isAnswerFullfilled.value = false;
-  answer.value = '';
 };
 </script>
 
