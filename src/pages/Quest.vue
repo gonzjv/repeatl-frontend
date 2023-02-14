@@ -201,7 +201,12 @@ const completePhrase = async () => {
   );
 
   prevPhrases.value.push(currentPhrase.value);
-  updateCurrentPhrase();
+
+  if (phraseArrToDo.value.length == 0) {
+    completeModel();
+  } else {
+    updateCurrentPhrase();
+  }
   // updatePercentage();
   // notCompletedPhraseAmount.value =
   //   countNotCompletedPhraseAmount(
@@ -219,49 +224,38 @@ const completePhrase = async () => {
 
 const completeModel = async () => {
   console.log('COMPLETE MODEL');
-  if (
-    progress.value.modelStep ==
-    currentSection.value.models.length - 1
-  ) {
+  modelArrToDo.value =
+    modelArrToDo.value.slice(1);
+  console.log('modelArrToDo', modelArrToDo.value);
+
+  if (modelArrToDo.value.length == 0) {
     completeSection();
+    prevPhrases.value = [];
+    currentPhrase.value = {};
     return;
   }
-  progress.value.phraseStep = 0;
-  progress.value.modelStep += 1;
-  await updateProgress(
-    userData.token,
-    progress.value
-  );
-
-  currentModel.value =
-    currentSection.value.models[
-      progress.value.modelStep
-    ];
-  currentPhrase.value =
-    currentModel.value.phrases[
-      progress.value.phraseStep
-    ];
   prevPhrases.value = [];
+  updatePhraseArrToDo();
+  updateCurrentPhrase();
+  // // updatePercentage();
+  // notCompletedPhraseAmount.value =
+  //   countNotCompletedPhraseAmount(
+  //     progress.value,
+  //     currentSection.value
+  //   );
 
-  // updatePercentage();
-  notCompletedPhraseAmount.value =
-    countNotCompletedPhraseAmount(
-      progress.value,
-      currentSection.value
-    );
-
-  percentage.value = getPercentage(
-    phraseAmount.value,
-    notCompletedPhraseAmount.value
-  );
+  // percentage.value = getPercentage(
+  //   phraseAmount.value,
+  //   notCompletedPhraseAmount.value
+  // );
 
   resetAnswer();
 };
 
 const completeSection = () => {
   console.log('COMPLETE SECTION');
-  isSectionComplete.value = true;
-  percentage.value = 100;
+  // isSectionComplete.value = true;
+  // percentage.value = 100;
 };
 
 const resetAnswer = () => {
