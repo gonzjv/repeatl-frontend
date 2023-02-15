@@ -7,11 +7,6 @@ import {
   onBeforeMount,
 } from 'vue';
 import {
-  getProgress,
-  createProgress,
-  updateProgress,
-} from '../services/progressService';
-import {
   InformationCircleIcon,
   CheckBadgeIcon,
 } from '@heroicons/vue/24/outline';
@@ -25,7 +20,10 @@ import {
   getModelSectionState,
   addModelSectionState,
 } from '@/services/modelSectionStateService';
-import { addModelStateArr } from '@/services/modelStateService';
+import {
+  addModelStateArr,
+  completeModelRequest,
+} from '@/services/modelStateService';
 
 const courseStore = useCourseStore();
 const {
@@ -107,8 +105,9 @@ const updateModelArrToDo = () => {
 };
 
 const updatePhraseArrToDo = () => {
+  currentModel.value = modelArrToDo.value[0];
   phraseArrToDo.value =
-    modelArrToDo.value[0].phrases;
+    currentModel.value.phrases;
 };
 
 const updateCurrentPhrase = () => {
@@ -239,10 +238,25 @@ const completeModel = async () => {
     modelArrToDo.value.slice(1);
   console.log('modelArrToDo', modelArrToDo.value);
 
+  const currentModelState =
+    modelSectionState.value.modelStateArr.find(
+      (e) => e.modelId == currentModel.value.id
+    );
+  console.log(
+    'currentModelState',
+    currentModelState
+  );
+
+  const res = await completeModelRequest(
+    userData.value.token,
+    currentModelState.id
+  );
+  console.log('res', res);
+
   if (modelArrToDo.value.length == 0) {
     completeSection();
-    prevPhrases.value = [];
-    currentPhrase.value = {};
+    resetPrevPhrases();
+    resetCurrentPhrase();
     return;
   }
   prevPhrases.value = [];

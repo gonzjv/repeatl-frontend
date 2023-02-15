@@ -71,7 +71,7 @@ const addModelStateArr = async (
   }
 };
 
-const completeModel = async (
+const completeModelRequest = async (
   token,
   modelStateId
 ) => {
@@ -80,7 +80,7 @@ const completeModel = async (
     'Content-Type': 'application/json',
     Authorization: bearerToken,
   };
-  const url = `${API_URL}wordState/`;
+  const url = `${API_URL}modelState/`;
   const reqData = {
     modelStateId: modelStateId,
   };
@@ -101,6 +101,6 @@ const completeModel = async (
 export {
   getModelState,
   addModelState,
-  completeModel,
+  completeModelRequest,
   addModelStateArr,
 };
