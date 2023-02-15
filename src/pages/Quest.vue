@@ -15,10 +15,10 @@ import {
   countPhrases,
   getPercentage,
 } from '@/helpers/questHelpers';
-import { countNotCompletedPhraseAmount } from '../helpers/questHelpers';
 import {
   getModelSectionState,
   addModelSectionState,
+  updateModelSectionState,
 } from '@/services/modelSectionStateService';
 import {
   addModelStateArr,
@@ -41,6 +41,7 @@ const {
 
 const state = reactive({
   currentModel: currentSection.value.models[0],
+  currentModelState: {},
   currentPhrase:
     currentSection.value.models[0].phrases[0],
   progress: {},
@@ -57,6 +58,7 @@ const state = reactive({
 });
 const {
   currentModel,
+  currentModelState,
   currentPhrase,
   progress,
   phraseAmount,
@@ -114,9 +116,7 @@ const updateCurrentPhrase = () => {
   currentPhrase.value = phraseArrToDo.value[0];
 };
 
-const updateState = async () => {
-  console.log('update state!');
-
+const updateStateFromApi = async () => {
   const stateFromApi = await getModelSectionState(
     collectionState.value.id,
     currentSection.value.id,
@@ -128,7 +128,12 @@ const updateState = async () => {
     userStore.$patch({
       modelSectionState: stateFromApi,
     });
+};
 
+const updateState = async () => {
+  console.log('update state!');
+
+  await updateStateFromApi();
   if (
     modelSectionState.value.modelStateArr &&
     modelSectionState.value.modelStateArr.length >
@@ -218,11 +223,6 @@ const completePhrase = async () => {
     updateCurrentPhrase();
   }
   // updatePercentage();
-  // notCompletedPhraseAmount.value =
-  //   countNotCompletedPhraseAmount(
-  //     progress.value,
-  //     currentSection.value
-  //   );
 
   // percentage.value = getPercentage(
   //   phraseAmount.value,
@@ -238,13 +238,13 @@ const completeModel = async () => {
     modelArrToDo.value.slice(1);
   console.log('modelArrToDo', modelArrToDo.value);
 
-  const currentModelState =
+  currentModelState.value =
     modelSectionState.value.modelStateArr.find(
       (e) => e.modelId == currentModel.value.id
     );
   console.log(
     'currentModelState',
-    currentModelState
+    currentModelState.value
   );
 
   const res = await completeModelRequest(
@@ -263,11 +263,6 @@ const completeModel = async () => {
   updatePhraseArrToDo();
   updateCurrentPhrase();
   // // updatePercentage();
-  // notCompletedPhraseAmount.value =
-  //   countNotCompletedPhraseAmount(
-  //     progress.value,
-  //     currentSection.value
-  //   );
 
   // percentage.value = getPercentage(
   //   phraseAmount.value,
@@ -277,9 +272,21 @@ const completeModel = async () => {
   resetAnswer();
 };
 
-const completeSection = () => {
+const completeSection = async () => {
   console.log('COMPLETE SECTION');
-  // isSectionComplete.value = true;
+
+  const reqData = {
+    id: modelSectionState.value.id,
+    isCompleted: true,
+  };
+
+  const response = await updateModelSectionState(
+    userData.value.token,
+    reqData
+  );
+  console.log('response', response);
+
+  isSectionComplete.value = true;
   // percentage.value = 100;
 };
 </script>
