@@ -3,6 +3,7 @@ import { updateWordSectionState } from '../services/wordSectionStateService';
 const WORD_BATCH_NUMBER = 2;
 
 const countPhrases = (section) => {
+  console.log('section', section);
   let result = 0;
   section.models.forEach((model) => {
     result += model.phrases.length;

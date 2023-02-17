@@ -130,6 +130,20 @@ const updateStateFromApi = async () => {
     });
 };
 
+const updatePercentage = () => {
+  const notDonePhraseAmount =
+    modelArrToDo.value.reduce(
+      (accu, model) =>
+        accu + model.phrases.length,
+      0
+    ) - prevPhrases.value.length;
+
+  percentage.value = getPercentage(
+    phraseAmount.value,
+    notDonePhraseAmount
+  );
+};
+
 const updateState = async () => {
   console.log('update state!');
 
@@ -142,8 +156,6 @@ const updateState = async () => {
     updateModelArrToDo();
     updatePhraseArrToDo();
     updateCurrentPhrase();
-    // updateCurrentWord();
-    // updatePercentage();
   }
 };
 
@@ -161,6 +173,7 @@ onBeforeMount(async () => {
   phraseAmount.value = countPhrases(
     currentSection.value
   );
+  updatePercentage();
 });
 
 const checkAnswer = () => {
@@ -216,18 +229,13 @@ const completePhrase = async () => {
   );
 
   prevPhrases.value.push(currentPhrase.value);
+  updatePercentage();
 
   if (phraseArrToDo.value.length == 0) {
     completeModel();
   } else {
     updateCurrentPhrase();
   }
-  // updatePercentage();
-
-  // percentage.value = getPercentage(
-  //   phraseAmount.value,
-  //   notCompletedPhraseAmount.value
-  // );
 
   resetAnswer();
 };
@@ -249,7 +257,7 @@ const completeModel = async () => {
 
   const res = await completeModelRequest(
     userData.value.token,
-    currentModelState.id
+    currentModelState.value.id
   );
   console.log('res', res);
 
@@ -262,7 +270,7 @@ const completeModel = async () => {
   prevPhrases.value = [];
   updatePhraseArrToDo();
   updateCurrentPhrase();
-  // // updatePercentage();
+  // updatePercentage();
 
   // percentage.value = getPercentage(
   //   phraseAmount.value,
