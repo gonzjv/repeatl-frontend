@@ -79,7 +79,6 @@ const checkIsComplete = (sectionId) => {
       collectionState.value.wordSectionStateArr.find(
         (el) => el.wordSectionId == sectionId
       );
-    console.log;
     return wordSectionState
       ? wordSectionState.isCompleted
       : false;

@@ -70,6 +70,21 @@ const handleButtonClick = (section) => {
 const handleGoBack = () => {
   router.back();
 };
+
+const checkIsComplete = (sectionId) => {
+  if (
+    collectionState.value &&
+    collectionState.value.modelSectionStateArr
+  ) {
+    const modelSectionState =
+      collectionState.value.modelSectionStateArr.find(
+        (el) => el.modelSectionId == sectionId
+      );
+    return modelSectionState
+      ? modelSectionState.isCompleted
+      : false;
+  }
+};
 </script>
 <template>
   <main
@@ -124,6 +139,7 @@ const handleGoBack = () => {
           </button>
         </div>
         <router-link
+          v-if="!checkIsComplete(section.id)"
           @click="
             courseStore.$patch({
               currentSection: section,
@@ -133,6 +149,18 @@ const handleGoBack = () => {
           class="text-sky-400 font-bold w-1/5 border-sky-400 border-2 rounded-md"
         >
           Старт
+        </router-link>
+        <router-link
+          v-if="checkIsComplete(section.id)"
+          @click="
+            courseStore.$patch({
+              currentSection: section,
+            })
+          "
+          to="/questRepeat"
+          class="text-fuchsia-400 font-bold w-1/5 border-fuchsia-400 border-2 rounded-md"
+        >
+          Повторение
         </router-link>
       </li>
     </ul>
