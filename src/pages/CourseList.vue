@@ -60,7 +60,7 @@ const handleCourseSwitch = async (course) => {
 </script>
 <template>
   <main class="flex flex-col gap-10 items-center">
-    <p>Progress: {{ progress }}</p>
+    <!-- <p>Progress: {{ progress }}</p> -->
     <aside
       v-if="coursesWindowDisplay"
       class="flex flex-col gap-10 w-full"
@@ -86,28 +86,6 @@ const handleCourseSwitch = async (course) => {
     <section
       class="flex flex-col w-full items-center"
       v-if="!coursesWindowDisplay"
-    >
-      <!-- <button
-        @click="coursesWindowDisplay = true"
-        class="bg-fuchsia-400 text-white w-4/12 rounded-lg h-10 text-2xl"
-      >
-        {{ currentCourse.name }}
-      </button> -->
-      <!-- <h2
-        class="w-full text-left text-2xl font-bold"
-      >
-        ВЫБОР ЗАДАНИЙ:
-      </h2>
-      <ul
-        class="w-full flex flex-col gap-10 py-10 items-start"
-      >
-        <li
-          class="text-base p-4 w-full flex items-start flex-col gap-10"
-          v-for="collection in collectionsData"
-        >
-          <Collection :collection="collection" />
-        </li>
-      </ul> -->
-    </section>
+    ></section>
   </main>
 </template>

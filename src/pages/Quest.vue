@@ -44,9 +44,7 @@ const state = reactive({
   currentModelState: {},
   currentPhrase:
     currentSection.value.models[0].phrases[0],
-  progress: {},
   phraseAmount: 0,
-  notCompletedPhraseAmount: 0,
   percentage: 0,
   answer: '',
   isAnswerCorrect: true,
@@ -60,9 +58,7 @@ const {
   currentModel,
   currentModelState,
   currentPhrase,
-  progress,
   phraseAmount,
-  notCompletedPhraseAmount,
   percentage,
   answer,
   isAnswerCorrect,
@@ -295,7 +291,6 @@ const completeSection = async () => {
   console.log('response', response);
 
   isSectionComplete.value = true;
-  // percentage.value = 100;
 };
 </script>
 
@@ -303,9 +298,6 @@ const completeSection = async () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <p>
-      modelSectionState {{ modelSectionState }}
-    </p>
     <nav
       class="flex justify-start gap-2 text-sky-400"
     >

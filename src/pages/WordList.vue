@@ -89,7 +89,6 @@ const checkIsComplete = (sectionId) => {
   <main
     class="relative gap-10 w-full flex flex-col items-center"
   >
-    <p>CollectionState: {{ collectionState }}</p>
     <button
       @click="handleGoBack"
       class="absolute flex gap-1 items-center left-0 top-3 text-дп"

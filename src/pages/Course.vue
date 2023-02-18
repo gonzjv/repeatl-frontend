@@ -71,8 +71,6 @@ onBeforeMount(async () => {
   <main
     class="flex flex-col justify-center items-center gap-10"
   >
-    <!-- <p>Progress: {{ progress }}</p> -->
-    <p>Course state: {{ courseState }}</p>
     <h2
       class="flex justify-center items-center bg-fuchsia-400 text-white w-4/12 rounded-lg h-10 text-2xl"
     >

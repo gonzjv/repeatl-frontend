@@ -47,7 +47,6 @@ const {
 
 const state = reactive({
   currentWord: currentSection.value.words[0],
-  progress: {},
   wordAmount: 0,
   notCompletedWordAmount: 0,
   percentage: 0,
