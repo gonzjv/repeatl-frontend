@@ -5,6 +5,7 @@ import {
   reactive,
   toRefs,
   onBeforeMount,
+  onBeforeUnmount,
 } from 'vue';
 import {
   InformationCircleIcon,
@@ -170,6 +171,12 @@ onBeforeMount(async () => {
     currentSection.value
   );
   updatePercentage();
+});
+
+onBeforeUnmount(async () => {
+  userStore.$patch({
+    modelSectionState: false,
+  });
 });
 
 const checkAnswer = () => {
