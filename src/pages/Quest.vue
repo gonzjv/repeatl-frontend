@@ -25,13 +25,11 @@ import {
   addModelStateArr,
   completeModelRequest,
 } from '@/services/modelStateService';
+import QuestNav from '../components/QuestNav.vue';
 
 const courseStore = useCourseStore();
-const {
-  currentCourse,
-  currentSection,
-  currentCollection,
-} = storeToRefs(courseStore);
+const { currentSection } =
+  storeToRefs(courseStore);
 
 const userStore = useUserStore();
 const {
@@ -305,20 +303,7 @@ const completeSection = async () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <nav
-      class="flex justify-start gap-2 text-sky-400"
-    >
-      <router-link to="/course">
-        {{ currentCourse.name }}
-      </router-link>
-      <p>/</p>
-      <router-link to="/modelList"
-        >Коллекция
-        {{
-          currentCollection.number
-        }}</router-link
-      >
-    </nav>
+    <QuestNav />
     <h2 class="text-xl">
       {{ currentSection.label }}
     </h2>
