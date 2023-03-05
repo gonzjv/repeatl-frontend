@@ -7,6 +7,8 @@ export const useCourseStore = defineStore(
       currentCourse: {},
       currentCollection: {},
       currentSection: {},
+      currentModel: {},
+      percentage: 0,
     }),
   }
 );

@@ -26,9 +26,10 @@ import {
   completeModelRequest,
 } from '@/services/modelStateService';
 import QuestNav from '../components/QuestNav.vue';
+import QuestProgress from '../components/QuestProgress.vue';
 
 const courseStore = useCourseStore();
-const { currentSection } =
+const { currentSection, currentModel } =
   storeToRefs(courseStore);
 
 const userStore = useUserStore();
@@ -39,12 +40,12 @@ const {
 } = storeToRefs(userStore);
 
 const state = reactive({
-  currentModel: currentSection.value.models[0],
+  // currentModel: currentSection.value.models[0],
   currentModelState: {},
   currentPhrase:
     currentSection.value.models[0].phrases[0],
   phraseAmount: 0,
-  percentage: 0,
+  // percentage: 0,
   answer: '',
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
@@ -54,11 +55,11 @@ const state = reactive({
   modelArrToDo: [],
 });
 const {
-  currentModel,
+  // currentModel,
   currentModelState,
   currentPhrase,
   phraseAmount,
-  percentage,
+  // percentage,
   answer,
   isAnswerCorrect,
   isAnswerFullfilled,
@@ -102,7 +103,10 @@ const updateModelArrToDo = () => {
 };
 
 const updatePhraseArrToDo = () => {
-  currentModel.value = modelArrToDo.value[0];
+  // currentModel.value = modelArrToDo.value[0];
+  courseStore.$patch({
+    currentModel: modelArrToDo.value[0],
+  });
   phraseArrToDo.value =
     currentModel.value.phrases;
 };
@@ -133,10 +137,13 @@ const updatePercentage = () => {
       0
     ) - prevPhrases.value.length;
 
-  percentage.value = getPercentage(
+  const newPercentage = getPercentage(
     phraseAmount.value,
     notDonePhraseAmount
   );
+  courseStore.$patch({
+    percentage: newPercentage,
+  });
 };
 
 const updateState = async () => {
@@ -251,16 +258,11 @@ const completeModel = async () => {
     modelSectionState.value.modelStateArr.find(
       (e) => e.modelId == currentModel.value.id
     );
-  console.log(
-    'currentModelState',
-    currentModelState.value
-  );
 
   const res = await completeModelRequest(
     userData.value.token,
     currentModelState.value.id
   );
-  console.log('res', res);
 
   if (modelArrToDo.value.length == 0) {
     completeSection();
@@ -271,12 +273,6 @@ const completeModel = async () => {
   prevPhrases.value = [];
   updatePhraseArrToDo();
   updateCurrentPhrase();
-  // updatePercentage();
-
-  // percentage.value = getPercentage(
-  //   phraseAmount.value,
-  //   notCompletedPhraseAmount.value
-  // );
 
   resetAnswer();
 };
@@ -304,25 +300,8 @@ const completeSection = async () => {
     class="flex flex-col w-full items-start gap-10"
   >
     <QuestNav />
-    <h2 class="text-xl">
-      {{ currentSection.label }}
-    </h2>
     <section class="flex gap-10 w-full">
-      <aside class="flex flex-col gap-5 w-2/12">
-        <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-center"
-        >
-          <p>Model: {{ currentModel.number }}</p>
-        </div>
-        <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-center"
-        >
-          <p>
-            Progress:
-            {{ percentage }} %
-          </p>
-        </div>
-      </aside>
+      <QuestProgress />
       <div class="w-6/12 flex flex-col gap-10">
         <div
           class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center"
