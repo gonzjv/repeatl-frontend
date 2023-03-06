@@ -27,10 +27,15 @@ import {
 } from '@/services/modelStateService';
 import QuestNav from '../components/QuestNav.vue';
 import QuestProgress from '../components/QuestProgress.vue';
+import QuestPhraseWindow from '@/components/QuestPhraseWindow.vue';
 
 const courseStore = useCourseStore();
-const { currentSection, currentModel } =
-  storeToRefs(courseStore);
+const {
+  currentSection,
+  currentModel,
+  currentPhrase,
+  prevPhraseArr,
+} = storeToRefs(courseStore);
 
 const userStore = useUserStore();
 const {
@@ -40,31 +45,25 @@ const {
 } = storeToRefs(userStore);
 
 const state = reactive({
-  // currentModel: currentSection.value.models[0],
   currentModelState: {},
-  currentPhrase:
-    currentSection.value.models[0].phrases[0],
+  // currentPhrase:
+  //   currentSection.value.models[0].phrases[0],
   phraseAmount: 0,
-  // percentage: 0,
   answer: '',
   isAnswerCorrect: true,
   isAnswerFullfilled: false,
   isSectionComplete: false,
-  prevPhrases: [],
   phraseArrToDo: [],
   modelArrToDo: [],
 });
 const {
-  // currentModel,
   currentModelState,
-  currentPhrase,
+  // currentPhrase,
   phraseAmount,
-  // percentage,
   answer,
   isAnswerCorrect,
   isAnswerFullfilled,
   isSectionComplete,
-  prevPhrases,
   phraseArrToDo,
   modelArrToDo,
 } = toRefs(state);
@@ -103,7 +102,6 @@ const updateModelArrToDo = () => {
 };
 
 const updatePhraseArrToDo = () => {
-  // currentModel.value = modelArrToDo.value[0];
   courseStore.$patch({
     currentModel: modelArrToDo.value[0],
   });
@@ -112,7 +110,10 @@ const updatePhraseArrToDo = () => {
 };
 
 const updateCurrentPhrase = () => {
-  currentPhrase.value = phraseArrToDo.value[0];
+  // currentPhrase.value = phraseArrToDo.value[0];
+  courseStore.$patch({
+    currentPhrase: phraseArrToDo.value[0],
+  });
 };
 
 const updateStateFromApi = async () => {
@@ -135,7 +136,7 @@ const updatePercentage = () => {
       (accu, model) =>
         accu + model.phrases.length,
       0
-    ) - prevPhrases.value.length;
+    ) - prevPhraseArr.value.length;
 
   const newPercentage = getPercentage(
     phraseAmount.value,
@@ -162,6 +163,11 @@ const updateState = async () => {
 };
 
 onBeforeMount(async () => {
+  courseStore.$patch({
+    currentPhrase:
+      currentSection.value.models[0].phrases[0],
+  });
+
   await updateState();
 
   const isStateExist = modelSectionState.value.id
@@ -212,9 +218,14 @@ const resetAnswer = () => {
 };
 
 const resetPrevPhrases = () =>
-  (prevPhrases.value = []);
+  courseStore.$patch({
+    prevPhraseArr: [],
+  });
 const resetCurrentPhrase = () =>
-  (currentPhrase.value = {});
+  // currentPhrase.value = {}
+  courseStore.$patch({
+    currentPhrase: {},
+  });
 
 const handleFormSubmit = () => {
   console.log('SUBMIT!!!');
@@ -236,7 +247,10 @@ const completePhrase = async () => {
     phraseArrToDo.value
   );
 
-  prevPhrases.value.push(currentPhrase.value);
+  // prevPhrases.value.push(currentPhrase.value);
+  courseStore.$patch((state) =>
+    state.prevPhraseArr.push(currentPhrase.value)
+  );
   updatePercentage();
 
   if (phraseArrToDo.value.length == 0) {
@@ -270,7 +284,10 @@ const completeModel = async () => {
     resetCurrentPhrase();
     return;
   }
-  prevPhrases.value = [];
+  // prevPhrases.value = [];
+  courseStore.$patch({
+    prevPhraseArr: [],
+  });
   updatePhraseArrToDo();
   updateCurrentPhrase();
 
@@ -303,13 +320,14 @@ const completeSection = async () => {
     <section class="flex gap-10 w-full">
       <QuestProgress />
       <div class="w-6/12 flex flex-col gap-10">
+        <!-- <QuestPhraseWindow /> -->
         <div
           class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center"
         >
           <ul
             class="h-1/2 w-full flex flex-col gap-5 items-start justify-center p-20"
           >
-            <li v-for="prev in prevPhrases">
+            <li v-for="prev in prevPhraseArr">
               <p class="font-extralight text-xs">
                 {{ prev.native }}
               </p>

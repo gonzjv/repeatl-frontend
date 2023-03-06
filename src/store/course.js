@@ -8,7 +8,9 @@ export const useCourseStore = defineStore(
       currentCollection: {},
       currentSection: {},
       currentModel: {},
+      currentPhrase: {},
       percentage: 0,
+      prevPhraseArr: [],
     }),
   }
 );
