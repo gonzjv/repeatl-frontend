@@ -7,8 +7,12 @@ import {
 } from '@heroicons/vue/24/outline';
 
 const courseStore = useCourseStore();
-const { prevPhraseArr, currentPhrase } =
-  storeToRefs(courseStore);
+const {
+  prevPhraseArr,
+  currentPhrase,
+  isAnswerCorrect,
+  isAnswerFullfilled,
+} = storeToRefs(courseStore);
 </script>
 <template>
   <div

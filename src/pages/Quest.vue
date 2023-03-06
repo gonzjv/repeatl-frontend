@@ -7,10 +7,7 @@ import {
   onBeforeMount,
   onBeforeUnmount,
 } from 'vue';
-import {
-  InformationCircleIcon,
-  CheckBadgeIcon,
-} from '@heroicons/vue/24/outline';
+import { CheckBadgeIcon } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
 import {
   countPhrases,
@@ -35,6 +32,8 @@ const {
   currentModel,
   currentPhrase,
   prevPhraseArr,
+  isAnswerCorrect,
+  isAnswerFullfilled,
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
@@ -46,23 +45,16 @@ const {
 
 const state = reactive({
   currentModelState: {},
-  // currentPhrase:
-  //   currentSection.value.models[0].phrases[0],
   phraseAmount: 0,
   answer: '',
-  isAnswerCorrect: true,
-  isAnswerFullfilled: false,
   isSectionComplete: false,
   phraseArrToDo: [],
   modelArrToDo: [],
 });
 const {
   currentModelState,
-  // currentPhrase,
   phraseAmount,
   answer,
-  isAnswerCorrect,
-  isAnswerFullfilled,
   isSectionComplete,
   phraseArrToDo,
   modelArrToDo,
@@ -110,7 +102,6 @@ const updatePhraseArrToDo = () => {
 };
 
 const updateCurrentPhrase = () => {
-  // currentPhrase.value = phraseArrToDo.value[0];
   courseStore.$patch({
     currentPhrase: phraseArrToDo.value[0],
   });
@@ -202,18 +193,21 @@ const checkAnswer = () => {
     .slice(0, answerLength)
     .join('');
 
-  isAnswerCorrect.value =
-    answer.value == stringToCompare
-      ? true
-      : false;
-
-  isAnswerFullfilled.value =
-    answerLength == phraseLength ? true : false;
+  courseStore.$patch({
+    isAnswerCorrect:
+      answer.value == stringToCompare
+        ? true
+        : false,
+    isAnswerFullfilled:
+      answerLength == phraseLength ? true : false,
+  });
 };
 
 const resetAnswer = () => {
-  isAnswerCorrect.value = true;
-  isAnswerFullfilled.value = false;
+  courseStore.$patch({
+    isAnswerCorrect: true,
+    isAnswerFullfilled: false,
+  });
   answer.value = '';
 };
 
@@ -222,7 +216,6 @@ const resetPrevPhrases = () =>
     prevPhraseArr: [],
   });
 const resetCurrentPhrase = () =>
-  // currentPhrase.value = {}
   courseStore.$patch({
     currentPhrase: {},
   });
@@ -247,7 +240,6 @@ const completePhrase = async () => {
     phraseArrToDo.value
   );
 
-  // prevPhrases.value.push(currentPhrase.value);
   courseStore.$patch((state) =>
     state.prevPhraseArr.push(currentPhrase.value)
   );
@@ -284,7 +276,6 @@ const completeModel = async () => {
     resetCurrentPhrase();
     return;
   }
-  // prevPhrases.value = [];
   courseStore.$patch({
     prevPhraseArr: [],
   });
@@ -320,60 +311,7 @@ const completeSection = async () => {
     <section class="flex gap-10 w-full">
       <QuestProgress />
       <div class="w-6/12 flex flex-col gap-10">
-        <!-- <QuestPhraseWindow /> -->
-        <div
-          class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center"
-        >
-          <ul
-            class="h-1/2 w-full flex flex-col gap-5 items-start justify-center p-20"
-          >
-            <li v-for="prev in prevPhraseArr">
-              <p class="font-extralight text-xs">
-                {{ prev.native }}
-              </p>
-              <p class="text-xs">
-                {{ prev.foreign }}
-              </p>
-            </li>
-          </ul>
-          <div
-            class="h-1/2 w-full flex flex-col items-start justify-center p-20"
-          >
-            <p class="font-extralight">
-              {{ currentPhrase.native }}
-            </p>
-            <div
-              :class="
-                !isAnswerCorrect
-                  ? 'text-red-600'
-                  : isAnswerFullfilled &&
-                    'text-emerald-400'
-              "
-              class="relative transition duration-500"
-            >
-              <aside
-                class="absolute -left-8 top-0"
-                v-if="!isAnswerCorrect"
-              >
-                <InformationCircleIcon
-                  class="w-5"
-                />
-              </aside>
-              <aside
-                class="absolute -left-8 top-0"
-                v-if="
-                  isAnswerCorrect &&
-                  isAnswerFullfilled
-                "
-              >
-                <CheckBadgeIcon class="w-5" />
-              </aside>
-              <span>
-                {{ currentPhrase.foreign }}
-              </span>
-            </div>
-          </div>
-        </div>
+        <QuestPhraseWindow />
         <form
           @submit.prevent="handleFormSubmit"
           class="relative w-full flex justify-center items-center"

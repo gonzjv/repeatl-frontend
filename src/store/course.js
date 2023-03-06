@@ -11,6 +11,8 @@ export const useCourseStore = defineStore(
       currentPhrase: {},
       percentage: 0,
       prevPhraseArr: [],
+      isAnswerCorrect: true,
+      isAnswerFullfilled: false,
     }),
   }
 );
