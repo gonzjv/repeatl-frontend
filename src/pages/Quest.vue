@@ -25,6 +25,7 @@ import {
 import QuestNav from '../components/QuestNav.vue';
 import QuestProgress from '../components/QuestProgress.vue';
 import QuestPhraseWindow from '@/components/QuestPhraseWindow.vue';
+import QuestInput from '../components/QuestInput.vue';
 
 const courseStore = useCourseStore();
 const {
@@ -60,120 +61,120 @@ const {
   modelArrToDo,
 } = toRefs(state);
 
-const createState = async () => {
-  const newModelSectionState =
-    await addModelSectionState(
-      collectionState.value.id,
-      currentSection.value.id,
-      userData.value.token
-    );
-  console.log(
-    'newModelSectionState',
-    newModelSectionState
-  );
-  userStore.$patch({
-    modelSectionState: newModelSectionState,
-  });
+// const createState = async () => {
+//   const newModelSectionState =
+//     await addModelSectionState(
+//       collectionState.value.id,
+//       currentSection.value.id,
+//       userData.value.token
+//     );
+//   console.log(
+//     'newModelSectionState',
+//     newModelSectionState
+//   );
+//   userStore.$patch({
+//     modelSectionState: newModelSectionState,
+//   });
 
-  await addModelStateArr(
-    modelSectionState.value.id,
-    userData.value.token
-  );
-  await updateState();
-};
+//   await addModelStateArr(
+//     modelSectionState.value.id,
+//     userData.value.token
+//   );
+//   await updateState();
+// };
 
-const updateModelArrToDo = () => {
-  modelArrToDo.value =
-    currentSection.value.models.filter(
-      (model) =>
-        modelSectionState.value.modelStateArr.find(
-          (e) => e.modelId == model.id
-        ).isCompleted == false
-    );
-  console.log('modelArrToDo', modelArrToDo.value);
-};
+// const updateModelArrToDo = () => {
+//   modelArrToDo.value =
+//     currentSection.value.models.filter(
+//       (model) =>
+//         modelSectionState.value.modelStateArr.find(
+//           (e) => e.modelId == model.id
+//         ).isCompleted == false
+//     );
+//   console.log('modelArrToDo', modelArrToDo.value);
+// };
 
-const updatePhraseArrToDo = () => {
-  courseStore.$patch({
-    currentModel: modelArrToDo.value[0],
-  });
-  phraseArrToDo.value =
-    currentModel.value.phrases;
-};
+// const updatePhraseArrToDo = () => {
+//   courseStore.$patch({
+//     currentModel: modelArrToDo.value[0],
+//   });
+//   phraseArrToDo.value =
+//     currentModel.value.phrases;
+// };
 
-const updateCurrentPhrase = () => {
-  courseStore.$patch({
-    currentPhrase: phraseArrToDo.value[0],
-  });
-};
+// const updateCurrentPhrase = () => {
+//   courseStore.$patch({
+//     currentPhrase: phraseArrToDo.value[0],
+//   });
+// };
 
-const updateStateFromApi = async () => {
-  const stateFromApi = await getModelSectionState(
-    collectionState.value.id,
-    currentSection.value.id,
-    userData.value.token
-  );
-  console.log('stateFromApi', stateFromApi);
+// const updateStateFromApi = async () => {
+//   const stateFromApi = await getModelSectionState(
+//     collectionState.value.id,
+//     currentSection.value.id,
+//     userData.value.token
+//   );
+//   console.log('stateFromApi', stateFromApi);
 
-  stateFromApi &&
-    userStore.$patch({
-      modelSectionState: stateFromApi,
-    });
-};
+//   stateFromApi &&
+//     userStore.$patch({
+//       modelSectionState: stateFromApi,
+//     });
+// };
 
-const updatePercentage = () => {
-  const notDonePhraseAmount =
-    modelArrToDo.value.reduce(
-      (accu, model) =>
-        accu + model.phrases.length,
-      0
-    ) - prevPhraseArr.value.length;
+// const updatePercentage = () => {
+//   const notDonePhraseAmount =
+//     modelArrToDo.value.reduce(
+//       (accu, model) =>
+//         accu + model.phrases.length,
+//       0
+//     ) - prevPhraseArr.value.length;
 
-  const newPercentage = getPercentage(
-    phraseAmount.value,
-    notDonePhraseAmount
-  );
-  courseStore.$patch({
-    percentage: newPercentage,
-  });
-};
+//   const newPercentage = getPercentage(
+//     phraseAmount.value,
+//     notDonePhraseAmount
+//   );
+//   courseStore.$patch({
+//     percentage: newPercentage,
+//   });
+// };
 
-const updateState = async () => {
-  console.log('update state!');
+// const updateState = async () => {
+//   console.log('update state!');
 
-  await updateStateFromApi();
-  if (
-    modelSectionState.value.modelStateArr &&
-    modelSectionState.value.modelStateArr.length >
-      0
-  ) {
-    updateModelArrToDo();
-    updatePhraseArrToDo();
-    updateCurrentPhrase();
-  }
-};
+//   await updateStateFromApi();
+//   if (
+//     modelSectionState.value.modelStateArr &&
+//     modelSectionState.value.modelStateArr.length >
+//       0
+//   ) {
+//     updateModelArrToDo();
+//     updatePhraseArrToDo();
+//     updateCurrentPhrase();
+//   }
+// };
 
-onBeforeMount(async () => {
-  courseStore.$patch({
-    currentPhrase:
-      currentSection.value.models[0].phrases[0],
-  });
+// onBeforeMount(async () => {
+//   courseStore.$patch({
+//     currentPhrase:
+//       currentSection.value.models[0].phrases[0],
+//   });
 
-  await updateState();
+//   await updateState();
 
-  const isStateExist = modelSectionState.value.id
-    ? true
-    : false;
+//   const isStateExist = modelSectionState.value.id
+//     ? true
+//     : false;
 
-  if (!isStateExist) {
-    await createState();
-  }
+//   if (!isStateExist) {
+//     await createState();
+//   }
 
-  phraseAmount.value = countPhrases(
-    currentSection.value
-  );
-  updatePercentage();
-});
+//   phraseAmount.value = countPhrases(
+//     currentSection.value
+//   );
+//   updatePercentage();
+// });
 
 onBeforeUnmount(async () => {
   userStore.$patch({
@@ -181,126 +182,126 @@ onBeforeUnmount(async () => {
   });
 });
 
-const checkAnswer = () => {
-  const answerLength =
-    answer.value.split('').length;
-  const phraseToCompare =
-    currentPhrase.value.foreign;
-  const phraseLength =
-    phraseToCompare.split('').length;
-  const stringToCompare = phraseToCompare
-    .split('')
-    .slice(0, answerLength)
-    .join('');
+// const checkAnswer = () => {
+//   const answerLength =
+//     answer.value.split('').length;
+//   const phraseToCompare =
+//     currentPhrase.value.foreign;
+//   const phraseLength =
+//     phraseToCompare.split('').length;
+//   const stringToCompare = phraseToCompare
+//     .split('')
+//     .slice(0, answerLength)
+//     .join('');
 
-  courseStore.$patch({
-    isAnswerCorrect:
-      answer.value == stringToCompare
-        ? true
-        : false,
-    isAnswerFullfilled:
-      answerLength == phraseLength ? true : false,
-  });
-};
+//   courseStore.$patch({
+//     isAnswerCorrect:
+//       answer.value == stringToCompare
+//         ? true
+//         : false,
+//     isAnswerFullfilled:
+//       answerLength == phraseLength ? true : false,
+//   });
+// };
 
-const resetAnswer = () => {
-  courseStore.$patch({
-    isAnswerCorrect: true,
-    isAnswerFullfilled: false,
-  });
-  answer.value = '';
-};
+// const resetAnswer = () => {
+//   courseStore.$patch({
+//     isAnswerCorrect: true,
+//     isAnswerFullfilled: false,
+//   });
+//   answer.value = '';
+// };
 
-const resetPrevPhrases = () =>
-  courseStore.$patch({
-    prevPhraseArr: [],
-  });
-const resetCurrentPhrase = () =>
-  courseStore.$patch({
-    currentPhrase: {},
-  });
+// const resetPrevPhrases = () =>
+//   courseStore.$patch({
+//     prevPhraseArr: [],
+//   });
+// const resetCurrentPhrase = () =>
+//   courseStore.$patch({
+//     currentPhrase: {},
+//   });
 
-const handleFormSubmit = () => {
-  console.log('SUBMIT!!!');
-  if (
-    isAnswerCorrect.value &&
-    isAnswerFullfilled.value
-  ) {
-    console.log('SUBMIT_correct!!!');
-    completePhrase();
-  }
-};
+// const handleFormSubmit = () => {
+//   console.log('SUBMIT!!!');
+//   if (
+//     isAnswerCorrect.value &&
+//     isAnswerFullfilled.value
+//   ) {
+//     console.log('SUBMIT_correct!!!');
+//     completePhrase();
+//   }
+// };
 
-const completePhrase = async () => {
-  console.log('COMPLETE PHRASE');
-  phraseArrToDo.value =
-    phraseArrToDo.value.slice(1);
-  console.log(
-    'phraseArrToDo',
-    phraseArrToDo.value
-  );
+// const completePhrase = async () => {
+//   console.log('COMPLETE PHRASE');
+//   phraseArrToDo.value =
+//     phraseArrToDo.value.slice(1);
+//   console.log(
+//     'phraseArrToDo',
+//     phraseArrToDo.value
+//   );
 
-  courseStore.$patch((state) =>
-    state.prevPhraseArr.push(currentPhrase.value)
-  );
-  updatePercentage();
+//   courseStore.$patch((state) =>
+//     state.prevPhraseArr.push(currentPhrase.value)
+//   );
+//   updatePercentage();
 
-  if (phraseArrToDo.value.length == 0) {
-    completeModel();
-  } else {
-    updateCurrentPhrase();
-  }
+//   if (phraseArrToDo.value.length == 0) {
+//     completeModel();
+//   } else {
+//     updateCurrentPhrase();
+//   }
 
-  resetAnswer();
-};
+//   resetAnswer();
+// };
 
-const completeModel = async () => {
-  console.log('COMPLETE MODEL');
-  modelArrToDo.value =
-    modelArrToDo.value.slice(1);
-  console.log('modelArrToDo', modelArrToDo.value);
+// const completeModel = async () => {
+//   console.log('COMPLETE MODEL');
+//   modelArrToDo.value =
+//     modelArrToDo.value.slice(1);
+//   console.log('modelArrToDo', modelArrToDo.value);
 
-  currentModelState.value =
-    modelSectionState.value.modelStateArr.find(
-      (e) => e.modelId == currentModel.value.id
-    );
+//   currentModelState.value =
+//     modelSectionState.value.modelStateArr.find(
+//       (e) => e.modelId == currentModel.value.id
+//     );
 
-  const res = await completeModelRequest(
-    userData.value.token,
-    currentModelState.value.id
-  );
+//   const res = await completeModelRequest(
+//     userData.value.token,
+//     currentModelState.value.id
+//   );
 
-  if (modelArrToDo.value.length == 0) {
-    completeSection();
-    resetPrevPhrases();
-    resetCurrentPhrase();
-    return;
-  }
-  courseStore.$patch({
-    prevPhraseArr: [],
-  });
-  updatePhraseArrToDo();
-  updateCurrentPhrase();
+//   if (modelArrToDo.value.length == 0) {
+//     completeSection();
+//     resetPrevPhrases();
+//     resetCurrentPhrase();
+//     return;
+//   }
+//   courseStore.$patch({
+//     prevPhraseArr: [],
+//   });
+//   updatePhraseArrToDo();
+//   updateCurrentPhrase();
 
-  resetAnswer();
-};
+//   resetAnswer();
+// };
 
-const completeSection = async () => {
-  console.log('COMPLETE SECTION');
+// const completeSection = async () => {
+//   console.log('COMPLETE SECTION');
 
-  const reqData = {
-    id: modelSectionState.value.id,
-    isCompleted: true,
-  };
+//   const reqData = {
+//     id: modelSectionState.value.id,
+//     isCompleted: true,
+//   };
 
-  const response = await updateModelSectionState(
-    userData.value.token,
-    reqData
-  );
-  console.log('response', response);
+//   const response = await updateModelSectionState(
+//     userData.value.token,
+//     reqData
+//   );
+//   console.log('response', response);
 
-  isSectionComplete.value = true;
-};
+//   isSectionComplete.value = true;
+// };
 </script>
 
 <template>
@@ -312,7 +313,8 @@ const completeSection = async () => {
       <QuestProgress />
       <div class="w-6/12 flex flex-col gap-10">
         <QuestPhraseWindow />
-        <form
+        <QuestInput />
+        <!-- <form
           @submit.prevent="handleFormSubmit"
           class="relative w-full flex justify-center items-center"
         >
@@ -354,7 +356,7 @@ const completeSection = async () => {
           >
             в коллекцию</router-link
           >
-        </form>
+        </form> -->
       </div>
       <aside>help</aside>
     </section>
