@@ -4,6 +4,7 @@ import {
   reactive,
   toRefs,
   onBeforeMount,
+  onBeforeUnmount,
 } from 'vue';
 import { useCourseStore } from '../store/course';
 import {
@@ -76,6 +77,12 @@ onBeforeMount(async () => {
     currentSection.value
   );
   updatePercentage();
+});
+
+onBeforeUnmount(async () => {
+  userStore.$patch({
+    modelSectionState: false,
+  });
 });
 
 const createState = async () => {
