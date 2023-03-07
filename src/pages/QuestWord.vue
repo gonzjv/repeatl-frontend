@@ -15,8 +15,6 @@ import { useUserStore } from '../store/user';
 import {
   getPercentage,
   WORD_BATCH_NUMBER,
-  setIntroActive,
-  setFirstRepeatActive,
   setSecondRepeatActive,
 } from '@/helpers/questHelpers';
 import {
@@ -29,6 +27,7 @@ import {
   completeWordState,
   completeFirstRepeatBatch,
 } from '@/services/wordStateService';
+import QuestNav from '../components/QuestNav.vue';
 
 const courseStore = useCourseStore();
 const {
@@ -334,18 +333,7 @@ const resetAnswer = () => {
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <nav
-      class="flex justify-start gap-2 text-sky-400"
-    >
-      <router-link to="/course">
-        {{ currentCourse.name }}
-      </router-link>
-      <p>/</p>
-      <router-link to="/wordList"
-        >Коллекция
-        {{ currentCollection.name }}</router-link
-      >
-    </nav>
+    <QuestNav route="/wordList" />
     <h2 class="text-xl">
       {{ currentSection.label }}
     </h2>

@@ -2,6 +2,10 @@
 import { storeToRefs } from 'pinia';
 import { useCourseStore } from '../store/course';
 
+const props = defineProps({
+  route: String,
+});
+
 const courseStore = useCourseStore();
 const { currentCourse, currentCollection } =
   storeToRefs(courseStore);
@@ -14,7 +18,7 @@ const { currentCourse, currentCollection } =
       {{ currentCourse.name }}
     </router-link>
     <p>/</p>
-    <router-link to="/modelList"
+    <router-link :to="props.route"
       >Коллекция
       {{ currentCollection.number }}</router-link
     >
