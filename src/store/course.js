@@ -13,6 +13,7 @@ export const useCourseStore = defineStore(
       prevPhraseArr: [],
       isAnswerCorrect: true,
       isAnswerFullfilled: false,
+      answer: '',
     }),
   }
 );
