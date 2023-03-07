@@ -9,11 +9,14 @@ export const useCourseStore = defineStore(
       currentSection: {},
       currentModel: {},
       currentPhrase: {},
+      currentWord: {},
       percentage: 0,
       prevPhraseArr: [],
       isAnswerCorrect: true,
       isAnswerFullfilled: false,
       answer: '',
+      isSectionComplete: false,
+      isFirstRepeatActive: false,
     }),
   }
 );

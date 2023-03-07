@@ -7,10 +7,7 @@ import {
   onBeforeMount,
   onBeforeUnmount,
 } from 'vue';
-import {
-  InformationCircleIcon,
-  CheckBadgeIcon,
-} from '@heroicons/vue/24/outline';
+import { CheckBadgeIcon } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
 import {
   getPercentage,
@@ -28,12 +25,20 @@ import {
   completeFirstRepeatBatch,
 } from '@/services/wordStateService';
 import QuestNav from '../components/QuestNav.vue';
+import QuestWordProgress from '../components/QuestWordProgress.vue';
+import QuestWordWindow from '../components/QuestWordWindow.vue';
 
 const courseStore = useCourseStore();
 const {
   currentCourse,
   currentSection,
   currentCollection,
+  currentWord,
+  isAnswerCorrect,
+  isAnswerFullfilled,
+  answer,
+  isSectionComplete,
+  isFirstRepeatActive,
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
@@ -45,29 +50,15 @@ const {
 } = storeToRefs(userStore);
 
 const state = reactive({
-  currentWord: currentSection.value.words[0],
   wordAmount: 0,
   notCompletedWordAmount: 0,
-  percentage: 0,
-  answer: '',
-  isAnswerCorrect: true,
-  isAnswerFullfilled: false,
-  isSectionComplete: false,
-  isFirstRepeatActive: false,
   wordArrToDo: [],
   completedWordArr: [],
   lastWord: {},
 });
 const {
-  currentWord,
-  answer,
-  isAnswerCorrect,
-  isAnswerFullfilled,
-  isSectionComplete,
-  isFirstRepeatActive,
   wordAmount,
   notCompletedWordAmount,
-  percentage,
   wordArrToDo,
   completedWordArr,
   lastWord,
@@ -98,7 +89,9 @@ const updateState = async () => {
 
 const updateCurrentWord = () => {
   if (wordArrToDo.value.length > 0) {
-    currentWord.value = wordArrToDo.value[0];
+    courseStore.$patch({
+      currentWord: wordArrToDo.value[0],
+    });
   }
 };
 
@@ -131,10 +124,17 @@ const updatePercentage = () => {
   notCompletedWordAmount.value =
     wordArrToDo.value.length;
 
-  percentage.value = getPercentage(
+  const newPercentage = getPercentage(
     wordAmount.value,
     notCompletedWordAmount.value
   );
+  console.log(
+    'percentage',
+    courseStore.percentage
+  );
+  courseStore.$patch({
+    percentage: newPercentage,
+  });
 };
 
 const addWordArrToState = async () => {
@@ -181,6 +181,12 @@ onBeforeUnmount(async () => {
   userStore.$patch({
     wordSectionState: false,
   });
+  courseStore.$patch({
+    isSectionComplete: false,
+    isAnswerCorrect: false,
+    isAnswerFullfilled: false,
+    answer: '',
+  });
 });
 
 const checkAnswer = () => {
@@ -194,13 +200,14 @@ const checkAnswer = () => {
     .slice(0, answerLength)
     .join('');
 
-  isAnswerCorrect.value =
-    answer.value == stringToCompare
-      ? true
-      : false;
-
-  isAnswerFullfilled.value =
-    answerLength == phraseLength ? true : false;
+  courseStore.$patch({
+    isAnswerCorrect:
+      answer.value == stringToCompare
+        ? true
+        : false,
+    isAnswerFullfilled:
+      answerLength == phraseLength ? true : false,
+  });
 };
 
 const handleFormSubmit = () => {
@@ -216,8 +223,9 @@ const handleFormSubmit = () => {
 
 const completeSection = async () => {
   console.log('COMPLETE SECTION');
-  isSectionComplete.value = true;
-  percentage.value = 100;
+  courseStore.$patch({
+    isSectionComplete: true,
+  });
 
   const stateToUpdate = {
     id: wordSectionState.value.id,
@@ -244,25 +252,23 @@ const completeWord = async () => {
 
     updateCurrentWord();
 
-    console.log('currentWord', currentWord.value);
-    console.log('wordArrToDo', wordArrToDo.value);
-    console.log(
-      'completedWordArr',
-      completedWordArr.value
-    );
     if (
       completedWordArr.value.length ==
       WORD_BATCH_NUMBER
     ) {
       if (!isFirstRepeatActive.value) {
-        isFirstRepeatActive.value = true;
+        courseStore.$patch({
+          isFirstRepeatActive: true,
+        });
         wordArrToDo.value =
           completedWordArr.value;
         completedWordArr.value = [];
 
         updateCurrentWord();
       } else {
-        isFirstRepeatActive.value = false;
+        courseStore.$patch({
+          isFirstRepeatActive: false,
+        });
 
         let wordStateIdArr = [];
         completedWordArr.value.map((word) => {
@@ -323,9 +329,11 @@ const completeWord = async () => {
 };
 
 const resetAnswer = () => {
-  isAnswerCorrect.value = true;
-  isAnswerFullfilled.value = false;
-  answer.value = '';
+  courseStore.$patch({
+    isAnswerCorrect: true,
+    isAnswerFullfilled: false,
+    answer: '',
+  });
 };
 </script>
 
@@ -338,90 +346,9 @@ const resetAnswer = () => {
       {{ currentSection.label }}
     </h2>
     <section class="flex gap-10 w-full">
-      <aside class="flex flex-col gap-5">
-        <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
-        >
-          <p>
-            Word section:
-            {{ currentSection.number }}
-          </p>
-        </div>
-        <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
-        >
-          <p>
-            Progress:
-            {{ percentage }} %
-          </p>
-        </div>
-      </aside>
+      <QuestWordProgress />
       <div class="w-6/12 flex flex-col gap-10">
-        <div
-          class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center justify-start"
-        >
-          <div
-            v-if="!isSectionComplete"
-            class="w-full flex flex-col gap-7 items-start justify-start p-20"
-          >
-            <p>
-              {{ currentWord.native }}
-            </p>
-            <p class="font-extralight">
-              {{ currentWord.mnemoTag }}
-            </p>
-            <div
-              :class="
-                !isAnswerCorrect
-                  ? 'text-red-600'
-                  : isAnswerFullfilled &&
-                    'text-emerald-400'
-              "
-              class="relative transition duration-500"
-            >
-              <aside
-                class="absolute -left-8 top-0"
-                v-if="!isAnswerCorrect"
-              >
-                <InformationCircleIcon
-                  class="w-5"
-                />
-              </aside>
-              <aside
-                class="absolute -left-8 top-0"
-                v-if="
-                  isAnswerCorrect &&
-                  isAnswerFullfilled
-                "
-              >
-                <CheckBadgeIcon class="w-5" />
-              </aside>
-              <span
-                v-if="
-                  (wordSectionState.isIntroActive &&
-                    !isFirstRepeatActive) ||
-                  !isAnswerCorrect ||
-                  (isAnswerCorrect &&
-                    isAnswerFullfilled)
-                "
-              >
-                {{ currentWord.foreign }}
-              </span>
-            </div>
-            <p
-              v-if="
-                (wordSectionState.isIntroActive &&
-                  !isFirstRepeatActive) ||
-                !isAnswerCorrect ||
-                (isAnswerCorrect &&
-                  isAnswerFullfilled)
-              "
-              class="font-extralight"
-            >
-              {{ currentWord.transcription }}
-            </p>
-          </div>
-        </div>
+        <QuestWordWindow />
         <form
           @submit.prevent="handleFormSubmit"
           class="relative w-full flex justify-center items-center"
