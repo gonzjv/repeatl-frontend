@@ -24,6 +24,7 @@ import {
   completeWordState,
   completeFirstRepeatBatch,
 } from '@/services/wordStateService';
+import QuestWordInput from './QuestWordInput.vue';
 
 const courseStore = useCourseStore();
 const {
@@ -31,7 +32,6 @@ const {
   currentWord,
   isAnswerCorrect,
   isAnswerFullfilled,
-  answer,
   isFirstRepeatActive,
   isSectionComplete,
 } = storeToRefs(courseStore);
@@ -184,27 +184,6 @@ onBeforeUnmount(async () => {
   });
 });
 
-const checkAnswer = () => {
-  const answerLength =
-    answer.value.split('').length;
-  const wordToCompare = currentWord.value.foreign;
-  const phraseLength =
-    wordToCompare.split('').length;
-  const stringToCompare = wordToCompare
-    .split('')
-    .slice(0, answerLength)
-    .join('');
-
-  courseStore.$patch({
-    isAnswerCorrect:
-      answer.value == stringToCompare
-        ? true
-        : false,
-    isAnswerFullfilled:
-      answerLength == phraseLength ? true : false,
-  });
-};
-
 const handleFormSubmit = () => {
   console.log('SUBMIT!!!');
   if (
@@ -342,13 +321,7 @@ const resetAnswer = () => {
     >
       Проверьте корректность ввода фразы
     </aside>
-    <input
-      placeholder="Введите фразу..."
-      @input="checkAnswer"
-      v-model="answer"
-      class="p-3 shadow-lg w-full bg-white rounded-lg border-2 border-transparent focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
-      type="text"
-    />
+    <QuestWordInput />
     <button
       v-if="isAnswerCorrect && isAnswerFullfilled"
       class="absolute top-1 -right-40 text-white w-32 h-10 bg-emerald-400 rounded-md"
