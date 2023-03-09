@@ -5,7 +5,7 @@ import QuestNav from '../components/QuestNav.vue';
 import QuestWordProgress from '../components/QuestWordProgress.vue';
 import QuestWordWindow from '../components/QuestWordWindow.vue';
 import QuestWordForm from '../components/QuestWordForm.vue';
-import QuestWordStatus from '../components/QuestWordStatus.vue';
+import QuestStatus from '../components/QuestStatus.vue';
 
 const courseStore = useCourseStore();
 const { currentSection } =
@@ -26,7 +26,7 @@ const { currentSection } =
         <QuestWordWindow />
         <QuestWordForm />
       </div>
-      <QuestWordStatus />
+      <QuestStatus />
     </section>
   </main>
 </template>

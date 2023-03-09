@@ -3,7 +3,7 @@ import QuestNav from '../components/QuestNav.vue';
 import QuestPhraseWindow from '../components/QuestPhraseWindow.vue';
 import QuestProgress from '../components/QuestProgress.vue';
 import QuestRepeatForm from '../components/QuestRepeatForm.vue';
-import QuestWordStatus from '../components/QuestWordStatus.vue';
+import QuestStatus from '../components/QuestStatus.vue';
 </script>
 
 <template>
@@ -17,8 +17,7 @@ import QuestWordStatus from '../components/QuestWordStatus.vue';
         <QuestPhraseWindow />
         <QuestRepeatForm />
       </div>
-      <!-- <aside>help</aside> -->
-      <QuestWordStatus />
+      <QuestStatus />
     </section>
   </main>
 </template>

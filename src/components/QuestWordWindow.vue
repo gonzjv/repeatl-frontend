@@ -17,11 +17,8 @@ const {
 } = storeToRefs(courseStore);
 const userStore = useUserStore();
 
-const {
-  userData,
-  collectionState,
-  wordSectionState,
-} = storeToRefs(userStore);
+const { wordSectionState } =
+  storeToRefs(userStore);
 </script>
 <template>
   <div
