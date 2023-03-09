@@ -1,180 +1,24 @@
-<script setup></script>
+<script setup>
+import QuestNav from '../components/QuestNav.vue';
+import QuestPhraseWindow from '../components/QuestPhraseWindow.vue';
+import QuestProgress from '../components/QuestProgress.vue';
+import QuestRepeatForm from '../components/QuestRepeatForm.vue';
+import QuestWordStatus from '../components/QuestWordStatus.vue';
+</script>
 
 <template>
   <main
     class="flex flex-col w-full items-start gap-10"
   >
-    <!-- <nav
-      class="flex justify-start gap-2 text-sky-400"
-    >
-      <router-link to="/course">
-        {{ currentCourse.name }}
-      </router-link>
-      <p>/</p>
-      <router-link to="/modelList"
-        >Коллекция
-        {{ currentCollection.name }}</router-link
-      >
-    </nav>
-    <h2 class="text-xl">
-      {{ currentSection.label }}
-    </h2> -->
-    <p class="text-fuchsia-400">
-      Model repeat page!
-    </p>
-    <!-- <section class="flex gap-10 w-full">
-      <aside class="flex flex-col gap-5">
-        <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
-        >
-          <p>
-            Word section:
-            {{ currentSection.number }}
-          </p>
-        </div>
-        <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
-        >
-          <p>
-            Progress:
-            {{ percentage }} %
-          </p>
-        </div>
-      </aside>
+    <QuestNav route="/modelList" />
+    <section class="flex gap-10 w-full">
+      <QuestProgress />
       <div class="w-6/12 flex flex-col gap-10">
-        <div
-          class="h-80 shadow-lg rounded-lg flex flex-col gap-51 items-center justify-start"
-        >
-          <div
-            v-if="!isSectionComplete"
-            class="w-full flex flex-col gap-7 items-start justify-start p-20"
-          >
-            <p>
-              {{ currentWord.native }}
-            </p>
-            <p class="font-extralight">
-              {{ currentWord.mnemoTag }}
-            </p>
-            <div
-              :class="
-                !isAnswerCorrect
-                  ? 'text-red-600'
-                  : isAnswerFullfilled &&
-                    'text-emerald-400'
-              "
-              class="relative transition duration-500"
-            >
-              <aside
-                class="absolute -left-8 top-0"
-                v-if="!isAnswerCorrect"
-              >
-                <InformationCircleIcon
-                  class="w-5"
-                />
-              </aside>
-              <aside
-                class="absolute -left-8 top-0"
-                v-if="
-                  isAnswerCorrect &&
-                  isAnswerFullfilled
-                "
-              >
-                <CheckBadgeIcon class="w-5" />
-              </aside>
-              <span
-                v-if="
-                  (wordSectionState.isIntroActive &&
-                    !isFirstRepeatActive) ||
-                  !isAnswerCorrect ||
-                  (isAnswerCorrect &&
-                    isAnswerFullfilled)
-                "
-              >
-                {{ currentWord.foreign }}
-              </span>
-            </div>
-            <p
-              v-if="
-                (wordSectionState.isIntroActive &&
-                  !isFirstRepeatActive) ||
-                !isAnswerCorrect ||
-                (isAnswerCorrect &&
-                  isAnswerFullfilled)
-              "
-              class="font-extralight"
-            >
-              {{ currentWord.transcription }}
-            </p>
-          </div>
-        </div>
-        <form
-          @submit.prevent="handleFormSubmit"
-          class="relative w-full flex justify-center items-center"
-        >
-          <aside
-            class="absolute left-0 -top-7 text-red-600 text-sm font-light"
-            v-if="!isAnswerCorrect"
-          >
-            Проверьте корректность ввода фразы
-          </aside>
-          <input
-            placeholder="Введите фразу..."
-            @input="checkAnswer"
-            v-model="answer"
-            class="p-3 shadow-lg w-full bg-white rounded-lg border-2 border-transparent focus-visible:outline-none focus:border-yellow-400 focus:border-2 transition duration-700"
-            type="text"
-          />
-          <button
-            v-if="
-              isAnswerCorrect &&
-              isAnswerFullfilled
-            "
-            class="absolute top-1 -right-40 text-white w-32 h-10 bg-emerald-400 rounded-md"
-            type="submit"
-          >
-            Дальше
-          </button>
-          <aside
-            class="absolute -right-40 -top-10 text-xs flex gap-2 items-center text-emerald-400"
-            v-if="isSectionComplete"
-          >
-            <CheckBadgeIcon class="w-5" />
-            <span>Раздел завершен</span>
-          </aside>
-
-          <router-link
-            class="absolute -top-2 -right-72 text-sky-400"
-            v-if="isSectionComplete"
-            to="/wordList"
-          >
-            в коллекцию</router-link
-          >
-        </form>
+        <QuestPhraseWindow />
+        <QuestRepeatForm />
       </div>
-      <aside>
-        <div
-          class="shadow-lg rounded-lg p-3 flex gap-2 items-center justify-between"
-        >
-          <p
-            v-if="
-              wordSectionState.isIntroActive &&
-              !isFirstRepeatActive
-            "
-          >
-            Ознакомление
-          </p>
-          <p v-if="isFirstRepeatActive">
-            Первое повторение
-          </p>
-          <p
-            v-if="
-              wordSectionState.isSecondRepeatActive
-            "
-          >
-            Второе повторение
-          </p>
-        </div>
-      </aside>
-    </section> -->
+      <!-- <aside>help</aside> -->
+      <QuestWordStatus />
+    </section>
   </main>
 </template>

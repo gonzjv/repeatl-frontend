@@ -4,7 +4,7 @@ import { useCourseStore } from '../store/course';
 import { useUserStore } from '../store/user';
 
 const courseStore = useCourseStore();
-const { isFirstRepeatActive } =
+const { isFirstRepeatActive, isRepeatActive } =
   storeToRefs(courseStore);
 
 const userStore = useUserStore();
@@ -35,6 +35,7 @@ const { wordSectionState } =
       >
         Второе повторение
       </p>
+      <p v-if="isRepeatActive">Повторение</p>
     </div>
   </aside>
 </template>

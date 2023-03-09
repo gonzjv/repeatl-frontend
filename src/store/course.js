@@ -17,6 +17,7 @@ export const useCourseStore = defineStore(
       answer: '',
       isSectionComplete: false,
       isFirstRepeatActive: false,
+      isRepeatActive: false,
     }),
   }
 );
