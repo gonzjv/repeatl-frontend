@@ -10,7 +10,7 @@ const displayStore = useDisplayStore();
 </script>
 <template>
   <RouterLink
-    to="/courseList"
+    to="/todayTask"
     v-if="isUserLoggedIn"
     @click="
       displayStore.$patch({
@@ -19,6 +19,6 @@ const displayStore = useDisplayStore();
     "
     class="text-sky-400 w-56 h-20 flex justify-center items-center hover:bg-sky-100 border-4 border-yellow-200 rounded-full"
   >
-    Выбор заданий
+    Задания на сегодня
   </RouterLink>
 </template>
