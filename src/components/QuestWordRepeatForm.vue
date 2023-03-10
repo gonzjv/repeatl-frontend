@@ -9,21 +9,7 @@ import {
 } from 'vue';
 import { CheckBadgeIcon } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
-import {
-  getPercentage,
-  WORD_BATCH_NUMBER,
-  setSecondRepeatActive,
-} from '@/helpers/questHelpers';
-import {
-  addWordSectionState,
-  updateWordSectionState,
-  getWordSectionState,
-} from '../services/wordSectionStateService';
-import {
-  addWordState,
-  completeWordState,
-  completeFirstRepeatBatch,
-} from '@/services/wordStateService';
+import { getPercentage } from '@/helpers/questHelpers';
 import QuestWordInput from './QuestWordInput.vue';
 
 const courseStore = useCourseStore();
@@ -32,18 +18,11 @@ const {
   currentWord,
   isAnswerCorrect,
   isAnswerFullfilled,
-  isFirstRepeatActive,
   isSectionComplete,
   percentage,
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
-
-const {
-  userData,
-  collectionState,
-  wordSectionState,
-} = storeToRefs(userStore);
 
 const state = reactive({
   wordAmount: 0,
@@ -60,29 +39,6 @@ const {
   lastWord,
 } = toRefs(state);
 
-// const updateState = async () => {
-//   const stateFromApi = await getWordSectionState(
-//     collectionState.value.id,
-//     currentSection.value.id,
-//     userData.value.token
-//   );
-//   console.log('stateFromApi', stateFromApi);
-
-//   stateFromApi &&
-//     userStore.$patch({
-//       wordSectionState: stateFromApi,
-//     });
-
-//   if (
-//     wordSectionState.value.wordStateArr &&
-//     wordSectionState.value.wordStateArr.length > 0
-//   ) {
-//     updateWordArrToDo();
-//     updateCurrentWord();
-//     updatePercentage();
-//   }
-// };
-
 const updateCurrentWord = () => {
   if (wordArrToDo.value.length > 0) {
     courseStore.$patch({
@@ -90,28 +46,6 @@ const updateCurrentWord = () => {
     });
   }
 };
-
-// const updateWordArrToDo = () => {
-//   wordSectionState.value.isSecondRepeatActive &&
-//     (wordArrToDo.value =
-//       currentSection.value.words.filter(
-//         (word) =>
-//           wordSectionState.value.wordStateArr.find(
-//             (e) => e.wordId == word.id
-//           ).isCompleted == false
-//       ));
-
-//   wordSectionState.value.isIntroActive &&
-//     (wordArrToDo.value =
-//       currentSection.value.words.filter(
-//         (word) =>
-//           wordSectionState.value.wordStateArr.find(
-//             (e) => e.wordId == word.id
-//           ).isFirstRepeatComplete == false
-//       ));
-
-//   console.log('wordArrToDo', wordArrToDo.value);
-// };
 
 const updatePercentage = () => {
   wordAmount.value =
@@ -133,47 +67,17 @@ const updatePercentage = () => {
   });
 };
 
-// const addWordArrToState = async () => {
-//   let wordStateArr = [];
-//   for (const word of currentSection.value.words) {
-//     const newWordState = await addWordState(
-//       wordSectionState.value.id,
-//       word.id,
-//       userData.value.token
-//     );
-//     console.log('newWordState', newWordState);
-//     wordStateArr.push(newWordState);
-//   }
-//   return wordStateArr;
-// };
-
 onBeforeMount(async () => {
-  // await updateState();
   wordArrToDo.value = currentSection.value.words;
+  courseStore.$patch({
+    isRepeatActive: true,
+  });
 
+  updateCurrentWord();
   updatePercentage();
 
   lastWord.value =
     currentSection.value.words.at(-1);
-
-  // if (!wordSectionState.value.id) {
-  //   const newWordSectionState =
-  //     await addWordSectionState(
-  //       collectionState.value.id,
-  //       currentSection.value.id,
-  //       userData.value.token
-  //     );
-  //   console.log(
-  //     'newWordSectionState',
-  //     newWordSectionState
-  //   );
-  //   userStore.$patch({
-  //     wordSectionState: newWordSectionState,
-  //   });
-
-  //   await addWordArrToState();
-  //   await updateState();
-  // }
 });
 
 onBeforeUnmount(async () => {
@@ -181,6 +85,7 @@ onBeforeUnmount(async () => {
     wordSectionState: false,
   });
   courseStore.$patch({
+    isRepeatActive: false,
     isSectionComplete: false,
     isAnswerCorrect: true,
     isAnswerFullfilled: false,
@@ -204,17 +109,6 @@ const completeSection = async () => {
   courseStore.$patch({
     isSectionComplete: true,
   });
-
-  // const stateToUpdate = {
-  //   id: wordSectionState.value.id,
-  //   isCompleted: true,
-  //   isFirsrRepeatActive: false,
-  //   isSecondRepeatActive: false,
-  // };
-  // await updateWordSectionState(
-  //   userData.value.token,
-  //   stateToUpdate
-  // );
 };
 
 const completeWord = async () => {
@@ -227,89 +121,6 @@ const completeWord = async () => {
   updatePercentage();
 
   percentage.value >= 100 && completeSection();
-  // if (wordSectionState.value.isIntroActive) {
-  //   completedWordArr.value.push(
-  //     currentWord.value
-  //   );
-
-  //   wordArrToDo.value =
-  //     wordArrToDo.value.slice(1);
-
-  //   updateCurrentWord();
-
-  //   if (
-  //     completedWordArr.value.length ==
-  //     WORD_BATCH_NUMBER
-  //   ) {
-  //     if (!isFirstRepeatActive.value) {
-  //       courseStore.$patch({
-  //         isFirstRepeatActive: true,
-  //       });
-  //       wordArrToDo.value =
-  //         completedWordArr.value;
-  //       completedWordArr.value = [];
-
-  //       updateCurrentWord();
-  //     } else {
-  //       courseStore.$patch({
-  //         isFirstRepeatActive: false,
-  //       });
-
-  //       let wordStateIdArr = [];
-  //       completedWordArr.value.map((word) => {
-  //         const wordState =
-  //           wordSectionState.value.wordStateArr.find(
-  //             (e) => e.wordId == word.id
-  //           );
-  //         wordStateIdArr.push(wordState.id);
-  //       });
-
-  //       await completeFirstRepeatBatch(
-  //         userData.value.token,
-  //         wordStateIdArr
-  //       );
-  //       completedWordArr.value = [];
-
-  //       const isFirstRepeatComplete =
-  //         lastWord.value == currentWord.value &&
-  //         true;
-  //       console.log(
-  //         'isFirstRepeatComplete',
-  //         isFirstRepeatComplete
-  //       );
-
-  //       isFirstRepeatComplete &&
-  //         (await setSecondRepeatActive(
-  //           userData.value.token,
-  //           wordSectionState.value.id
-  //         ));
-
-  //       await updateState();
-  //       resetAnswer();
-  //       return;
-  //     }
-  //   }
-  // }
-
-  // if (
-  //   wordSectionState.value.isSecondRepeatActive
-  // ) {
-  //   const currentWordState =
-  //     wordSectionState.value.wordStateArr.find(
-  //       (e) => e.wordId == currentWord.value.id
-  //     );
-  //   await completeWordState(
-  //     userData.value.token,
-  //     currentWordState.id
-  //   );
-
-  //   await updateState();
-
-  //   if (wordArrToDo.value.length == 0) {
-  //     completeSection();
-  //     return;
-  //   }
-  // }
   resetAnswer();
 };
 
