@@ -18,6 +18,7 @@ export const useCourseStore = defineStore(
       isSectionComplete: false,
       isFirstRepeatActive: false,
       isRepeatActive: false,
+      isRepeatOptional: false,
     }),
   }
 );

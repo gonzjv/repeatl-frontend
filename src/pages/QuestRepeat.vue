@@ -2,6 +2,7 @@
 import QuestNav from '../components/QuestNav.vue';
 import QuestPhraseWindow from '../components/QuestPhraseWindow.vue';
 import QuestProgress from '../components/QuestProgress.vue';
+import QuestRepeatBtnNext from '../components/QuestRepeatBtnNext.vue';
 import QuestRepeatForm from '../components/QuestRepeatForm.vue';
 import QuestStatus from '../components/QuestStatus.vue';
 </script>
@@ -17,7 +18,12 @@ import QuestStatus from '../components/QuestStatus.vue';
         <QuestPhraseWindow />
         <QuestRepeatForm />
       </div>
-      <QuestStatus />
+      <div
+        class="flex flex-col justify-between gap-10"
+      >
+        <QuestStatus />
+        <QuestRepeatBtnNext />
+      </div>
     </section>
   </main>
 </template>

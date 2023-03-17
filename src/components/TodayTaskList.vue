@@ -58,6 +58,7 @@ onBeforeMount(async () => {
         @click="
           courseStore.$patch({
             currentSection: section,
+            isRepeatOptional: false,
           })
         "
         to="/questRepeat"

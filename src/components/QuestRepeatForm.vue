@@ -11,7 +11,6 @@ import {
   countPhrases,
   getPercentage,
 } from '@/helpers/questHelpers';
-import { CheckBadgeIcon } from '@heroicons/vue/24/outline';
 import QuestInput from './QuestInput.vue';
 
 const courseStore = useCourseStore();
@@ -28,14 +27,12 @@ const state = reactive({
   phraseArrToDo: [],
   modelArrToDo: [],
   phraseAmount: 0,
-  isSectionComplete: false,
   currentModelState: {},
 });
 const {
   phraseArrToDo,
   modelArrToDo,
   phraseAmount,
-  isSectionComplete,
 } = toRefs(state);
 
 onBeforeMount(async () => {
@@ -149,7 +146,9 @@ const completeModel = async () => {
 const completeSection = async () => {
   console.log('COMPLETE SECTION');
 
-  isSectionComplete.value = true;
+  courseStore.$patch({
+    isSectionComplete: true,
+  });
 };
 
 const updatePercentage = () => {
@@ -181,27 +180,5 @@ const updatePercentage = () => {
       Проверьте корректность ввода фразы
     </aside>
     <QuestInput />
-    <button
-      v-if="isAnswerCorrect && isAnswerFullfilled"
-      class="absolute top-1 -right-40 text-white w-32 h-10 bg-emerald-400 rounded-md"
-      type="submit"
-    >
-      Дальше
-    </button>
-    <aside
-      class="absolute -right-40 -top-10 text-xs flex gap-2 items-center text-emerald-400"
-      v-if="isSectionComplete"
-    >
-      <CheckBadgeIcon class="w-5" />
-      <span>Раздел завершен</span>
-    </aside>
-
-    <router-link
-      class="absolute -top-2 -right-72 text-sky-400"
-      v-if="isSectionComplete"
-      to="/modelList"
-    >
-      в коллекцию</router-link
-    >
   </form>
 </template>
