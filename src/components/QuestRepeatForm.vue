@@ -12,6 +12,8 @@ import {
   getPercentage,
 } from '@/helpers/questHelpers';
 import QuestInput from './QuestInput.vue';
+import { completeRepeat } from '../services/modelSectionStateService';
+import { useUserStore } from '../store/user';
 
 const courseStore = useCourseStore();
 const {
@@ -21,7 +23,12 @@ const {
   prevPhraseArr,
   currentSection,
   currentModel,
+  isSectionComplete,
 } = storeToRefs(courseStore);
+
+const userStore = useUserStore();
+const { userData, collectionState } =
+  storeToRefs(userStore);
 
 const state = reactive({
   phraseArrToDo: [],
@@ -96,7 +103,8 @@ const handleFormSubmit = () => {
   console.log('SUBMIT!!!');
   if (
     isAnswerCorrect.value &&
-    isAnswerFullfilled.value
+    isAnswerFullfilled.value &&
+    !isSectionComplete.value
   ) {
     console.log('SUBMIT_correct!!!');
     completePhrase();
@@ -149,6 +157,11 @@ const completeSection = async () => {
   courseStore.$patch({
     isSectionComplete: true,
   });
+  await completeRepeat(
+    userData.value.token,
+    collectionState.value.id,
+    currentSection.value.id
+  );
 };
 
 const updatePercentage = () => {
