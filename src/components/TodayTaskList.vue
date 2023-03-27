@@ -32,26 +32,28 @@ onBeforeMount(async () => {
 });
 </script>
 <template>
-  <ul class="shadow-lg rounded-lg p-5">
-    <p class="text-emerald-400">User data</p>
+  <ul
+    class="shadow-lg rounded-lg p-10 flex flex-col gap-5"
+  >
+    <!-- <p class="text-emerald-400">User data</p>
     <p>{{ userData }}</p>
     <p class="text-emerald-400">
       Completed section arr
     </p>
-    <p>{{ completedSectionArr }}</p>
+    <p>{{ completedSectionArr }}</p> -->
 
     <li
-      class="flex gap-3"
+      class="flex gap-3 shadow-lg p-5 rounded-lg justify-between items-center"
       v-for="section in completedSectionArr"
     >
-      <div class="flex gap-3">
-        <p>
-          id
-          {{ section.id }}
+      <div class="flex gap-7">
+        <p class="text-sky-400">
+          {{ section.models[0].grammarSubject }}
         </p>
-        <p>
-          number
-          {{ section.number }}
+        <p class="font-extralight">
+          {{
+            section.models[0].phrases[0].foreign
+          }}...
         </p>
       </div>
       <router-link
