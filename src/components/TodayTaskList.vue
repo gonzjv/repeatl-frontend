@@ -33,6 +33,7 @@ onBeforeMount(async () => {
 </script>
 <template>
   <ul
+    v-if="completedSectionArr.length > 0"
     class="shadow-lg rounded-lg p-10 flex flex-col gap-5"
   >
     <!-- <p class="text-emerald-400">User data</p>
