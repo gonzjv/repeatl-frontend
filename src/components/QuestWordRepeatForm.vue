@@ -7,10 +7,10 @@ import {
   onBeforeMount,
   onBeforeUnmount,
 } from 'vue';
-import { CheckBadgeIcon } from '@heroicons/vue/24/outline';
 import { useUserStore } from '../store/user';
 import { getPercentage } from '@/helpers/questHelpers';
 import QuestWordInput from './QuestWordInput.vue';
+import { completeWordRepeat } from '../services/wordSectionStateService';
 
 const courseStore = useCourseStore();
 const {
@@ -18,11 +18,12 @@ const {
   currentWord,
   isAnswerCorrect,
   isAnswerFullfilled,
-  isSectionComplete,
   percentage,
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
+const { userData, collectionState } =
+  storeToRefs(userStore);
 
 const state = reactive({
   wordAmount: 0,
@@ -109,6 +110,12 @@ const completeSection = async () => {
   courseStore.$patch({
     isSectionComplete: true,
   });
+
+  await completeWordRepeat(
+    userData.value.token,
+    collectionState.value.id,
+    currentSection.value.id
+  );
 };
 
 const completeWord = async () => {
@@ -144,7 +151,7 @@ const resetAnswer = () => {
       Проверьте корректность ввода фразы
     </aside>
     <QuestWordInput />
-    <button
+    <!-- <button
       v-if="isAnswerCorrect && isAnswerFullfilled"
       class="absolute top-1 -right-40 text-white w-32 h-10 bg-emerald-400 rounded-md"
       type="submit"
@@ -165,6 +172,6 @@ const resetAnswer = () => {
       to="/wordList"
     >
       в коллекцию</router-link
-    >
+    > -->
   </form>
 </template>

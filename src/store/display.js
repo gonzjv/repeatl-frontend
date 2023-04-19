@@ -10,6 +10,7 @@ export const useDisplayStore = defineStore(
       isLoginPopupDisplay: false,
       isBoardPopupDisplay: false,
       popupElement: '',
+      isTodayWordsDisplay: false,
     }),
   }
 );

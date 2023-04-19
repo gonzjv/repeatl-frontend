@@ -20,6 +20,26 @@ const getWordSections = async (
   }
 };
 
+const getCompletedWordSectionArr = async (
+  token,
+  userId
+) => {
+  try {
+    const url = `${API_URL}wordSections/completed/${userId}`;
+    const bearerToken = 'Bearer ' + token;
+    const myHeaders = {
+      Authorization: bearerToken,
+    };
+    const response = await fetch(url, {
+      headers: myHeaders,
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('Erorr', error);
+  }
+};
+
 const addWordSection = async (
   token,
   wordSection,
@@ -146,4 +166,5 @@ export {
   getWordArr,
   addWord,
   deleteWord,
+  getCompletedWordSectionArr,
 };

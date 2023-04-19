@@ -151,6 +151,7 @@ const checkIsComplete = (sectionId) => {
           @click="
             courseStore.$patch({
               currentSection: section,
+              isRepeatOptional: true,
             })
           "
           to="/questWordRepeat"
