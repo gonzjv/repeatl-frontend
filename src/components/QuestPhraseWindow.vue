@@ -12,6 +12,7 @@ const {
   currentPhrase,
   isAnswerCorrect,
   isAnswerFullfilled,
+  isRepeatActive,
 } = storeToRefs(courseStore);
 </script>
 <template>
@@ -43,7 +44,7 @@ const {
             : isAnswerFullfilled &&
               'text-emerald-400'
         "
-        class="relative transition duration-500"
+        class="w-full relative transition duration-500"
       >
         <aside
           class="absolute -left-8 top-0"
@@ -59,7 +60,14 @@ const {
         >
           <CheckBadgeIcon class="w-5" />
         </aside>
-        <span>
+        <span
+          class="absolute left-0"
+          v-if="
+            !isRepeatActive ||
+            !isAnswerCorrect ||
+            isAnswerFullfilled
+          "
+        >
           {{ currentPhrase.foreign }}
         </span>
       </div>
