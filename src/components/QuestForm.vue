@@ -83,6 +83,8 @@ onBeforeUnmount(async () => {
   userStore.$patch({
     modelSectionState: false,
   });
+  courseStore.$patch({ isAnswerCorrect: true });
+  resetPrevPhrases();
 });
 
 const createState = async () => {

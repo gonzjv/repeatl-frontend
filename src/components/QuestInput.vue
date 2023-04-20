@@ -1,11 +1,15 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { useCourseStore } from '../store/course';
+import { onBeforeUnmount } from 'vue';
 
 const courseStore = useCourseStore();
 const { answer, currentPhrase } =
   storeToRefs(courseStore);
 
+onBeforeUnmount(() => {
+  courseStore.$patch({ answer: '' });
+});
 const checkAnswer = () => {
   const answerLength =
     answer.value.split('').length;

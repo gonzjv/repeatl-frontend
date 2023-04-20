@@ -65,7 +65,9 @@ onBeforeMount(async () => {
 onBeforeUnmount(() => {
   courseStore.$patch({
     isRepeatActive: false,
+    isAnswerCorrect: true,
   });
+  resetPrevPhrases();
 });
 
 const updatePhraseArrToDo = () => {
