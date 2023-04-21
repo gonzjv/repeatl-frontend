@@ -195,5 +195,16 @@ const updatePercentage = () => {
       Проверьте корректность ввода фразы
     </aside>
     <QuestInput />
+    <button
+      v-if="
+        isAnswerCorrect &&
+        isAnswerFullfilled &&
+        !isSectionComplete
+      "
+      class="absolute -right-40 top-2 text-white w-32 h-10 bg-emerald-400 rounded-md"
+      type="submit"
+    >
+      Дальше
+    </button>
   </form>
 </template>

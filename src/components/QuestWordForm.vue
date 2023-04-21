@@ -323,26 +323,15 @@ const resetAnswer = () => {
     </aside>
     <QuestWordInput />
     <button
-      v-if="isAnswerCorrect && isAnswerFullfilled"
-      class="absolute top-1 -right-40 text-white w-32 h-10 bg-emerald-400 rounded-md"
+      v-if="
+        isAnswerCorrect &&
+        isAnswerFullfilled &&
+        !isSectionComplete
+      "
+      class="absolute -right-40 top-2 text-white w-32 h-10 bg-emerald-400 rounded-md"
       type="submit"
     >
       Дальше
     </button>
-    <aside
-      class="absolute -right-40 -top-10 text-xs flex gap-2 items-center text-emerald-400"
-      v-if="isSectionComplete"
-    >
-      <CheckBadgeIcon class="w-5" />
-      <span>Раздел завершен</span>
-    </aside>
-
-    <router-link
-      class="absolute -top-2 -right-72 text-sky-400"
-      v-if="isSectionComplete"
-      to="/wordList"
-    >
-      в коллекцию</router-link
-    >
   </form>
 </template>

@@ -52,16 +52,5 @@ const { wordSectionState } =
       <CheckBadgeIcon class="w-5" />
       <span>Раздел завершен</span>
     </aside>
-    <button
-      v-if="
-        isAnswerCorrect &&
-        isAnswerFullfilled &&
-        !isSectionComplete
-      "
-      class="text-white w-32 h-10 bg-emerald-400 rounded-md"
-      type="submit"
-    >
-      Дальше
-    </button>
   </aside>
 </template>

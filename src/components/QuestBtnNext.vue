@@ -1,0 +1,24 @@
+<script setup>
+import { storeToRefs } from 'pinia';
+import { useCourseStore } from '../store/course';
+import { useRouter } from 'vue-router';
+
+const courseStore = useCourseStore();
+const { isSectionComplete } =
+  storeToRefs(courseStore);
+
+const router = useRouter();
+
+const handleGoBack = () => {
+  router.back();
+};
+</script>
+<template>
+  <button
+    class="text-sky-400 p-4 shadow-lg rounded-lg"
+    v-if="isSectionComplete"
+    @click="handleGoBack"
+  >
+    в коллекцию
+  </button>
+</template>

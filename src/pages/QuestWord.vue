@@ -6,6 +6,7 @@ import QuestWordProgress from '../components/QuestWordProgress.vue';
 import QuestWordWindow from '../components/QuestWordWindow.vue';
 import QuestWordForm from '../components/QuestWordForm.vue';
 import QuestStatus from '../components/QuestStatus.vue';
+import QuestBtnNext from '../components/QuestBtnNext.vue';
 
 const courseStore = useCourseStore();
 const { currentSection } =
@@ -26,7 +27,12 @@ const { currentSection } =
         <QuestWordWindow />
         <QuestWordForm />
       </div>
-      <QuestStatus />
+      <div
+        class="flex flex-col justify-between gap-10"
+      >
+        <QuestStatus />
+        <QuestBtnNext />
+      </div>
     </section>
   </main>
 </template>
