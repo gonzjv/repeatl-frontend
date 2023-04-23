@@ -19,6 +19,7 @@ const {
   isAnswerCorrect,
   isAnswerFullfilled,
   percentage,
+  isRepeatOptional,
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
@@ -90,6 +91,7 @@ onBeforeUnmount(async () => {
     isSectionComplete: false,
     isAnswerCorrect: true,
     isAnswerFullfilled: false,
+    isSectionComplete: false,
     answer: '',
   });
 });
@@ -111,11 +113,12 @@ const completeSection = async () => {
     isSectionComplete: true,
   });
 
-  await completeWordRepeat(
-    userData.value.token,
-    collectionState.value.id,
-    currentSection.value.id
-  );
+  !isRepeatOptional.value &&
+    (await completeWordRepeat(
+      userData.value.token,
+      collectionState.value.id,
+      currentSection.value.id
+    ));
 };
 
 const completeWord = async () => {

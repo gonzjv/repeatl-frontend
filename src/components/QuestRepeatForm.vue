@@ -24,6 +24,7 @@ const {
   currentSection,
   currentModel,
   isSectionComplete,
+  isRepeatOptional,
 } = storeToRefs(courseStore);
 
 const userStore = useUserStore();
@@ -66,6 +67,7 @@ onBeforeUnmount(() => {
   courseStore.$patch({
     isRepeatActive: false,
     isAnswerCorrect: true,
+    isSectionComplete: false,
   });
   resetPrevPhrases();
 });
@@ -159,11 +161,13 @@ const completeSection = async () => {
   courseStore.$patch({
     isSectionComplete: true,
   });
-  await completeRepeat(
-    userData.value.token,
-    collectionState.value.id,
-    currentSection.value.id
-  );
+
+  !isRepeatOptional.value &&
+    (await completeRepeat(
+      userData.value.token,
+      collectionState.value.id,
+      currentSection.value.id
+    ));
 };
 
 const updatePercentage = () => {
